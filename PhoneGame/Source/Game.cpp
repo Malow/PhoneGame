@@ -45,6 +45,11 @@ void Game::Life()
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
+		// Updates GFX
+		float diff = GetGraphics()->Update();	
+
+
+		// Take care of packets / events
 		if(MaloW::ProcessEvent* ev = this->PeekEvent())
 		{
 			// Network packet containing data
@@ -68,19 +73,12 @@ void Game::Life()
 				this->cc = nnce->GetCC();
 			}
 
-
-
 			delete ev;
 		}
 
 
-
-
-
-
-		// Updates camera etc, does NOT render the frame, another process is doing that, so diff should be very low.
-		float diff = GetGraphics()->Update();	
-
+		// 3D / game related.
+		// Handle Keyboard inputs.
 		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
 			GetGraphics()->GetCamera()->MoveForward(diff * 10.0f);
 		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
@@ -89,7 +87,6 @@ void Game::Life()
 			GetGraphics()->GetCamera()->MoveBackward(diff * 10.0f);
 		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
 			GetGraphics()->GetCamera()->MoveRight(diff * 10.0f);
-
 
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
 			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f + diff * 0.01f));

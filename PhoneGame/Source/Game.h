@@ -5,6 +5,7 @@
 #include "MaloWLib/ClientChannel.h"
 
 
+
 class NewNetworkClientEvent : public MaloW::ProcessEvent
 {
 private:
@@ -26,8 +27,6 @@ public:
 
 	MaloW::ClientChannel* GetCC() { this->selfDelete = false; return this->cc; }
 };
-
-
 
 
 
