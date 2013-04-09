@@ -5,6 +5,8 @@
 
 #include "Graphics.h"
 #include "..\Source\MaloWFileDebug.h"
+#include "ConnectionListener.h"
+#include "Game.h"
 
 int __stdcall wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
 {
@@ -18,52 +20,17 @@ int __stdcall wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
 	MaloW::Debug("(DEBUG): ModelViewer: vld.h included.");
 #endif
 #endif
-	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
-	GetGraphics()->CreateSkyBox("Media/StarMap.dds"); 
-	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
-	GetGraphics()->GetCamera()->LookAt(Vector3(0, 0, 0));
 
-	//iLight* li = GetGraphics()->CreateLight(GetGraphics()->GetCamera()->GetPosition());
-	//li->SetIntensity(0.001f);
-	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
-	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
-	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
-	model->Scale(1.0f * 0.05f);
+	Game* game = new Game();
+	ConnectionListener* cl = new ConnectionListener(10000, game);
+	cl->Start();
+	
+	game->Life();
 
-	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
-
-	bool go = true;
-	GetGraphics()->Update();
-	while(GetGraphics()->IsRunning() && go)
-	{
-		Sleep(10);
-
-		// Updates camera etc, does NOT render the frame, another process is doing that, so diff should be very low.
-		float diff = GetGraphics()->Update();	
-
-		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
-			GetGraphics()->GetCamera()->MoveForward(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
-			GetGraphics()->GetCamera()->MoveLeft(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('S'))	
-			GetGraphics()->GetCamera()->MoveBackward(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
-			GetGraphics()->GetCamera()->MoveRight(diff * 10.0f);
-
-
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
-			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f + diff * 0.01f));
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT))
-			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f - diff * 0.01f));
-
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SPACE))
-			GetGraphics()->GetCamera()->MoveUp(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_CONTROL))
-			GetGraphics()->GetCamera()->MoveDown(diff * 10.0f);
-
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
-			go = false;
-	}
+	game->Close(); 
+	cl->Close();
+	delete cl;
+	delete game;
 
 	FreeGraphics();
 	return 0;

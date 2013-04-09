@@ -11,12 +11,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
+    <ClCompile Include="Source\MaloWLib\ClientChannel.cpp" />
+    <ClCompile Include="Source\MaloWLib\NetworkServer.cpp" />
+    <ClCompile Include="Source\MaloWLib\Process.cpp" />
+    <ClCompile Include="Source\MaloWLib\ServerChannel.cpp" />
     <ClCompile Include="Source\PhoneGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\ConnectionListener.h" />
+    <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\Graphics.h" />
     <ClInclude Include="Source\MaloW.h" />
+    <ClInclude Include="Source\MaloWLib\Array.h" />
+    <ClInclude Include="Source\MaloWLib\ClientChannel.h" />
+    <ClInclude Include="Source\MaloWLib\List.h" />
+    <ClInclude Include="Source\MaloWLib\MaloW.h" />
+    <ClInclude Include="Source\MaloWLib\MaloWFileDebug.h" />
+    <ClInclude Include="Source\MaloWLib\NetworkPacket.h" />
+    <ClInclude Include="Source\MaloWLib\NetworkServer.h" />
+    <ClInclude Include="Source\MaloWLib\Process.h" />
+    <ClInclude Include="Source\MaloWLib\Queue.h" />
+    <ClInclude Include="Source\MaloWLib\ServerChannel.h" />
+    <ClInclude Include="Source\MaloWLib\Winsock.h" />
     <ClInclude Include="Source\Windows.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -51,7 +69,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\External\VLD\include\;$(SolutionDir)/NDYGFX/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\External\VLD\include\;$(SolutionDir)/NDYGFX/Include/;$(SolutionDir)\PhoneGame\Source\MaloWLib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\External\VLD\lib\Win32;$(SolutionDir)/Build/Debug/;$(SolutionDir)/WorkingDir/;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\Build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\Obj\$(Configuration)\</IntDir>
@@ -61,7 +79,7 @@
     <OutDir>$(SolutionDir)\Build\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\Obj\$(Configuration)\</IntDir>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)/NDYGFX/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)/NDYGFX/Include/;$(SolutionDir)\PhoneGame\Source\MaloWLib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)/Build/Release/;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)R</TargetName>
   </PropertyGroup>

@@ -5,12 +5,30 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Source Files\MaloWLib">
+      <UniqueIdentifier>{66f6eae5-b2e7-418b-a0d7-625263013829}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\PhoneGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaloWLib\Process.cpp">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaloWLib\ClientChannel.cpp">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaloWLib\NetworkServer.cpp">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MaloWLib\ServerChannel.cpp">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -22,6 +40,45 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Windows.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\Array.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\List.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\MaloW.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\MaloWFileDebug.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\Process.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\Queue.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\ClientChannel.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\NetworkPacket.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\NetworkServer.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\ServerChannel.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MaloWLib\Winsock.h">
+      <Filter>Source Files\MaloWLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ConnectionListener.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
