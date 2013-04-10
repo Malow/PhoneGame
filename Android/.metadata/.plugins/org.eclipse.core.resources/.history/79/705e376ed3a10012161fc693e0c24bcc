@@ -1,0 +1,37 @@
+package com.example.layouttest;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.widget.ImageView;
+
+public class SimpleButton extends ImageView 
+{
+
+    public SimpleButton(Context context) 
+    {
+        super(context);
+    }
+
+    public SimpleButton(Context context, AttributeSet attrs, int defStyle) 
+    {
+        super(context, attrs, defStyle);
+    }
+
+    public SimpleButton(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+    }
+
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) 
+    {
+        super.onSizeChanged(h, w, oldh, oldw);
+    }
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event) 
+    {
+       return false;
+    }
+}

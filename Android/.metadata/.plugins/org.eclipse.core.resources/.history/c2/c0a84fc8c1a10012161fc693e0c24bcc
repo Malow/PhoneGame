@@ -1,0 +1,9 @@
+package com.example.wiiphone;
+
+public class MessageConverter {
+
+	public MessageConverter(String type, float values[])
+	{
+		
+	}
+}
