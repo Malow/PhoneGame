@@ -82,12 +82,6 @@ SKYMAP_VS_OUTPUT SKYMAP_VS(VSIn input)
 float4 SKYMAP_PS(SKYMAP_VS_OUTPUT input) : SV_Target
 {
 	float4 ret = ret = SkyMap.Sample(linearSampler, input.texCoord);
-	if(input.worldPos.y < FogHeight)
-	{
-		float factor = (input.worldPos.y - CamY) / (FogHeight - CamY);
-
-		ret = lerp(float4(0.45f, 0.45f, 0.45f, 1.0f), ret, saturate(factor));
-	}
 	return ret;
 
 	/*PSOut output = (PSOut)0;
