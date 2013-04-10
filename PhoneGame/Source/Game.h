@@ -29,17 +29,48 @@ public:
 };
 
 
+class NetworkController
+{
+private:
+	
+public:
+	MaloW::ClientChannel* cc;
+	Vector3 direction;
+	float speed;
+
+	NetworkController()
+	{
+		this->cc = NULL;
+		this->direction = Vector3(0, 0, 0);
+		this->speed = 50.0f;
+	}
+
+	virtual ~NetworkController()
+	{
+		if(this->cc)
+		{
+			this->cc->Close();
+			delete this->cc;
+			this->cc = NULL;
+		}
+	}
+};
+
 
 class Game : public MaloW::Process
 {
 private:
-	MaloW::ClientChannel* cc;
+	NetworkController* networkController;
+
+	void HandleEvent(float diff);
+	void PlayGameMode1();
 
 public:
 	Game();
 	~Game();
 
 	void NewNetworkClient(MaloW::ClientChannel* cc);
-	void Life();
+	void Life() { };
+	void Play(int mode);
 };
 

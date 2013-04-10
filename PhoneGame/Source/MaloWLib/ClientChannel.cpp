@@ -27,7 +27,8 @@ string ClientChannel::receiveData()
 	bool getNewData = true;
 	if(!this->buffer.empty())
 	{
-		if(int pos = this->buffer.find(10))
+		int pos = this->buffer.find(10);
+		if(pos > 0)
 		{
 			msg = this->buffer.substr(0, pos);
 			this->buffer = this->buffer.substr(pos+1, this->buffer.length());

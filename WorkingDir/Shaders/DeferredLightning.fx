@@ -661,14 +661,7 @@ float4 PSScene(PSIn input) : SV_Target
 
 	///////////////////////////////////////////////////////////////////
 	//							Basic fog:							//
-	//////////////////////////////////////////////////////////////////
-	finalColor = saturate(finalColor);
-	float fogDepth = NormsAndDepth.w;
-	if(fogDepth > 0.75f)
-	{
-		float fogfactor = (fogDepth - 0.75f) * 4.1f;	// Linear scale the last 25% of farclip, but a little more 
-		finalColor = lerp(finalColor, float4(0.45f, 0.45f, 0.45f, 1.0f), saturate(fogfactor));
-	}
+	/////////////////////////////////////////////////////////////////
 		
 	
 	
