@@ -2,107 +2,119 @@ package com.example.wiiphone;
 
 import android.app.Activity;
 import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
-import java.io.*;
- 
-import java.util.ArrayList;
- 
+import android.widget.SeekBar;
+
+@SuppressWarnings("deprecation")
 public class MainActivity extends Activity implements SensorEventListener
 {
-    private ListView mList = null;
-    private ArrayList<String> arrayList = null;
-    private MyCustomAdapter mAdapter = null;
     private TCPClient mTcpClient = null;
-    private connectTask mConnectTask = null;
     private SensorManager mSensorManager = null;
     private Sensor mAccelerometer = null;
+    private PowerManager mPowerManager = null;
+    private WakeLock mWakeLock = null;
  
-    @Override
+    
+	@Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	System.out.println("onCreate");
+    	System.out.println("onCreate START");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
- 
+        
+        // Get an instance of the SensorManager.
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         
+        // Get the sensor (Accelerometer).
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         
+        // Register Delays and Listeners.
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-        arrayList = new ArrayList<String>();
- 
-        final EditText editText = (EditText) findViewById(R.id.editText);
-        Button send = (Button)findViewById(R.id.send_button);
- 
-        //relate the listView from java to the one created in xml
-        mList = (ListView)findViewById(R.id.list);
-        mAdapter = new MyCustomAdapter(this, arrayList);
-        mList.setAdapter(mAdapter);
- 
-        // connect to the server
+        
+        // Get an instance of the PowerManager.
+        mPowerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        
+        mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass()
+                .getName());
+        
+        // connect to the server.
         new connectTask().execute("");
-
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
- 
-                String message = editText.getText().toString();
- 
-                //add the text in the arrayList
-                arrayList.add("c: " + message);
- 
-                //sends the message to the server
-                if (mTcpClient != null) {
+        
+        // Get the SeekerBar so we can add onChange event.
+        VerticalSeekBar throttle = (VerticalSeekBar)findViewById(R.id.throttleSeekBar);
+        
+        // Set the OnBarChange method.
+        throttle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() 
+        {
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar)
+			{
+				// No need to implement but has to override.
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar)
+			{
+				// No need to implement but has to override.
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) 
+			{
+				if (mTcpClient != null) {
+					String message = "SPD " +  Float.toString(progress);
                     mTcpClient.sendMessage(message);
+                    
+                    Log.e("SPD MESSAGE", message);
                 }
- 
-                //refresh the list
-                mAdapter.notifyDataSetChanged();
-                editText.setText("");
-            }
-        });
- 
+			}
+		});
+        System.out.println("onCreate END");
     }
     
+    // Overriding all onX events for debugging cause I'm a noob at Android programming.
     @Override
     public void onResume()
     {
-    	System.out.println("onResume");
+    	System.out.println("onResume START");
         super.onResume(); 
+        mWakeLock.acquire();
+        
+        System.out.println("onResume END");
     }
     
     @Override
     public void onPause()
     {
-    	System.out.println("onPause");
+    	System.out.println("onPause START");
         super.onPause();
+        mTcpClient.stopClient(); // Stop update if we close app.
+        mWakeLock.release();
         
+        System.out.println("onPause END");
     }
     
     @Override
     public void onStart()
     {
-    	System.out.println("onStart");
+    	System.out.println("onStart START");
         super.onStart();
-        
+        System.out.println("onStart END");
     }
     
     @Override
     public void onStop()
     {
-    	System.out.println("onStop");
+    	System.out.println("onStop START");
         super.onStop();
+        System.out.println("onStop END");
     }
     
     @Override
@@ -110,8 +122,7 @@ public class MainActivity extends Activity implements SensorEventListener
     {
     	System.out.println("onDestroy START");
         super.onDestroy();
-        mTcpClient.stopClient();
-        System.out.println("onDestroy DONE");
+        System.out.println("onDestroy END");
     }
     
     @Override
@@ -160,12 +171,7 @@ public class MainActivity extends Activity implements SensorEventListener
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
- 
-            //in the arrayList we add the messaged received from server
-            arrayList.add(values[0]);
-            // notify the adapter that the data set has changed. This means that new message received
-            // from server was added to the list
-            mAdapter.notifyDataSetChanged();
+             // Somehow this needs to be here.
         }
     }
 }
