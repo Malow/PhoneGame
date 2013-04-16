@@ -5,7 +5,6 @@
 #define MINIMUM_SPEED 10.0f
 #define MAXIMUM_SPEED 100.0f
 
-
 //////////////////////////////////////////////////////////////////////////
 ///////////////////Rotate vector around other vector//////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -81,8 +80,8 @@ void RotateVectorAroundVector(Vector3& vector, Vector3& axis, float angle)
 }
 //////////////////////////////////////////////////////////////////////////
 
-#define CREEP_POS_COUNT 10
-static const Vector3 creepPos[CREEP_POS_COUNT] = 
+#define star_POS_COUNT 10
+static const Vector3 starPos[star_POS_COUNT] = 
 {
 	Vector3(-16, 17, -9),
 	Vector3(-26, 10, -50),
@@ -131,7 +130,11 @@ void Game::PlayGameMode1()
 	Vector3 phoneDir = Vector3(0.9f, 0, 0.2f);
 	phoneDir.Normalize();
 
-	iMesh* creep = GetGraphics()->CreateMesh("Media/Creep1.obj", Vector3(50, 20, 50));
+	iMesh* star = GetGraphics()->CreateMesh("Media/Star1.obj", Vector3(50, 20, 50));
+	iBillboard* planetSun = GetGraphics()->CreateBillboard(Vector3(300, 0, 0), Vector2(100.0f, 100.0f), Vector3(1, 1, 1), "Media/planet_sun.png");
+	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-300, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
+	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 300), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
+	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -300), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
 
 	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
 	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
@@ -139,9 +142,12 @@ void Game::PlayGameMode1()
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
 	iImage* guiCockpit = GetGraphics()->CreateImage(Vector2(0, GetGraphics()->GetEngineParameters().WindowHeight * 0.1f), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/cockpit.png");
+	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
+	guiStar->SetOpacity(0.0f);
+	float starTimer = 0.0f;
 
 	bool go = true;
-	int creepcolor = 2;
+	int starcolor = 2;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
@@ -195,6 +201,18 @@ void Game::PlayGameMode1()
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(1, 0, 0);
 
+			// Make it so that u dont have to turn the phone completely for it to give full effect:
+			// Algorithm needed here to make
+			phoneDir *= 2;
+			if(phoneDir.z > 1.0f)
+				phoneDir.z = 1.0f;
+			if(phoneDir.z < -1.0f)
+				phoneDir.z = -1.0f;
+			if(phoneDir.y > 1.0f)
+				phoneDir.y = 1.0f;
+			if(phoneDir.y < -1.0f)
+				phoneDir.y = -1.0f;
+
 			// min / max: 10 / 100: speed: 10 -> min(10) + input(10) * range(0.9) = 19
 			targetSpeed = MINIMUM_SPEED + this->networkController->speed * ((MAXIMUM_SPEED - MINIMUM_SPEED) * 0.01f);
 			
@@ -206,10 +224,10 @@ void Game::PlayGameMode1()
 			targetSpeedTxt->SetText(string("TARGETSPEED: " + MaloW::convertNrToString(targetSpeed)).c_str());
 
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
-			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * 0.001f);
+			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * diff * 0.001f);
 			ourUp = cross.GetCrossProduct(ourDir);
 			
-			RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * 0.001f);
+			RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * diff * 0.001f);
 
 			// Apply phone's targetspeed to speed
 			if(targetSpeed > speed)
@@ -236,25 +254,31 @@ void Game::PlayGameMode1()
 		// Handle game objectives
 		if(started)
 			time += diff * 0.001f;
-		if((GetGraphics()->GetCamera()->GetPosition() - creep->GetPosition()).GetLength() < 2.5f)
+		if((GetGraphics()->GetCamera()->GetPosition() - star->GetPosition()).GetLength() < 3.0f)
 		{
-			GetGraphics()->DeleteMesh(creep);
-			creep = GetGraphics()->CreateMesh(string("Media/Creep" + MaloW::convertNrToString(creepcolor++) + ".obj").c_str(), creepPos[score%CREEP_POS_COUNT]);
+			GetGraphics()->DeleteMesh(star);
+			star = GetGraphics()->CreateMesh(string("Media/Star" + MaloW::convertNrToString(starcolor++) + ".obj").c_str(), starPos[score%star_POS_COUNT]);
 
-			if(creepcolor > 3)
-				creepcolor = 1;
+			if(starcolor > 3)
+				starcolor = 1;
 
 			if(score == 0)
 				started = true;
 			score++;
+
+			starTimer = 2.0f;
 		}
 		// print score and time text.
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
-
+		starTimer -= diff * 0.001f;
+		if(starTimer < 0.0f)
+			starTimer = 0.0f;
+		guiStar->SetOpacity(starTimer);
+		star->Rotate(Vector3(diff, diff, diff) * 0.002f);
 
 		// Update arrow pointing towards next game objective
-		Vector3 VecToObjective =  creep->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
+		Vector3 VecToObjective =  star->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
 		arrow->SetPosition(GetGraphics()->GetCamera()->GetPosition() + ourDir * 2 + ourUp);
 		arrow->ResetRotation();
 		Vector3 vec = Vector3(0, -1, 0);
@@ -275,7 +299,8 @@ void Game::PlayGameMode1()
 
 // TODO:
 
-// Some sort of notifier that uve taken a ball (UI flashes) or something.
 // Turning less effective with lower speed -> Test before doing this.
 // A couple of planets spread around randomly outside of spawnable area.
-// exact spawning locations for all orbs? In a const list that it cycles through and restarts in? To avoid RNG from affecting performance.
+// TargetSpeedText: cast as int etc. maybe to avoid the text for spazzing.
+// Add algortihm for increasing Z when Y is high, and the other way around, this because when Y is increased Z will be decreased because it's a normalized vector.. Maybe use X to play around with and have 
+//				both multiplied by X or something? Also need to make movements around small numbers less noticable (think spotify volume level)
