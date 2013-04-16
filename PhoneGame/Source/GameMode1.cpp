@@ -213,14 +213,11 @@ void Game::PlayGameMode1()
 	}
 }
 
-
+// TODO:
 
 // Colorization of balls randomly.
-
 // Color overlay on the arrow for 1 sec after taking a ball.
-
-// Minimum gas speed
-
+// Minimum speed so u cant stand still
 // Turning less effective with lower speed
-
 // Not being able to instant change speed.
+// A couple of planets spread around randomly outside of spawnable area.
