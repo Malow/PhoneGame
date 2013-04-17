@@ -101,10 +101,17 @@ void Game::PlayGameMode2()
 
 		// Handle events such as network packets and client connections
 		this->HandleEvent(diff);
-
+	
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
 
+		iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
+		mBalls->UpdateBallParentMode(mPlatform);
+		mBalls->Update(diff);
+		Vector3 normalPlane;
+		if(pe->DoSpecialPhoneCollisionGame(mBalls, mPlatform, normalPlane, diff))
+			mBalls->collisionPlatformResponse(mPlatform, normalPlane, diff);
+		mBalls->UpdatePost();
 
 		if(this->networkController)
 		{

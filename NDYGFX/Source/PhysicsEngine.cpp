@@ -1864,16 +1864,292 @@ void PhysicsEngine::DoCollisionRayVsFBXMesh( Vector3 rayOrigin, Vector3 rayDirec
 
 
 #include "..\..\PhoneGame\Source\Map.h"
-
-void PhysicsEngine::DoSpecialPhoneCollisionGame(iMesh* ball, Map* map, Vector3& normal, float diff )
+#include "..\..\PhoneGame\Source\PowerBall.h"
+#include "..\..\PhoneGame\NDYGFX\Include\Vector.h"
+#include "..\..\PhoneGame\Source\Matrix4.h"
+bool RayTriIntersect(Vector3 origin, Vector3 direction, Vector3 p0, Vector3 p1, Vector3 p2, float &u, float &v, float &t)
 {
-	if(Mesh* mesh = dynamic_cast<Mesh*>(ball))
+	Vector3 e1, e2, q, s, r;
+	u = v = t = 0;
+	float a,f, eps = 0.00001f;
+	e1 = p1 - p0;
+	e2 = p2 - p0;
+	//q  = direction.GetCrossProduct(e2);
+	q  = e2.GetCrossProduct(direction);
+	a = e1.GetDotProduct(q);
+	if( a > - eps && a < eps)
+		return false;
+	f = 1/a;
+	s = origin - p0;
+	u = f*(s.GetDotProduct(q));
+	if( u < 0.0f)
+		return false;
+	//r = s.GetCrossProduct(e1);
+	r = e1.GetCrossProduct(s);
+	v = f*(direction.GetDotProduct(r));
+	if( v < 0.0f || u+v > 1.0f)
+		return false;
+	t = f*(e2.GetDotProduct(q));
+	return true;
+}
+bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vector3& normal, float diff )
+{
+	if(Mesh* mesh = dynamic_cast<Mesh*>(ball->GetMesh()))
+	{
+		MaloW::Array<MeshStrip*>* temp = dynamic_cast<Mesh*>(map->GetMesh())->GetStrips();
+	//int sizeMstrip = temp->size();
+	int sizeVertexS0 = temp->get(0)->getNrOfVerts();
+	Vertex* verts;
+	//Vector3 origin = this->GetPositionVector3();
+	Vector3 origin = ball->GetTempPosition();
+	Vector3 dir = ball->GetVelocity();
+	Vector3 dirN = dir/dir.GetLength();
+	verts = temp->get(0)->getVerts();
+	/*
+	for(int i = 0;i<sizeMstrip;i++)
 	{
 		
+	}
+	*/
+	Vector3 p0,p1,p2, normal, v1,v2;
+	float smalestTime = -1;
+	bool firstHit = false;
+	float u, v,t;
+	float lengthProjN = 0;
+	Vector3 p0Store, p1Store,p2Store, normalStore;
+	Vector3 pos = Vector3(map->GetMesh()->GetPosition());
+	Vector3 posS = ball->GetTempPosition();//this->GetPositionVector3();
+	Vector3 rayDirection;
+	Vector3 scalingMesh = map->GetMesh()->GetScaling();
+
+	Vector4 quat;
+	quat = map->GetMesh()->GetRotationQuaternion(); 
+	Matrix4 rotate;
+	rotate.SetElement(1, 0);
+	rotate.SetElement(1, 5);
+	rotate.SetElement(1, 10);
+
+	Matrix4 scaling;
+	scaling.SetScale(scalingMesh);
+
+	Matrix4 translate;
+	translate.SetTranslate(pos);
+	
+	Matrix4 world = translate*rotate*scaling;
+	
+	for(int i =0; i< sizeVertexS0; i+=3)
+	{
+		
+		/*
+		p0 = Vector3(verts[i].pos).GetComponentMultiplication(scalingMesh) + pos;
+		p1 = Vector3(verts[i+1].pos).GetComponentMultiplication(scalingMesh) +pos;
+		p2 = Vector3(verts[i+2].pos).GetComponentMultiplication(scalingMesh) + pos;
+		*/
+		p0 = world*Vector3(verts[i].pos.x, verts[i].pos.y, verts[i].pos.z);
+		p1 = world*Vector3(verts[i+1].pos.x, verts[i+1].pos.y, verts[i+1].pos.z);
+		p2 = world*Vector3(verts[i+2].pos.x, verts[i+2].pos.y, verts[i+2].pos.z);
+
+		v1 = p1-p0;
+		v2 = p2-p0;
+		rayDirection = v1.GetCrossProduct(v2);
+		rayDirection.Normalize();
+		float tempLength;
+		Vector3 ny;
+		Vector3 projN;
+		if(RayTriIntersect(origin , rayDirection, p0, p1, p2, u, v, t) )
+		{
+			normal = rayDirection;
+			ny = origin - p0;
+			projN = normal*ny.GetDotProduct(normal);
+			tempLength = projN.GetLength();
+			if(!firstHit)
+			{
+				firstHit = true;
+				smalestTime = t;
+				lengthProjN = tempLength;
+				p0Store = p0;
+				p1Store = p1;
+				p2Store = p2;
+				normalStore = normal;
+			}
+			else
+			{
+				if( tempLength < lengthProjN )
+				{
+					smalestTime = t;
+					lengthProjN = tempLength;
+					p0Store = p0;
+					p1Store = p1;
+					p2Store = p2;
+					normalStore = normal;
+				}
+			}			
+		}
+		// check agains all edges
+		Vector3 lineDirection;
+		float scalarProj;
+		Vector3 projOnLine;
+		Vector3 normalToLine;
+		// edge 1:
+		ny = origin - p0;
+		lineDirection = p1 - p0;
+		scalarProj = (ny.GetDotProduct(lineDirection)/lineDirection.GetLengthSquared());
+		projOnLine = lineDirection * scalarProj;
+		if( (scalarProj >= 0.0f) && (scalarProj <= 1) )
+		{
+			normalToLine = ny - projOnLine;
+			tempLength = normalToLine.GetLength();
+			if(!firstHit)
+			{
+				firstHit = true;
+				lengthProjN = tempLength;
+				p0Store = p0;
+				p1Store = p1;
+				p2Store = p2;
+				normalStore = normalToLine;
+				normalStore.Normalize();
+			}
+			else
+			{
+				if( tempLength < lengthProjN )
+				{
+					lengthProjN = tempLength;
+					p0Store = p0;
+					p1Store = p1;
+					p2Store = p2;
+					normalStore = normalToLine;
+					normalStore.Normalize();
+				}
+			}	
+
+		}
+		// edge 2:
+		ny = origin - p1;
+		lineDirection = p2 - p1;
+		scalarProj = (ny.GetDotProduct(lineDirection)/lineDirection.GetLengthSquared());
+		projOnLine = lineDirection * scalarProj;
+		if( (scalarProj >= 0.0f) && (scalarProj <= 1) )
+		{
+			normalToLine = ny - projOnLine;
+			tempLength = normalToLine.GetLength();
+			if(!firstHit)
+			{
+				firstHit = true;
+				lengthProjN = tempLength;
+				p0Store = p0;
+				p1Store = p1;
+				p2Store = p2;
+				normalStore = normalToLine;
+				normalStore.Normalize();
+			}
+			else
+			{
+				if( tempLength < lengthProjN )
+				{
+					lengthProjN = tempLength;
+					p0Store = p0;
+					p1Store = p1;
+					p2Store = p2;
+					normalStore = normalToLine;
+					normalStore.Normalize();
+				}
+			}	
+
+		}
+		// edge 3:
+		ny = origin - p2;
+		lineDirection = p0 - p2;
+		scalarProj = (ny.GetDotProduct(lineDirection)/lineDirection.GetLengthSquared());
+		projOnLine = lineDirection * scalarProj;
+		if( (scalarProj >= 0.0f) && (scalarProj <= 1) )
+		{
+			normalToLine = ny - projOnLine;
+			tempLength = normalToLine.GetLength();
+			if(!firstHit)
+			{
+				firstHit = true;
+				lengthProjN = tempLength;
+				p0Store = p0;
+				p1Store = p1;
+				p2Store = p2;
+				normalStore = normalToLine;
+				normalStore.Normalize();
+			}
+			else
+			{
+				if( tempLength < lengthProjN )
+				{
+					lengthProjN = tempLength;
+					p0Store = p0;
+					p1Store = p1;
+					p2Store = p2;
+					normalStore = normal;
+				}
+			}	
+
+		}
+	}
+	if(firstHit)
+	{
+		// for checking if the ball are in the air not turned on at the moment, 
+		float eps = 0.5f; //0.001
+		if( (lengthProjN < (ball->GetRadius() + eps)) && (lengthProjN > (ball->GetRadius()  - eps)) )
+		{
+			ball->SetNormalContact(normalStore);
+			ball->SetHasContact(true);
+		}
+		else 
+		{
+			ball->SetNormalContact(normalStore);
+			ball->SetHasContact(false);
+		}
+
+		if( lengthProjN <= ball->GetRadius() )
+		{
+			Vector3 velNorm = ball->GetVelocity();
+			velNorm.Normalize();
+			
+			if(normalStore.GetDotProduct(velNorm) >=0)
+				return false;
+	
+			float diff = abs(lengthProjN-ball->GetRadius());
+			
+			//Vector3 newPo = origin -dirN*diff;
+			//Vector3 projVel = normalStore * this->mVelocity.GetDotProduct(normalStore);
+			Vector3 newPo = origin + normalStore*diff;
+			/*
+			if( projVel.GetDotProduct(normalStore) < 0.0f)
+			{
+				newPo = origin - normalStore*diff;
+				return false;
+			}
+			else
+				newPo = origin + normalStore*diff;
+			*/
+			
+			//this->SetPosition(newPo);
+			ball->SetTempPosition(newPo);
+			normal = normalStore;
+			//this->mNormalContact = normalPlane;
+			//this->mHasContact  = true;
+			return true;
+		}
+		else
+		{
+			normal = Vector3(0,0,0);
+			//this->mNormalContact = normalPlane;
+			//this->mHasContact  = false;
+			return false;
+		}
+		
+	}
+	normal = Vector3(0,0,0);
+	ball->SetNormalContact(normal);
+	//this->mHasContact  = false;
+	return false;
 	}
 	else
 	{
 		MaloW::Debug("LOLWTFPHONEGAME GO HOME UR DRONK");
 	}
 }
-
