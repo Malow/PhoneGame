@@ -1,7 +1,13 @@
 #include "Game.h"
 
 #define SPEED_MULTIPLIER 0.0005f
+#define SPEED_CHANGE_MUTLIPLIER 0.01f
+#define MINIMUM_SPEED 10.0f
+#define MAXIMUM_SPEED 100.0f
 
+//////////////////////////////////////////////////////////////////////////
+///////////////////Rotate vector around other vector//////////////////////
+//////////////////////////////////////////////////////////////////////////
 float t(float angle)
 {
 	return 1-(float)cos((double)angle);
@@ -72,6 +78,24 @@ void RotateVectorAroundVector(Vector3& vector, Vector3& axis, float angle)
 	vector.y = b1(angle, axis, tr, sin) * vector.x + b2(angle, axis, tr, cos) * vector.y + b3(angle, axis, tr, sin) * vector.z;
 	vector.z = c1(angle, axis, tr, sin) * vector.x + c2(angle, axis, tr, sin) * vector.y + c3(angle, axis, tr, cos) * vector.z; 
 }
+//////////////////////////////////////////////////////////////////////////
+
+#define star_POS_COUNT 10
+static const Vector3 starPos[star_POS_COUNT] = 
+{
+	Vector3(-16, 17, -9),
+	Vector3(-26, 10, -50),
+	Vector3(12, 8, 28),
+	Vector3(-5, -45, 14),
+	Vector3(11, -23, 31),
+	Vector3(-8, 45, 41),
+	Vector3(41, -14, -23),
+	Vector3(3, -48, -46),
+	Vector3(-29, 32, 42),
+	Vector3(45, -32, -34)
+};
+
+
 
 void Game::PlayGameMode1()
 {
@@ -99,21 +123,31 @@ void Game::PlayGameMode1()
 
 	Vector3 ourDir = Vector3(1, 0, 0);
 	Vector3 ourUp = Vector3(0, 1, 0);
+	float targetSpeed = 50.0f;
 	float speed = 50.0f;
 
 	Vector3 defaultDir = Vector3(1, 0, 0);
 	Vector3 phoneDir = Vector3(0.9f, 0, 0.2f);
 	phoneDir.Normalize();
 
-	iMesh* creep = GetGraphics()->CreateMesh("Media/Creep.obj", Vector3(50, 20, 50));
+	iMesh* star = GetGraphics()->CreateMesh("Media/Star1.obj", Vector3(50, 20, 50));
+	iBillboard* planetSun = GetGraphics()->CreateBillboard(Vector3(300, 0, 0), Vector2(100.0f, 100.0f), Vector3(1, 1, 1), "Media/planet_sun.png");
+	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-300, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
+	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 300), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
+	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -300), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
 
-	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 20), 1.0f, "Media/fonts/new");
-	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 50), 1.0f, "Media/fonts/new");
-	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 80), 1.0f, "Media/fonts/new");
+	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
+	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
+	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
+	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
 	iImage* guiCockpit = GetGraphics()->CreateImage(Vector2(0, GetGraphics()->GetEngineParameters().WindowHeight * 0.1f), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/cockpit.png");
+	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
+	guiStar->SetOpacity(0.0f);
+	float starTimer = 0.0f;
 
 	bool go = true;
+	int starcolor = 2;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
@@ -150,12 +184,14 @@ void Game::PlayGameMode1()
 			RotateVectorAroundVector(ourUp, ourDir, -diff * 0.001f);
 		}
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
-			speed += diff * 0.01f;
+			speed += diff * SPEED_CHANGE_MUTLIPLIER;
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT))
-			speed -= diff * 0.01f;
+			speed -= diff * SPEED_CHANGE_MUTLIPLIER;
+
 
 		// print speed text.
 		speedTxt->SetText(string("SPEED: " + MaloW::convertNrToString(speed)).c_str());
+	
 
 		// Handle phone inputs
 		if(this->networkController)
@@ -165,36 +201,84 @@ void Game::PlayGameMode1()
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(1, 0, 0);
 
-			speed = this->networkController->speed;
-			if(speed == 0.0f)
-				speed = 50.0f;
+			// Make it so that u dont have to turn the phone completely for it to give full effect:
+			// Algorithm needed here to make
+			phoneDir *= 2;
+			if(phoneDir.z > 1.0f)
+				phoneDir.z = 1.0f;
+			if(phoneDir.z < -1.0f)
+				phoneDir.z = -1.0f;
+			if(phoneDir.y > 1.0f)
+				phoneDir.y = 1.0f;
+			if(phoneDir.y < -1.0f)
+				phoneDir.y = -1.0f;
+
+			// min / max: 10 / 100: speed: 10 -> min(10) + input(10) * range(0.9) = 19
+			targetSpeed = MINIMUM_SPEED + this->networkController->speed * ((MAXIMUM_SPEED - MINIMUM_SPEED) * 0.01f);
 			
+			if(targetSpeed < MINIMUM_SPEED)
+				targetSpeed = MINIMUM_SPEED;
+			if(targetSpeed > MAXIMUM_SPEED)
+				targetSpeed = MAXIMUM_SPEED;
+
+			targetSpeedTxt->SetText(string("TARGETSPEED: " + MaloW::convertNrToString(targetSpeed)).c_str());
 
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
-			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * 0.001f);
+			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * diff * 0.001f);
 			ourUp = cross.GetCrossProduct(ourDir);
 			
-			RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * 0.001f);
+			RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * diff * 0.001f);
+
+			// Apply phone's targetspeed to speed
+			if(targetSpeed > speed)
+			{
+				speed += diff * SPEED_CHANGE_MUTLIPLIER;
+				if(speed > targetSpeed)
+					speed = targetSpeed;
+			}
+			if(targetSpeed < speed)
+			{
+				speed -= diff * SPEED_CHANGE_MUTLIPLIER;
+				if(speed < targetSpeed)
+					speed = targetSpeed;
+			}
 		}
+
+		if(speed < MINIMUM_SPEED)
+			speed = MINIMUM_SPEED;
+
+		if(speed > MAXIMUM_SPEED)
+			speed = MAXIMUM_SPEED;
 
 
 		// Handle game objectives
 		if(started)
 			time += diff * 0.001f;
-		if((GetGraphics()->GetCamera()->GetPosition() - creep->GetPosition()).GetLength() < 2.5f)
+		if((GetGraphics()->GetCamera()->GetPosition() - star->GetPosition()).GetLength() < 3.0f)
 		{
-			creep->SetPosition(Vector3(rand()%100 - 50, rand()%100 - 50, rand()%100 - 50));
+			GetGraphics()->DeleteMesh(star);
+			star = GetGraphics()->CreateMesh(string("Media/Star" + MaloW::convertNrToString(starcolor++) + ".obj").c_str(), starPos[score%star_POS_COUNT]);
+
+			if(starcolor > 3)
+				starcolor = 1;
+
 			if(score == 0)
 				started = true;
 			score++;
+
+			starTimer = 2.0f;
 		}
 		// print score and time text.
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
-
+		starTimer -= diff * 0.001f;
+		if(starTimer < 0.0f)
+			starTimer = 0.0f;
+		guiStar->SetOpacity(starTimer);
+		star->Rotate(Vector3(diff, diff, diff) * 0.002f);
 
 		// Update arrow pointing towards next game objective
-		Vector3 VecToObjective =  creep->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
+		Vector3 VecToObjective =  star->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
 		arrow->SetPosition(GetGraphics()->GetCamera()->GetPosition() + ourDir * 2 + ourUp);
 		arrow->ResetRotation();
 		Vector3 vec = Vector3(0, -1, 0);
@@ -213,14 +297,10 @@ void Game::PlayGameMode1()
 	}
 }
 
+// TODO:
 
-
-// Colorization of balls randomly.
-
-// Color overlay on the arrow for 1 sec after taking a ball.
-
-// Minimum gas speed
-
-// Turning less effective with lower speed
-
-// Not being able to instant change speed.
+// Turning less effective with lower speed -> Test before doing this.
+// A couple of planets spread around randomly outside of spawnable area.
+// TargetSpeedText: cast as int etc. maybe to avoid the text for spazzing.
+// Add algortihm for increasing Z when Y is high, and the other way around, this because when Y is increased Z will be decreased because it's a normalized vector.. Maybe use X to play around with and have 
+//				both multiplied by X or something? Also need to make movements around small numbers less noticable (think spotify volume level)
