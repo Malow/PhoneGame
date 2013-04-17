@@ -5,6 +5,7 @@
 Game::Game()
 {
 	this->networkController = NULL;
+	this->gameMode = -1;
 }
 
 Game::~Game()
@@ -24,18 +25,63 @@ void Game::NewNetworkClient( MaloW::ClientChannel* cc )
 	this->PutEvent(nnce);
 }
 
-void Game::Play(int mode)
+void Game::Play()
 {
-	switch (mode)
-	{
-	case 1:
-		this->PlayGameMode1();
-	  break;
-	case 2:
-		this->PlayGameMode2();
-		break;
-	default:
-		break;
+	bool play = true;
+	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
+	GetGraphics()->StartRendering();
+	while(play)
+	{	
+		float diff = GetGraphics()->Update();
+		if(GetGraphics()->GetKeyListener()->IsPressed('1'))
+			this->gameMode = 1;
+		if(GetGraphics()->GetKeyListener()->IsPressed('2'))
+			this->gameMode = 2;
+
+		switch (this->gameMode)
+		{
+			// Phone has sent -2 which means quit.
+		case -2:
+			play = false;
+			break;
+
+			// -1 means that keep looping like 0 but that it's the first loop so send msg to phone that it should choose mode.
+		case -1:
+			if(this->networkController)
+			{
+				this->networkController->cc->sendData("CHOOSE GAMEMODE");
+				this->gameMode = 0;
+			}
+			break;
+
+			// 0 is default and means keep looping waiting for input from phone.
+		case 0:
+			this->HandleEvent(diff);
+			break;
+
+			// 1 is play game mode 1.
+		case 1:
+			gameModeImage->SetOpacity(0.0f);
+			this->PlayGameMode1();
+			this->gameMode = -1;
+			gameModeImage->SetOpacity(1.0f);
+			break;
+
+			// 2 is play game mode 2.
+		case 2:
+			gameModeImage->SetOpacity(0.0f);
+			this->PlayGameMode2();
+			this->gameMode = -1;
+			gameModeImage->SetOpacity(1.0f);
+			break;
+		default:
+			break;
+		}
+
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
+			play = false;
+
+		Sleep(2);
 	}
 }
 
@@ -77,6 +123,13 @@ void Game::HandleEvent(float diff)
 				msg = msg.substr(4);
 				float spd = atof(msg.c_str());
 				this->networkController->speed = spd;
+			}
+
+			// Gamemode change
+			if(msg.substr(0, 3) == "GAM")
+			{
+				msg = msg.substr(4);
+				this->gameMode = atoi(msg.c_str());
 			}
 
 			// Ping request

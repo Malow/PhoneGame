@@ -61,6 +61,7 @@ class Game : public MaloW::Process
 {
 private:
 	NetworkController* networkController;
+	int gameMode;
 
 	void HandleEvent(float diff);
 	void PlayGameMode1();
@@ -72,6 +73,6 @@ public:
 
 	void NewNetworkClient(MaloW::ClientChannel* cc);
 	void Life() { };
-	void Play(int mode);
+	void Play();
 };
 
