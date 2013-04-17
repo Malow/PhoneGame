@@ -2,6 +2,7 @@
 #include "Matrix3.h"
 #include "Matrix4.h"
 #include "Quaternion.h"
+#include "Graphics.h"
 
 using namespace std;
 
@@ -178,4 +179,19 @@ void Map::Reset()
 void Map::RotateAxis( Vector3 vec, float angle )
 {
 
+}
+
+void Map::SetScale( Vector3 scale )
+{
+	this->mMesh->Scale(scale);
+}
+
+void Map::ResetXZAngles()
+{
+	this->mAngleX = this->mAngleZ = 0.0f; if(this->mMesh) this->mMesh->ResetRotation();
+}
+
+Vector3 Map::GetScale() const
+{
+	return Vector3(this->mMesh->GetScaling());
 }
