@@ -104,8 +104,6 @@ void Game::PlayGameMode1()
 	int score = 0;
 	bool started = false;
 
-
-
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->CreateSkyBox("Media/StarMap.dds"); 
 	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
@@ -116,7 +114,7 @@ void Game::PlayGameMode1()
 	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
 	model->Scale(1.0f * 0.05f);
 
-	iMesh* arrow = GetGraphics()->CreateMesh("Media/RedArrow.obj", Vector3(10, 20, 15));
+	iMesh* arrow = GetGraphics()->CreateMesh("Media/RedArrow.obj", Vector3(10, 2000, 15));
 
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -135,6 +133,8 @@ void Game::PlayGameMode1()
 	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-400, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
 	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 400), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
 	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -400), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
+	iBillboard* planetNeptune = GetGraphics()->CreateBillboard(Vector3(0, 400, 0), Vector2(40.0f, 40.0f), Vector3(1, 1, 1), "Media/planet_neptune.png");
+	iBillboard* planetNebula = GetGraphics()->CreateBillboard(Vector3(0, -400, 0), Vector2(60.0f, 60.0f), Vector3(1, 1, 1), "Media/planet_nebula.png");
 
 	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
 	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
@@ -288,7 +288,7 @@ void Game::PlayGameMode1()
 			GetGraphics()->DeleteMesh(star);
 			star = GetGraphics()->CreateMesh(string("Media/Star" + MaloW::convertNrToString(starcolor++) + ".obj").c_str(), starPos[score%star_POS_COUNT]);
 
-			if(starcolor > 3)
+			if(starcolor > 2)
 				starcolor = 1;
 
 			if(score == 0)
@@ -299,7 +299,7 @@ void Game::PlayGameMode1()
 		}
 		// print score and time text.
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
-		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
+		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString((int)time)).c_str());
 		starTimer -= diff * 0.001f;
 		if(starTimer < 0.0f)
 			starTimer = 0.0f;
@@ -308,7 +308,8 @@ void Game::PlayGameMode1()
 
 		// Update arrow pointing towards next game objective
 		Vector3 VecToObjective =  star->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
-		arrow->SetPosition(GetGraphics()->GetCamera()->GetPosition() + ourDir * 2 + ourUp);
+		GetGraphics()->GetCamera()->SetMesh(arrow, Vector3(ourDir * -2 - ourUp));
+		//arrow->SetPosition(GetGraphics()->GetCamera()->GetPosition() + ourDir * 2 + ourUp);
 		arrow->ResetRotation();
 		Vector3 vec = Vector3(0, -1, 0);
 		Vector3 around = vec.GetCrossProduct(VecToObjective);
@@ -324,9 +325,33 @@ void Game::PlayGameMode1()
 		GetGraphics()->GetCamera()->SetForward(ourDir);
 		GetGraphics()->GetCamera()->SetUpVector(ourUp);
 	}
+
+
+	GetGraphics()->GetCamera()->RemoveMesh();
+
+	// Delete all stuff
+	GetGraphics()->DeleteMesh(model);
+	GetGraphics()->DeleteMesh(arrow);
+	GetGraphics()->DeleteMesh(star);
+
+	GetGraphics()->DeleteBillboard(planetSun);
+	GetGraphics()->DeleteBillboard(planetMercury);
+	GetGraphics()->DeleteBillboard(planetVenus);
+	GetGraphics()->DeleteBillboard(planetJupiter);
+	GetGraphics()->DeleteBillboard(planetNeptune);
+	GetGraphics()->DeleteBillboard(planetNebula);
+
+	GetGraphics()->DeleteText(targetSpeedTxt);
+	GetGraphics()->DeleteText(speedTxt);
+	GetGraphics()->DeleteText(timeTxt);
+	GetGraphics()->DeleteText(scoreTxt);
+	GetGraphics()->DeleteText(phoneDirTxtX);
+	GetGraphics()->DeleteText(phoneDirTxtY);
+	GetGraphics()->DeleteText(phoneDirTxtZ);
+
+	GetGraphics()->DeleteImage(guiCockpit);
+	GetGraphics()->DeleteImage(guiStar);
 }
 
 // TODO:
-
 // Turning less effective with lower speed -> Test before doing this.
-// A couple of planets spread around randomly outside of spawnable area.

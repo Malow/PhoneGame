@@ -10,6 +10,11 @@
 
 int __stdcall wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
 {
+	// Start networkserver first.
+	Game* game = new Game();
+	ConnectionListener* cl = new ConnectionListener(10000, game);
+	cl->Start();
+
 	MaloW::ClearDebug();
 	if ( !GraphicsInit(hInstance) )
 		MaloW::Debug("Failed Creating Graphics Engine!");
@@ -20,12 +25,8 @@ int __stdcall wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
 	MaloW::Debug("(DEBUG): ModelViewer: vld.h included.");
 #endif
 #endif
-
-	Game* game = new Game();
-	ConnectionListener* cl = new ConnectionListener(10000, game);
-	cl->Start();
 	
-	game->Play(2);
+	game->Play();
 
 	game->Close(); 
 	cl->Close();

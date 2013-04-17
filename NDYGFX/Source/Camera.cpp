@@ -145,6 +145,7 @@ void Camera::MoveFollowingMesh()
 
 
 		//Rotate Mesh
+		/*
 		Vector3 camDir = this->GetForward();
 		Vector3 around = Vector3(0,1,0);
 		float angle;
@@ -162,6 +163,7 @@ void Camera::MoveFollowingMesh()
 
 		this->followTarget->ResetRotation();
 		this->followTarget->RotateAxis(around, angle);
+		*/
 	}
 }
 
