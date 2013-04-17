@@ -99,6 +99,8 @@
     <ClInclude Include="Source\Windows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\PhoneGame\Source\Matrix3.cpp" />
+    <ClCompile Include="..\PhoneGame\Source\Matrix4.cpp" />
     <ClCompile Include="Source\AnimatedMesh.cpp" />
     <ClCompile Include="Source\Billboard.cpp" />
     <ClCompile Include="Source\BillboardCollection.cpp" />
