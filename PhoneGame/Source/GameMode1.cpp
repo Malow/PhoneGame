@@ -131,15 +131,18 @@ void Game::PlayGameMode1()
 	phoneDir.Normalize();
 
 	iMesh* star = GetGraphics()->CreateMesh("Media/Star1.obj", Vector3(50, 20, 50));
-	iBillboard* planetSun = GetGraphics()->CreateBillboard(Vector3(300, 0, 0), Vector2(100.0f, 100.0f), Vector3(1, 1, 1), "Media/planet_sun.png");
-	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-300, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
-	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 300), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
-	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -300), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
+	iBillboard* planetSun = GetGraphics()->CreateBillboard(Vector3(400, 0, 0), Vector2(100.0f, 100.0f), Vector3(1, 1, 1), "Media/planet_sun.png");
+	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-400, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
+	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 400), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
+	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -400), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
 
 	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
 	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
+	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 150), 1.0f, "Media/fonts/new");
+	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 180), 1.0f, "Media/fonts/new");
+	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 210), 1.0f, "Media/fonts/new");
 
 	iImage* guiCockpit = GetGraphics()->CreateImage(Vector2(0, GetGraphics()->GetEngineParameters().WindowHeight * 0.1f), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/cockpit.png");
 	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
@@ -190,7 +193,7 @@ void Game::PlayGameMode1()
 
 
 		// print speed text.
-		speedTxt->SetText(string("SPEED: " + MaloW::convertNrToString(speed)).c_str());
+		speedTxt->SetText(string("SPEED: " + MaloW::convertNrToString((int)speed)).c_str());
 	
 
 		// Handle phone inputs
@@ -201,9 +204,30 @@ void Game::PlayGameMode1()
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(1, 0, 0);
 
+			//////////////////////////////////////////////////////////////////////////
 			// Make it so that u dont have to turn the phone completely for it to give full effect:
-			// Algorithm needed here to make
-			phoneDir *= 2;
+			// Add algortihm for increasing Z when Y is high, and the other way around, this because when Y is increased Z 
+			//      will be decreased because it's a normalized vector.. Maybe use X to play around with and have 
+			//				both multiplied by X or something? Also need to make movements around small numbers less noticable (think spotify volume level)
+
+			// Divide by X. The higher Z and Y is the smaller X will be = the bigger Z and Y will be. Should mean that if u keep Z steady turned but turn Y more, both Z and X should get 
+			// redcued due to normalized vector, and then Z and Y gets increased due to divided by a smaller X.
+			phoneDir.z /= abs(phoneDir.x);
+			phoneDir.y /= abs(phoneDir.x);
+
+			// The smaller the value is the smaller the turn will be, should give a nice non-linear acceleration like spotify. 
+			// right now 0.0 - 0.1 is increased non-linearly, and then linearly after that.
+			if(abs(phoneDir.y) < 0.1f)
+				phoneDir.y *= abs(phoneDir.y) * 10;
+
+			if(abs(phoneDir.z) < 0.1f)
+				phoneDir.z *= abs(phoneDir.z) * 10;
+
+			// Double the value to increase the sens so u dont have to turn the phone completely for full effect.
+			phoneDir.y *= 2;
+			phoneDir.z *= 2;
+
+			// Limit values to -1.0 - 1.0
 			if(phoneDir.z > 1.0f)
 				phoneDir.z = 1.0f;
 			if(phoneDir.z < -1.0f)
@@ -213,6 +237,11 @@ void Game::PlayGameMode1()
 			if(phoneDir.y < -1.0f)
 				phoneDir.y = -1.0f;
 
+			phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneDir.x)).c_str());
+			phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneDir.y)).c_str());
+			phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneDir.z)).c_str());
+			//////////////////////////////////////////////////////////////////////////
+
 			// min / max: 10 / 100: speed: 10 -> min(10) + input(10) * range(0.9) = 19
 			targetSpeed = MINIMUM_SPEED + this->networkController->speed * ((MAXIMUM_SPEED - MINIMUM_SPEED) * 0.01f);
 			
@@ -221,7 +250,7 @@ void Game::PlayGameMode1()
 			if(targetSpeed > MAXIMUM_SPEED)
 				targetSpeed = MAXIMUM_SPEED;
 
-			targetSpeedTxt->SetText(string("TARGETSPEED: " + MaloW::convertNrToString(targetSpeed)).c_str());
+			targetSpeedTxt->SetText(string("TARGETSPEED: " + MaloW::convertNrToString((int)targetSpeed)).c_str());
 
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
 			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * diff * 0.001f);
@@ -301,6 +330,3 @@ void Game::PlayGameMode1()
 
 // Turning less effective with lower speed -> Test before doing this.
 // A couple of planets spread around randomly outside of spawnable area.
-// TargetSpeedText: cast as int etc. maybe to avoid the text for spazzing.
-// Add algortihm for increasing Z when Y is high, and the other way around, this because when Y is increased Z will be decreased because it's a normalized vector.. Maybe use X to play around with and have 
-//				both multiplied by X or something? Also need to make movements around small numbers less noticable (think spotify volume level)
