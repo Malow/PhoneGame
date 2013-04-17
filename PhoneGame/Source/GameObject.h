@@ -7,13 +7,13 @@
 *
 **/
 
-#include "Graphics.h"
+#include "Vector.h"
 
 class GameObject
 {
 	protected:
-			iMesh*	mMesh;
-			Vector3	mStartPosition;
+			class iMesh* mMesh;
+			Vector3 mStartPosition;
 	public:
 			GameObject();
 			virtual ~GameObject();
@@ -25,7 +25,7 @@ class GameObject
 			Vector3 GetPositionVector3() const;
 
 			/*! Returns the mesh of the game object. */
-			iMesh* GetMesh() const;
+			class iMesh* GetMesh() const;
 		
 			/*! Sets the position of the game object in world space. */
 			void SetPosition(const Vector3 position);
@@ -37,6 +37,6 @@ class GameObject
 			virtual void SetToStartPosition() = 0;
 
 			/*! Sets the mesh of the game object. */
-			void SetMesh(iMesh* mesh);
+			void SetMesh(class iMesh* mesh);
 
 };

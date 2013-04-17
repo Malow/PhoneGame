@@ -1861,3 +1861,19 @@ void PhysicsEngine::DoCollisionRayVsFBXMesh( Vector3 rayOrigin, Vector3 rayDirec
 	}
 }
 
+
+
+#include "..\..\PhoneGame\Source\Map.h"
+
+void PhysicsEngine::DoSpecialPhoneCollisionGame(iMesh* ball, Map* map, Vector3& normal, float diff )
+{
+	if(Mesh* mesh = dynamic_cast<Mesh*>(ball))
+	{
+		
+	}
+	else
+	{
+		MaloW::Debug("LOLWTFPHONEGAME GO HOME UR DRONK");
+	}
+}
+

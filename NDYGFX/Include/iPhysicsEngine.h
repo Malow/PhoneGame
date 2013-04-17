@@ -10,6 +10,7 @@
 #include "iMesh.h"
 #include "iTerrain.h"
 
+
 extern "C"
 {
 	struct DECLDIR CollisionData
@@ -66,5 +67,8 @@ extern "C"
 		virtual CollisionData GetCollisionBoundingOnly(Vector3 rayOrigin, Vector3 rayDirection, iTerrain* iterr) = 0;
 		virtual CollisionData GetCollisionBoundingOnly(iMesh* mesh1, iMesh* mesh2) = 0;
 		virtual CollisionData GetCollisionBoundingOnly(iMesh* mesh, iTerrain* terr) = 0;
+
+
+		virtual void DoSpecialPhoneCollisionGame(iMesh* ball, class Map* map, Vector3& normal, float diff) = 0;
 	};
 }

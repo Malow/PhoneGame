@@ -1,5 +1,6 @@
 #include "PowerBall.h"
 #include "Map.h"
+#include "Graphics.h"
 
 /*
 string convertInt(int number)
@@ -1167,4 +1168,9 @@ void PowerBall::AddForceRightOfForwardDirection(float dt)
 	/*
 	if(this->mHasContact && this->mSteering)
 		this->AddForce(this->mForward.GetRoteted(PI/2.0f) * dt); */
+}
+
+void PowerBall::UseInvisibilityEffect( bool use )
+{
+	this->mMesh->UseInvisibilityEffect(use);
 }

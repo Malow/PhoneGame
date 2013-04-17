@@ -316,7 +316,7 @@ class PowerBall : public GameObject
 			//void SetTransparency(float transparency) { this->mMesh->SetTransparency(transparency); }
 
 			/*! Set ball to use invisibility effect or not. */
-			void UseInvisibilityEffect(bool use) { this->mMesh->UseInvisibilityEffect(use); }
+			void UseInvisibilityEffect(bool use);
 
 			
 };

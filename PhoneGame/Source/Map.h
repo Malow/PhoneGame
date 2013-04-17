@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "string"
 #include "Matrix3.h"
+#include "Vector.h"
 
 class Map : GameObject
 {
@@ -68,7 +69,7 @@ class Map : GameObject
 			float GetMaxTimeInHotZoneContinuously() const { return this->mMaxTimeInHotZoneContinuously; }
 
 			/*! Returns the scale of the platform. */
-			Vector3 GetScale() const { return Vector3(this->mMesh->GetScaling()); }
+			Vector3 GetScale() const;
 
 			/*! Returns the target angle for the x-axis. */
 			float GetTargetAngleX() const { return this->mTargetAngleX; }
@@ -118,7 +119,7 @@ class Map : GameObject
 			void Update(const float dt);
 	
 			/*! Sets the scaling of the platform. */
-			void SetScale(Vector3 scale) { this->mMesh->Scale(scale); }
+			void SetScale(Vector3 scale);
 
 			/*! Sets the target angle in x-axis- */
 			void SetTargetAngleX(float angleX) { this->mTargetAngleX = angleX; }
@@ -151,7 +152,7 @@ class Map : GameObject
 			void ResetHotZone() { this->mTimeInHotZoneContinuously = 0.0f; } 
 
 			/*! Resets the rotation angles for x-axis and z-axis. */
-			void ResetXZAngles() { this->mAngleX = this->mAngleZ = 0.0f; if(this->mMesh) this->mMesh->ResetRotation(); }
+			void ResetXZAngles();
 
 			/*! Rotates the mesh around the x-axis. */
 			void RotateX(float dt);
