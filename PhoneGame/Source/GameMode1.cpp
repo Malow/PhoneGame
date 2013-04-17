@@ -133,6 +133,8 @@ void Game::PlayGameMode1()
 	iBillboard* planetMercury = GetGraphics()->CreateBillboard(Vector3(-400, 0, 0), Vector2(50.0f, 50.0f), Vector3(1, 1, 1), "Media/planet_mercury.png");
 	iBillboard* planetVenus = GetGraphics()->CreateBillboard(Vector3(0, 0, 400), Vector2(25.0f, 25.0f), Vector3(1, 1, 1), "Media/planet_venus.png");
 	iBillboard* planetJupiter = GetGraphics()->CreateBillboard(Vector3(0, 0, -400), Vector2(75.0f, 75.0f), Vector3(1, 1, 1), "Media/planet_jupiter.png");
+	iBillboard* planetNeptune = GetGraphics()->CreateBillboard(Vector3(0, 400, 0), Vector2(40.0f, 40.0f), Vector3(1, 1, 1), "Media/planet_neptune.png");
+	iBillboard* planetNebula = GetGraphics()->CreateBillboard(Vector3(0, -400, 0), Vector2(60.0f, 60.0f), Vector3(1, 1, 1), "Media/planet_nebula.png");
 
 	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
 	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
@@ -336,6 +338,8 @@ void Game::PlayGameMode1()
 	GetGraphics()->DeleteBillboard(planetMercury);
 	GetGraphics()->DeleteBillboard(planetVenus);
 	GetGraphics()->DeleteBillboard(planetJupiter);
+	GetGraphics()->DeleteBillboard(planetNeptune);
+	GetGraphics()->DeleteBillboard(planetNebula);
 
 	GetGraphics()->DeleteText(targetSpeedTxt);
 	GetGraphics()->DeleteText(speedTxt);
@@ -350,6 +354,4 @@ void Game::PlayGameMode1()
 }
 
 // TODO:
-
 // Turning less effective with lower speed -> Test before doing this.
-// A couple of planets spread around randomly outside of spawnable area.

@@ -27,6 +27,7 @@ void Game::NewNetworkClient( MaloW::ClientChannel* cc )
 
 void Game::Play()
 {
+	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	bool play = true;
 	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
 	GetGraphics()->StartRendering();
