@@ -31,6 +31,9 @@ void Game::Play(int mode)
 	case 1:
 		this->PlayGameMode1();
 	  break;
+	case 2:
+		this->PlayGameMode2();
+		break;
 	default:
 		break;
 	}

@@ -13,16 +13,26 @@
   <ItemGroup>
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameMode1.cpp" />
+    <ClCompile Include="Source\GameMode2.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\MaloWLib\ClientChannel.cpp" />
     <ClCompile Include="Source\MaloWLib\NetworkServer.cpp" />
     <ClCompile Include="Source\MaloWLib\Process.cpp" />
     <ClCompile Include="Source\MaloWLib\ServerChannel.cpp" />
+    <ClCompile Include="Source\Map.cpp" />
+    <ClCompile Include="Source\Matrix3.cpp" />
+    <ClCompile Include="Source\Matrix4.cpp" />
+    <ClCompile Include="Source\MeshStrip.cpp" />
     <ClCompile Include="Source\PhoneGame.cpp" />
+    <ClCompile Include="Source\PowerBall.cpp" />
+    <ClCompile Include="Source\Quaternion.cpp" />
+    <ClCompile Include="Source\RigidBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ConnectionListener.h" />
     <ClInclude Include="Source\Game.h" />
+    <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\Graphics.h" />
     <ClInclude Include="Source\MaloW.h" />
     <ClInclude Include="Source\MaloWLib\Array.h" />
@@ -36,6 +46,14 @@
     <ClInclude Include="Source\MaloWLib\Queue.h" />
     <ClInclude Include="Source\MaloWLib\ServerChannel.h" />
     <ClInclude Include="Source\MaloWLib\Winsock.h" />
+    <ClInclude Include="Source\Map.h" />
+    <ClInclude Include="Source\Matrix3.h" />
+    <ClInclude Include="Source\Matrix4.h" />
+    <ClInclude Include="Source\MeshStrip.h" />
+    <ClInclude Include="Source\PowerBall.h" />
+    <ClInclude Include="Source\Quaternion.h" />
+    <ClInclude Include="Source\RigidBody.h" />
+    <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\Windows.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

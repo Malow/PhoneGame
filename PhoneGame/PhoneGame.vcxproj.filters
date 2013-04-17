@@ -8,6 +8,9 @@
     <Filter Include="Source Files\MaloWLib">
       <UniqueIdentifier>{66f6eae5-b2e7-418b-a0d7-625263013829}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameMode2 files">
+      <UniqueIdentifier>{4fc1c213-774a-4e6d-bfde-ff8d1e934dc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Graphics.cpp">
@@ -33,6 +36,33 @@
     </ClCompile>
     <ClCompile Include="Source\GameMode1.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameMode2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Matrix3.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Matrix4.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshStrip.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PowerBall.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Quaternion.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RigidBody.cpp">
+      <Filter>Source Files\GameMode2 files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +113,33 @@
     </ClInclude>
     <ClInclude Include="Source\Game.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObject.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix3.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Matrix4.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshStrip.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PowerBall.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Quaternion.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RigidBody.h">
+      <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Source Files\GameMode2 files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

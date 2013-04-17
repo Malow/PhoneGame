@@ -25,7 +25,7 @@ int __stdcall wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
 	ConnectionListener* cl = new ConnectionListener(10000, game);
 	cl->Start();
 	
-	game->Play(1);
+	game->Play(2);
 
 	game->Close(); 
 	cl->Close();

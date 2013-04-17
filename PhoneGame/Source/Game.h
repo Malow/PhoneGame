@@ -64,6 +64,7 @@ private:
 
 	void HandleEvent(float diff);
 	void PlayGameMode1();
+	void PlayGameMode2();
 
 public:
 	Game();
