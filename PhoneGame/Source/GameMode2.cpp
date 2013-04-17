@@ -3,6 +3,21 @@
 #include "PowerBall.h"
 
 #define PI 3.1415
+#define NROFPREV 100
+float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[])
+{
+	float totAngles = 0;
+	for(int i = 0; i < NROFPREV; i++)
+	{
+		phoneDirr += prevVectors[i];
+		float dot = prevVectors[i].GetDotProduct(DefaultDir);
+		float angles = acos(dot);
+		totAngles += angles;
+	}
+	phoneDirr /= NROFPREV;
+	phoneDirr.Normalize();
+	return totAngles / NROFPREV;
+}
 
 void Game::PlayGameMode2()
 {
@@ -50,7 +65,14 @@ void Game::PlayGameMode2()
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
 	bool go = true;
-	const Vector3 DefaultDir = Vector3(0.0f, 0.0f, 1.0f);
+	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);
+	int currentPrev = 0;
+	Vector3 prevVectors[NROFPREV];
+	for(int i = 0; i < NROFPREV; i++)
+	{
+		prevVectors[i] = DefaultDir;
+	}
+
 	while(GetGraphics()->IsRunning() && go)
 	{
 		if(mGe->GetKeyListener()->IsPressed('1'))
@@ -86,18 +108,22 @@ void Game::PlayGameMode2()
 
 		if(this->networkController)
 		{
-			//Vector3 phoneDirr = Vector3(this->networkController->direction.y,-this->networkController->direction.z,this->networkController->direction.x);
-			Vector3 phoneDirr = this->networkController->direction;
+			Vector3 phoneDirr = Vector3(this->networkController->direction.y, this->networkController->direction.z, -this->networkController->direction.x);
+			//Vector3 phoneDirr = this->networkController->direction;
 			phoneDirr.Normalize();
-			float dot = phoneDirr.GetDotProduct(DefaultDir);
-			acos(dot);
-			Vector3 vecX = Vector3(phoneDirr.x, phoneDirr.y, phoneDirr.z);
-			mPlatform->ResetXZAngles();
+			prevVectors[currentPrev] = phoneDirr;
+			currentPrev++;
+			if(currentPrev >= NROFPREV)
+				currentPrev = 0;
 
-			if(phoneDirr.x > 0.2 || phoneDirr.x < -0.2 )
-				mPlatform->RotateZ(phoneDirr.x * 400);
-			if(phoneDirr.z > 0.2 || phoneDirr.z < -0.2 )
-				mPlatform->RotateX(phoneDirr.z * 400);
+			float angle = CalcAngle(phoneDirr, DefaultDir, prevVectors);
+			
+			if(angle > 0.5)
+				angle = 0.5;
+			if(angle < -0.5)
+				angle = -0.5;
+			mPlatform->ResetXZAngles();
+			mPlatform->RotateAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
 		}
 		if(mGe->GetKeyListener()->IsPressed('W'))
 			mPlatform->RotateX(-diff);

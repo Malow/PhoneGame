@@ -178,7 +178,8 @@ void Map::Reset()
 
 void Map::RotateAxis( Vector3 vec, float angle )
 {
-
+	if(this->mMesh)
+		this->mMesh->RotateAxis(vec, angle);
 }
 
 void Map::SetScale( Vector3 scale )
