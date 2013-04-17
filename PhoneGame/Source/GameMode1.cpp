@@ -154,6 +154,7 @@ void Game::PlayGameMode1()
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
+		Sleep(1);
 		// Updates GFX
 		float diff = GetGraphics()->Update();	
 
@@ -186,9 +187,9 @@ void Game::PlayGameMode1()
 		{
 			RotateVectorAroundVector(ourUp, ourDir, -diff * 0.001f);
 		}
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD) || GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
 			speed += diff * SPEED_CHANGE_MUTLIPLIER;
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT))
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT) || GetGraphics()->GetKeyListener()->IsPressed(VK_CONTROL))
 			speed -= diff * SPEED_CHANGE_MUTLIPLIER;
 
 

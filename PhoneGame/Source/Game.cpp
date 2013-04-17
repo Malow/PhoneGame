@@ -84,6 +84,8 @@ void Game::Play()
 
 		Sleep(2);
 	}
+
+	GetGraphics()->DeleteImage(gameModeImage);
 }
 
 void Game::HandleEvent(float diff)
