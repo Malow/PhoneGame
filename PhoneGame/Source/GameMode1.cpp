@@ -5,80 +5,6 @@
 #define MINIMUM_SPEED 10.0f
 #define MAXIMUM_SPEED 100.0f
 
-//////////////////////////////////////////////////////////////////////////
-///////////////////Rotate vector around other vector//////////////////////
-//////////////////////////////////////////////////////////////////////////
-float t(float angle)
-{
-	return 1-(float)cos((double)angle);
-}
-
-float c(float angle)
-{
-	return (float)cos((double)angle);
-}
-
-float s(float angle)
-{
-	return (float)sin((double)angle);
-}
-
-float a1(float angle, Vector3 axis, float tr, float cos)
-{
-	return (tr * axis.x * axis.x) + cos;
-}
-
-float a2(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.x * axis.y) - (sin * axis.z);
-}
-
-float a3(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.x * axis.z) + (sin * axis.y);
-}
-
-float b1(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.x * axis.y) + (sin * axis.z);
-}
-
-float b2(float angle, Vector3 axis, float tr, float cos)
-{
-	return (tr * axis.y * axis.y) + cos;
-}
-
-float b3(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.y * axis.z) - (sin * axis.x);
-}
-
-float c1(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.x * axis.z) - (sin * axis.y);
-}
-
-float c2(float angle, Vector3 axis, float tr, float sin)
-{
-	return (tr * axis.y * axis.z) + (sin * axis.x);
-}
-
-float c3(float angle, Vector3 axis, float tr, float cos)
-{
-	return (tr * axis.z * axis.z) + cos;
-}
-
-void RotateVectorAroundVector(Vector3& vector, Vector3& axis, float angle)
-{
-	float tr = t(angle);
-	float cos = c(angle);
-	float sin = s(angle);
-
-	vector.x = a1(angle, axis, tr, cos) * vector.x + a2(angle, axis, tr, sin) * vector.y + a3(angle, axis, tr, sin) * vector.z;
-	vector.y = b1(angle, axis, tr, sin) * vector.x + b2(angle, axis, tr, cos) * vector.y + b3(angle, axis, tr, sin) * vector.z;
-	vector.z = c1(angle, axis, tr, sin) * vector.x + c2(angle, axis, tr, sin) * vector.y + c3(angle, axis, tr, cos) * vector.z; 
-}
-//////////////////////////////////////////////////////////////////////////
 
 #define star_POS_COUNT 10
 static const Vector3 starPos[star_POS_COUNT] = 
@@ -94,7 +20,6 @@ static const Vector3 starPos[star_POS_COUNT] =
 	Vector3(-29, 32, 42),
 	Vector3(45, -32, -34)
 };
-
 
 
 void Game::PlayGameMode1()
@@ -173,22 +98,26 @@ void Game::PlayGameMode1()
 		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
 		{
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
-			RotateVectorAroundVector(ourDir, cross, -diff * 0.001f);
+			ourDir.RotateAroundAxis(cross, -diff * 0.001f);
+			//RotateVectorAroundVector(ourDir, cross, -diff * 0.001f);
 			ourUp = cross.GetCrossProduct(ourDir);
 		}
 		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
 		{
-			RotateVectorAroundVector(ourUp, ourDir, diff * 0.001f);
+			ourUp.RotateAroundAxis(ourDir, diff * 0.001f);
+			//RotateVectorAroundVector(ourUp, ourDir, diff * 0.001f);
 		}
 		if(GetGraphics()->GetKeyListener()->IsPressed('S'))	
 		{
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
-			RotateVectorAroundVector(ourDir, cross, diff * 0.001f);
+			ourDir.RotateAroundAxis(cross, diff * 0.001f);
+			//RotateVectorAroundVector(ourDir, cross, diff * 0.001f);
 			ourUp = cross.GetCrossProduct(ourDir);
 		}
 		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
 		{
-			RotateVectorAroundVector(ourUp, ourDir, -diff * 0.001f);
+			ourUp.RotateAroundAxis(ourDir, -diff * 0.001f);
+			//RotateVectorAroundVector(ourUp, ourDir, -diff * 0.001f);
 		}
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD) || GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
 			speed += diff * SPEED_CHANGE_MUTLIPLIER;
@@ -259,10 +188,11 @@ void Game::PlayGameMode1()
 			targetSpeedTxt->SetText(string("TARGETSPEED: " + MaloW::convertNrToString((int)targetSpeed)).c_str());
 
 			Vector3 cross = ourDir.GetCrossProduct(ourUp);
-			RotateVectorAroundVector(ourDir, cross, -phoneDir.z * diff * 0.001f);
+			ourDir.RotateAroundAxis(cross, -phoneDir.z * diff * 0.001f);
+			//RotateVectorAroundVector(ourDir, cross, -phoneDir.z * diff * 0.001f);
 			ourUp = cross.GetCrossProduct(ourDir);
-			
-			RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * diff * 0.001f);
+			ourUp.RotateAroundAxis(ourDir, -phoneDir.y * diff * 0.001f);
+			//RotateVectorAroundVector(ourUp, ourDir, -phoneDir.y * diff * 0.001f);
 
 			// Apply phone's targetspeed to speed
 			if(targetSpeed > speed)
