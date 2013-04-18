@@ -104,7 +104,7 @@ void Game::PlayGameMode2()
 	
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
-
+		
 		iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 		mBalls->UpdateBallParentMode(mPlatform);
 		mBalls->Update(diff);
@@ -112,6 +112,7 @@ void Game::PlayGameMode2()
 		if(pe->DoSpecialPhoneCollisionGame(mBalls, mPlatform, normalPlane, diff))
 			mBalls->collisionPlatformResponse(mPlatform, normalPlane, diff);
 		mBalls->UpdatePost();
+		mPlatform->Update(diff);
 
 		if(this->networkController)
 		{
@@ -152,6 +153,7 @@ void Game::PlayGameMode2()
 		mGe->DeleteLight(mLights[i]);
 
 	delete mPlatform;
+	delete mBalls;
 
 	mGe->DeleteText(scoreTxt);
 	mGe->DeleteText(timeTxt);

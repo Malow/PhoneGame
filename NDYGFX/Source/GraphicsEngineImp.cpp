@@ -344,7 +344,7 @@ HRESULT GraphicsEngineImp::InitWindow(HINSTANCE hInstance, int nCmdShow)
 	}
 	
 	this->InitObjects();
-
+ 
 	return S_OK;
 }
 

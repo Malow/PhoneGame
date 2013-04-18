@@ -1,10 +1,5 @@
 #pragma once
-/**
-* Author: Jerry Rahmqvist
-* Create Date: 07/05/2012
-* 
-* 
-**/
+
 #include "Matrix3.h"
 #include "Vector.h"
 
@@ -15,6 +10,7 @@ private:
 public:
 	Matrix4(bool homogenousMatrix = false);
 	Matrix4(float arr[]);
+	Matrix4(Vector4 vec);
 	~Matrix4();
 	Matrix4 operator*(const Matrix4& m) const;
 	Vector4 operator*(const Vector4& vec) const;

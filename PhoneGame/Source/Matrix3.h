@@ -1,10 +1,5 @@
 #pragma once
-/**
-* Author: Jerry Rahmqvist
-* Create Date: 07/05/2012
-* 
-* 
-**/
+
 #include "Vector.h"
 
 class Matrix3
