@@ -37,7 +37,7 @@ void Game::PlayGameMode3()
 	Helicopter* heli = NULL;
 	heli = new Helicopter(chopper, rotor, secrotor, terrain);
 
-	bool go = true;
+	go = true;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
@@ -52,7 +52,7 @@ void Game::PlayGameMode3()
 			go = false;
 
 
-		heli->Update(diff * 0.001f);
+		heli->Update(diff * 0.002f);
 
 
 		// Heli Controlls
@@ -110,3 +110,4 @@ void Game::PlayGameMode3()
 // TODO:
 
 // change skybox crashes when one is allready created.
+// Helicopter.cpp rad 109: GOGOGO!

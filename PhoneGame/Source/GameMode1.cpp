@@ -77,7 +77,7 @@ void Game::PlayGameMode1()
 	guiStar->SetOpacity(0.0f);
 	float starTimer = 0.0f;
 
-	bool go = true;
+	go = true;
 	int starcolor = 2;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)

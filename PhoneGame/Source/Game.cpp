@@ -6,6 +6,8 @@ Game::Game()
 {
 	this->networkController = NULL;
 	this->gameMode = -1;
+	this->go = true;
+	this->play = true;
 }
 
 Game::~Game()
@@ -28,7 +30,7 @@ void Game::NewNetworkClient( MaloW::ClientChannel* cc )
 void Game::Play()
 {
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
-	bool play = true;
+	this->play = true;
 	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
 	GetGraphics()->StartRendering();
 	while(play)
@@ -167,6 +169,18 @@ void Game::HandleEvent(float diff)
 			{
 				msg = msg.substr(4);
 				this->gameMode = atoi(msg.c_str());
+			}
+
+
+			if(msg.substr(0, 4) == "QUIT")
+			{
+				this->go = false;
+			}
+
+			if(msg.substr(0, 4) == "EXIT")
+			{
+				this->go = false;
+				this->play = false;
 			}
 
 			// Ping request

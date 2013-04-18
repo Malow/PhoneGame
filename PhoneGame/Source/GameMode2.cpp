@@ -64,7 +64,7 @@ void Game::PlayGameMode2()
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
-	bool go = true;
+	go = true;
 	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);
 	int currentPrev = 0;
 	Vector3 prevVectors[NROFPREV];

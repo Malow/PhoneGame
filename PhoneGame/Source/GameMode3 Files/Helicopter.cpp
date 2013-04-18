@@ -2,13 +2,21 @@
 
 #define GRAVITY 9.82f
 #define AIR_DENSITY 1.2f
-#define AIR_FRICTION_CONSTANT 0.1f
+
+// Increase air friction for better gameplay
+//#define AIR_FRICTION_CONSTANT 0.1f
+#define AIR_FRICTION_CONSTANT 10.0f
+
 #define GROUND_FRICTION_CONSTANT 0.3f
 
 // Taken from http://www.defensie.nl/english/subjects/materiel/aircraft_and_helicopters/helicopters/apache_ah-64d_longbow_attack_helicopter
 // Not anymore
-#define MAX_ROTOR_RPM 15.0f
-#define MAX_SEC_ROTOR_RPM 60.0f
+#define MAX_ROTOR_RPM 12.5f
+#define MAX_SEC_ROTOR_RPM 50.0f
+
+
+#define ROLLING_COEF 0.2f
+#define YAWING_COEF 0.0001f
 
 
 Helicopter::Helicopter(iMesh* chopper, iMesh* rotor, iMesh* secrotor, iTerrain* terr)
@@ -89,9 +97,20 @@ void Helicopter::Update(float dt)
 	this->chopper->SetPosition(this->pos);
 	this->rotor->SetPosition(this->pos);
 	this->secrotor->SetPosition(this->pos - this->forward * 28 + this->up * 11);	// Adding offset for the second rotor.
-	GetGraphics()->GetCamera()->SetPosition(this->pos + this->up * 20 - this->forward * 40);
-	GetGraphics()->GetCamera()->LookAt(this->pos + this->forward * 30 + Vector3(0, 10, 0));
+
+	Vector3 lookAt = this->forward;
+	lookAt.y = 0.0f;
+	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, 20, 0) - lookAt * 40);
+	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
 	//GetGraphics()->GetCamera()->SetForward(this->forward);
+
+
+	/*
+	// Attune forward to direction:
+	// If this Direction = right of us: this->yawingRight = true;
+	// If this Direction = left of us: this->yawingLeft = true;
+	// Ok not really using those bools, but do what they do inside their If's but only like 1/10'ths of it.
+	*/
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
@@ -129,7 +148,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 		}
 		this->AttuneSecRotorToMainRotor(dt);
 	
-		float angle = (this->rotorRPM * (MAX_SEC_ROTOR_RPM / MAX_ROTOR_RPM) / 2 - this->secRotorRPM) * 0.0001f;
+		float angle = (this->rotorRPM * (MAX_SEC_ROTOR_RPM / MAX_ROTOR_RPM) / 2 - this->secRotorRPM) * YAWING_COEF;
 		this->forward.RotateAroundAxis(this->up, -angle);
 		this->chopper->RotateAxis(this->up, -angle);
 		this->rotor->RotateAxis(this->up, angle);
@@ -143,35 +162,35 @@ void Helicopter::UpdateChopperSpec(float dt)
 		{
 			Vector3 vec(this->up);
 			Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
-			float angle = -dt * 0.1f;
+			float angle = -dt * ROLLING_COEF;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
 			this->chopper->RotateAxis(around, -angle);
-			this->rotor->RotateAxis(around, angle);
+			this->rotor->RotateAxis(around, -angle);
 		}
 		if(this->rollingBackward)
 		{
 			Vector3 vec(this->up);
 			Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
-			float angle = dt * 0.1f;
+			float angle = dt * ROLLING_COEF;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
 			this->chopper->RotateAxis(around, -angle);
-			this->rotor->RotateAxis(around, angle);
+			this->rotor->RotateAxis(around, -angle);
 		}
 		if(this->rollingLeft)
 		{
-			float angle = -dt * 0.1f;
+			float angle = -dt * ROLLING_COEF;
 			this->up.RotateAroundAxis(this->forward, -angle);
 			this->chopper->RotateAxis(this->forward, -angle);
-			this->rotor->RotateAxis(this->forward, angle);
+			this->rotor->RotateAxis(this->forward, -angle);
 		}
 		if(this->rollingRight)
 		{
-			float angle = dt * 0.1f;
+			float angle = dt * ROLLING_COEF;
 			this->up.RotateAroundAxis(this->forward, -angle);
 			this->chopper->RotateAxis(this->forward, -angle);
-			this->rotor->RotateAxis(this->forward, angle);
+			this->rotor->RotateAxis(this->forward, -angle);
 		}
 	}
 

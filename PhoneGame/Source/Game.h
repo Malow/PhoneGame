@@ -62,6 +62,8 @@ class Game : public MaloW::Process
 private:
 	NetworkController* networkController;
 	int gameMode;
+	bool go;
+	bool play;
 
 	void HandleEvent(float diff);
 	void PlayGameMode1();
