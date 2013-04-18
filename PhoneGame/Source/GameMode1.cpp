@@ -137,14 +137,17 @@ void Game::PlayGameMode1()
 	iBillboard* planetNebula = GetGraphics()->CreateBillboard(Vector3(0, -400, 0), Vector2(60.0f, 60.0f), Vector3(1, 1, 1), "Media/planet_nebula.png");
 
 	iText* targetSpeedTxt = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
-	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
-	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
-	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
-	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 150), 1.0f, "Media/fonts/new");
-	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 180), 1.0f, "Media/fonts/new");
-	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 210), 1.0f, "Media/fonts/new");
+	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 35), 1.0f, "Media/fonts/new");
+	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 65), 1.0f, "Media/fonts/new");
+	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/new");
 
-	iImage* guiCockpit = GetGraphics()->CreateImage(Vector2(0, GetGraphics()->GetEngineParameters().WindowHeight * 0.1f), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/cockpit.png");
+#ifdef _DEBUG
+	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 155), 1.0f, "Media/fonts/new");
+	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 185), 1.0f, "Media/fonts/new");
+	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/new");
+#endif
+
+	iImage* guiCockpit = GetGraphics()->CreateImage(Vector2(0, GetGraphics()->GetEngineParameters().WindowHeight * 0.12f), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/cockpit.png");
 	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
 	guiStar->SetOpacity(0.0f);
 	float starTimer = 0.0f;
@@ -238,9 +241,11 @@ void Game::PlayGameMode1()
 			if(phoneDir.y < -1.0f)
 				phoneDir.y = -1.0f;
 
+#ifdef _DEBUG
 			phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneDir.x)).c_str());
 			phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneDir.y)).c_str());
 			phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneDir.z)).c_str());
+#endif
 			//////////////////////////////////////////////////////////////////////////
 
 			// min / max: 10 / 100: speed: 10 -> min(10) + input(10) * range(0.9) = 19
@@ -346,9 +351,11 @@ void Game::PlayGameMode1()
 	GetGraphics()->DeleteText(speedTxt);
 	GetGraphics()->DeleteText(timeTxt);
 	GetGraphics()->DeleteText(scoreTxt);
+#ifdef _DEBUG
 	GetGraphics()->DeleteText(phoneDirTxtX);
 	GetGraphics()->DeleteText(phoneDirTxtY);
 	GetGraphics()->DeleteText(phoneDirTxtZ);
+#endif
 
 	GetGraphics()->DeleteImage(guiCockpit);
 	GetGraphics()->DeleteImage(guiStar);

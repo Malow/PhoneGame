@@ -38,6 +38,8 @@ void Game::Play()
 			this->gameMode = 1;
 		if(GetGraphics()->GetKeyListener()->IsPressed('2'))
 			this->gameMode = 2;
+		if(GetGraphics()->GetKeyListener()->IsPressed('3'))
+			this->gameMode = 3;
 
 		switch (this->gameMode)
 		{
@@ -75,6 +77,14 @@ void Game::Play()
 			this->gameMode = -1;
 			gameModeImage->SetOpacity(1.0f);
 			break;
+
+		case 3:
+			gameModeImage->SetOpacity(0.0f);
+			this->PlayGameMode3();
+			this->gameMode = -1;
+			gameModeImage->SetOpacity(1.0f);
+			break;
+
 		default:
 			break;
 		}
