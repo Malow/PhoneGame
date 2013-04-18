@@ -1,10 +1,5 @@
 #pragma once
-/**
-* Author: Jerry Rahmqvist
-* Create Date: 19/05/2012
-* 
-* 
-**/
+
 #include "Vector.h"
 #include "Quaternion.h"
 #include "Matrix4.h"

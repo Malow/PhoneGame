@@ -1896,7 +1896,7 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 {
 	if(Mesh* mesh = dynamic_cast<Mesh*>(ball->GetMesh()))
 	{
-		MaloW::Array<MeshStrip*>* temp = dynamic_cast<Mesh*>(map->GetMesh())->GetStrips();
+		MaloW::Array<MeshStrip*>* temp =  dynamic_cast<Mesh*>(map->GetMesh())->GetStrips();
 	//int sizeMstrip = temp->size();
 	int sizeVertexS0 = temp->get(0)->getNrOfVerts();
 	Vertex* verts;
@@ -1922,12 +1922,15 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 	Vector3 rayDirection;
 	Vector3 scalingMesh = map->GetMesh()->GetScaling();
 
-	Vector4 quat;
-	quat = map->GetMesh()->GetRotationQuaternion(); 
-	Matrix4 rotate;
-	rotate.SetElement(1, 0);
-	rotate.SetElement(1, 5);
-	rotate.SetElement(1, 10);
+	D3DXMATRIX quat;
+	D3DXQUATERNION d3dQuat;
+	d3dQuat.x = map->GetMesh()->GetRotationQuaternion().x;
+	d3dQuat.y = map->GetMesh()->GetRotationQuaternion().y;
+	d3dQuat.z = map->GetMesh()->GetRotationQuaternion().z;
+	d3dQuat.w = map->GetMesh()->GetRotationQuaternion().w;
+	D3DXMatrixRotationQuaternion(&quat, &d3dQuat); 
+	Matrix4 rotate(quat);
+	rotate.TransposeThis();
 
 	Matrix4 scaling;
 	scaling.SetScale(scalingMesh);
@@ -1985,7 +1988,7 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 				}
 			}			
 		}
-		// check agains all edges
+		// check against all edges
 		Vector3 lineDirection;
 		float scalarProj;
 		Vector3 projOnLine;
@@ -2093,7 +2096,7 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 	{
 		// for checking if the ball are in the air not turned on at the moment, 
 		float eps = 0.5f; //0.001
-		if( (lengthProjN < (ball->GetRadius() + eps)) && (lengthProjN > (ball->GetRadius()  - eps)) )
+		if( (lengthProjN < (ball->GetRadius() + eps)) && (lengthProjN > (ball->GetRadius() - eps)) )
 		{
 			ball->SetNormalContact(normalStore);
 			ball->SetHasContact(true);
@@ -2101,10 +2104,10 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 		else 
 		{
 			ball->SetNormalContact(normalStore);
-			ball->SetHasContact(false);
+			ball->SetHasContact(true);
 		}
 
-		if( lengthProjN <= ball->GetRadius() )
+		if( lengthProjN <= ball->GetRadius())
 		{
 			Vector3 velNorm = ball->GetVelocity();
 			velNorm.Normalize();

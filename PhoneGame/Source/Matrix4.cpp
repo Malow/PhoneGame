@@ -20,6 +20,25 @@ Matrix4::Matrix4(float arr[])
 	for(int i = 0;i<16;i++)
 		this->mData[i] = arr[i];
 }
+Matrix4::Matrix4(Vector4 vec)
+{
+	mData[0] = 1.0f - 2.0f*vec.y*vec.y - 2.0f*vec.z*vec.z;
+	mData[1] = 2.0f*vec.x*vec.y - 2.0f*vec.z*vec.w;
+	mData[2] = 2.0f*vec.x*vec.z + 2.0f*vec.y*vec.w;
+	mData[3] = 0.0f;
+	mData[4] = 2.0f*vec.x*vec.y + 2.0f*vec.z*vec.w;
+	mData[5] = 1.0f - 2.0f*vec.x*vec.x - 2.0f*vec.z*vec.z;
+	mData[6] = 2.0f*vec.y*vec.z - 2.0f*vec.x*vec.w;
+	mData[7] = 0.0f;
+	mData[8] = 2.0f*vec.x*vec.z - 2.0f*vec.y*vec.w;
+	mData[9] = 2.0f*vec.y*vec.z + 2.0f*vec.x*vec.w;
+	mData[10] = 1.0f - 2.0f*vec.x*vec.x - 2.0f*vec.y*vec.y;
+	mData[11] = 0.0f;
+	mData[12] =	0.0f;
+	mData[13] = 0.0f;
+	mData[14] = 0.0f;
+	mData[15] = 1.0f;
+}
 
 Matrix4::~Matrix4()
 {

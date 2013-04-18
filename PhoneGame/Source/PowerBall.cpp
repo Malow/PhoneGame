@@ -279,9 +279,9 @@ void PowerBall::UpdateBallParentMode(Map* map)
 		Vector3 scalingMesh = Vector3(1,1,1);
 		Vector3 pos = map->GetMesh()->GetPosition();
 		Vector4 quat;
-		quat, &map->GetMesh()->GetRotationQuaternion(); 
+		quat = map->GetMesh()->GetRotationQuaternion(); 
 		
-		Matrix4 rotate(true);
+		Matrix4 rotate(quat);
 		rotate.TransposeThis();
 
 		Matrix4 scaling;
@@ -528,7 +528,7 @@ bool PowerBall::collisionWithPlatformSimple(Map* p, Vector3 &normalPlane)
 
 	Vector4 quat;
 	quat = GetMesh()->GetRotationQuaternion(); 
-	Matrix4 rotate(true);
+	Matrix4 rotate(quat);
 	rotate.TransposeThis();
 
 	Matrix4 scaling;
