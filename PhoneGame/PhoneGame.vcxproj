@@ -14,6 +14,7 @@
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameMode1.cpp" />
     <ClCompile Include="Source\GameMode2.cpp" />
+    <ClCompile Include="Source\GameMode3.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\MaloWLib\ClientChannel.cpp" />

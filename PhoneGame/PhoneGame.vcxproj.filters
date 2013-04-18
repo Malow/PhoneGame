@@ -64,6 +64,9 @@
     <ClCompile Include="Source\RigidBody.cpp">
       <Filter>Source Files\GameMode2 files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameMode3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Graphics.h">

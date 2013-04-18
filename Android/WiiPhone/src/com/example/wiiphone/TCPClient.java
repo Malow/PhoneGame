@@ -7,7 +7,7 @@ import java.net.Socket;
  
  
 public class TCPClient {
- 
+	public static TCPClient mTCPClient = null;
     private String mServerMessage;
     public static final String SERVERIP = "192.168.1.121"; //your computer IP address
     public static final int SERVERPORT = 10000;
@@ -23,8 +23,14 @@ public class TCPClient {
      */
     public TCPClient(OnMessageReceived listener) {
         mMessageListener = listener;
+        mTCPClient = this;
     }
- 
+    public static TCPClient getTCP()
+    {
+    	if(mTCPClient == null)
+    		Log.e("ERROR", "TCP == null");
+    	return mTCPClient;
+    }
     /**
      * Sends the message entered by client to the server
      * @param message text entered by client
@@ -41,6 +47,16 @@ public class TCPClient {
     public void stopClient()
     {
     	 mRun = false;
+    	 try{
+    		 if (socket != null) 
+        	 {
+        		 socket.close();
+        		 socket = null;
+             }
+    	 }
+    	 catch (IOException e) 
+    	 {
+    	 }
     	 
          if (mBufferOut != null) {
              mBufferOut.flush();
@@ -73,7 +89,7 @@ public class TCPClient {
                 //send the message to the server
             	mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
  
-                Log.e("TCP Client", "C: Sent.");
+                Log.e("TCP Client", "C: Sent. ");
  
                 
  
