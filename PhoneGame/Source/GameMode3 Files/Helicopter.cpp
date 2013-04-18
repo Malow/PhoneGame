@@ -91,7 +91,7 @@ void Helicopter::Update(float dt)
 	this->secrotor->SetPosition(this->pos - this->forward * 28 + this->up * 11);	// Adding offset for the second rotor.
 	GetGraphics()->GetCamera()->SetPosition(this->pos + this->up * 20 - this->forward * 40);
 	GetGraphics()->GetCamera()->LookAt(this->pos + this->forward * 30 + Vector3(0, 10, 0));
-	//GetGraphicsEngine()->GetCamera()->setForward(this->forward);
+	//GetGraphics()->GetCamera()->SetForward(this->forward);
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
@@ -131,7 +131,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 	
 		float angle = (this->rotorRPM * (MAX_SEC_ROTOR_RPM / MAX_ROTOR_RPM) / 2 - this->secRotorRPM) * 0.0001f;
 		this->forward.RotateAroundAxis(this->up, -angle);
-		this->chopper->RotateAxis(this->up, angle);
+		this->chopper->RotateAxis(this->up, -angle);
 		this->rotor->RotateAxis(this->up, angle);
 	}
 
@@ -146,7 +146,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 			float angle = -dt * 0.1f;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
-			this->chopper->RotateAxis(around, angle);
+			this->chopper->RotateAxis(around, -angle);
 			this->rotor->RotateAxis(around, angle);
 		}
 		if(this->rollingBackward)
@@ -156,21 +156,21 @@ void Helicopter::UpdateChopperSpec(float dt)
 			float angle = dt * 0.1f;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
-			this->chopper->RotateAxis(around, angle);
+			this->chopper->RotateAxis(around, -angle);
 			this->rotor->RotateAxis(around, angle);
 		}
 		if(this->rollingLeft)
 		{
 			float angle = -dt * 0.1f;
 			this->up.RotateAroundAxis(this->forward, -angle);
-			this->chopper->RotateAxis(this->forward, angle);
+			this->chopper->RotateAxis(this->forward, -angle);
 			this->rotor->RotateAxis(this->forward, angle);
 		}
 		if(this->rollingRight)
 		{
 			float angle = dt * 0.1f;
 			this->up.RotateAroundAxis(this->forward, -angle);
-			this->chopper->RotateAxis(this->forward, angle);
+			this->chopper->RotateAxis(this->forward, -angle);
 			this->rotor->RotateAxis(this->forward, angle);
 		}
 	}

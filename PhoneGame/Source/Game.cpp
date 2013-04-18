@@ -35,11 +35,29 @@ void Game::Play()
 	{	
 		float diff = GetGraphics()->Update();
 		if(GetGraphics()->GetKeyListener()->IsPressed('1'))
+		{
 			this->gameMode = 1;
+			if(this->networkController)
+			{
+				this->networkController->cc->sendData("KEYBOARD CHOSE MODE: 1");
+			}
+		}
 		if(GetGraphics()->GetKeyListener()->IsPressed('2'))
+		{
 			this->gameMode = 2;
+			if(this->networkController)
+			{
+				this->networkController->cc->sendData("KEYBOARD CHOSE MODE: 2");
+			}
+		}
 		if(GetGraphics()->GetKeyListener()->IsPressed('3'))
+		{
 			this->gameMode = 3;
+			if(this->networkController)
+			{
+				this->networkController->cc->sendData("KEYBOARD CHOSE MODE: 3");
+			}
+		}
 
 		switch (this->gameMode)
 		{
@@ -89,7 +107,7 @@ void Game::Play()
 			break;
 		}
 
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
+		if(GetGraphics()->GetKeyListener()->IsPressed('Q'))
 			play = false;
 
 		Sleep(2);
@@ -136,6 +154,12 @@ void Game::HandleEvent(float diff)
 				msg = msg.substr(4);
 				float spd = atof(msg.c_str());
 				this->networkController->speed = spd;
+			}
+
+			// Answer current game mode
+			if(msg.substr(0, 8) == "GET MODE")
+			{
+				this->networkController->cc->sendData("CURRENT MODE: " + MaloW::convertNrToString(this->gameMode));
 			}
 
 			// Gamemode change
