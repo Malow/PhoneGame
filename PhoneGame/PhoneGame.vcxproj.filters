@@ -11,6 +11,9 @@
     <Filter Include="Source Files\GameMode2 files">
       <UniqueIdentifier>{4fc1c213-774a-4e6d-bfde-ff8d1e934dc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameMode3 Files">
+      <UniqueIdentifier>{daad3c12-0660-41bf-90a9-d2822e627c8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Graphics.cpp">
@@ -63,6 +66,15 @@
     </ClCompile>
     <ClCompile Include="Source\RigidBody.cpp">
       <Filter>Source Files\GameMode2 files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameMode3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameMode3 Files\Helicopter.cpp">
+      <Filter>Source Files\GameMode3 Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameMode3 Files\PhysMesh.cpp">
+      <Filter>Source Files\GameMode3 Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +152,12 @@
     </ClInclude>
     <ClInclude Include="Source\Vertex.h">
       <Filter>Source Files\GameMode2 files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameMode3 Files\Helicopter.h">
+      <Filter>Source Files\GameMode3 Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameMode3 Files\PhysMesh.h">
+      <Filter>Source Files\GameMode3 Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

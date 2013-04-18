@@ -1,0 +1,9 @@
+newmtl Apache_Maya2:ApacheTexture
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.50 0.50 0.50
+Tf 1.00 1.00 1.00
+map_Kd FinalApacheTexture.Png
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 0.06
