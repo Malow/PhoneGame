@@ -149,6 +149,12 @@ void Game::PlayGameMode2()
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
 	}
+
+	if(this->networkController)
+	{
+		this->networkController->cc->sendData("QUITTING");
+	}
+
 	for(int i = 0; i < 5; i++)
 		mGe->DeleteLight(mLights[i]);
 

@@ -262,6 +262,10 @@ void Game::PlayGameMode1()
 		GetGraphics()->GetCamera()->SetUpVector(ourUp);
 	}
 
+	if(this->networkController)
+	{
+		this->networkController->cc->sendData("QUITTING");
+	}
 
 	GetGraphics()->GetCamera()->RemoveMesh();
 
