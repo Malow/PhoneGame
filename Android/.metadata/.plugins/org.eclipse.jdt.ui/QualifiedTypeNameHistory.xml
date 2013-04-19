@@ -14,4 +14,5 @@
 <fullyQualifiedTypeName name="com.example.wiiphone.R.id"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.SpaceShipActivity"/>
+<fullyQualifiedTypeName name="android.graphics.Paint.Style"/>
 </qualifiedTypeNameHistroy>

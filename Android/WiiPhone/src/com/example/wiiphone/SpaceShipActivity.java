@@ -107,6 +107,12 @@ public class SpaceShipActivity extends Activity implements SensorEventListener
     {
     	System.out.println("SpaceShip Activity: onDestroy START");
         super.onDestroy();
+        if(mTcpClient != null)
+		{
+			String message = "QUIT";
+			mTcpClient.sendMessage(message);
+			mTcpClient = null;
+		}
         System.out.println("SpaceShip Activity: onDestroy END");
     }
     

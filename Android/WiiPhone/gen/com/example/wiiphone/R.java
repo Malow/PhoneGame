@@ -25,15 +25,17 @@ public final class R {
         public static final int start_button=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080004;
+        public static final int action_settings=0x7f080005;
         public static final int game_1=0x7f080000;
         public static final int game_2=0x7f080001;
         public static final int game_3=0x7f080002;
-        public static final int spaceshipview=0x7f080003;
+        public static final int labyrinthview=0x7f080003;
+        public static final int spaceshipview=0x7f080004;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int spaceship_main=0x7f030001;
+        public static final int labyrinth_main=0x7f030001;
+        public static final int spaceship_main=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f070000;

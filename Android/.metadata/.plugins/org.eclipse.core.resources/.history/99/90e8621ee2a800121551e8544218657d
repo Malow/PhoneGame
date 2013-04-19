@@ -1,0 +1,104 @@
+package com.example.wiiphone;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+
+public class LabyrinthView extends View
+{
+	private TCPClient mTcpClient = null;
+	private ShapeDrawable mDrawableOuter = null;
+	private ShapeDrawable mDrawableInner = null;
+	private float mSensorX = 0;
+	private float mSensorY = 0;
+	private float mSensorZ = 10;
+	
+	public static final int AXIS_Y = 1;
+	
+    public LabyrinthView(Context context, AttributeSet attrs) 
+    {
+        super(context, attrs);
+        
+        mTcpClient = null;
+    }
+    public void InvalidateView(float x, float y, float z)
+    {
+    	int mMiddleX = super.getWidth() / 0.5;
+    	int mMiddleY = super.getHeight() / 2;
+    	postInvalidate();
+    	int lX = (int)x * 10 + ;
+    	int lY = (int)y * 10;
+    	int lZ = (int)z * 10;
+    	
+    	mSensorX = x;
+    	mSensorY = y;
+    	mSensorZ = z;
+    	
+    	int width = 200;
+    	int height = 200;
+    	
+    	mDrawableOuter = new ShapeDrawable(new OvalShape());
+    	mDrawableOuter.getPaint().setARGB(255,255,0,0);
+    	mDrawableOuter.setBounds(lX, lY, lX + width, lY + height);
+    	
+        postInvalidate();
+    }
+    
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) 
+    {
+        super.onSizeChanged(h, w, oldh, oldw);
+    }
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event) 
+    {
+        if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN
+        		|| event.getAction() == MotionEvent.ACTION_UP)  
+        {
+			float progress = event.getAxisValue(AXIS_Y);
+			progress = (progress / super.getHeight()); 
+			progress = ((1 - progress) * 100);
+			if (mTcpClient != null) 
+			{
+				if(progress > 100)
+				{
+					progress = 100.0f;
+				}
+				else if(progress < 0)
+				{
+					progress = 0.0f;
+				}
+				String message = "SPD " +  Float.toString(progress);
+                mTcpClient.sendMessage(message);
+                
+                Log.e("SPD MESSAGE", message);
+                
+            }
+			else
+			{
+				Log.e("ERROR SSView", "TCP === null");
+			}
+        }
+        return true;
+    }
+    
+    @Override
+    protected void onDraw(Canvas canvas) 
+    {
+    	if(mDrawableOuter != null)
+    	{
+    		mDrawableOuter.draw(canvas);
+    	}
+    }
+    
+    public void setTcpClient( TCPClient tcp )
+    {
+    	mTcpClient = tcp;
+    }
+}

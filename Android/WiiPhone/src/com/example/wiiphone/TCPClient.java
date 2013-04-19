@@ -14,7 +14,7 @@ public class TCPClient {
     private OnMessageReceived mMessageListener = null;
     private boolean mRun = false;
     private Socket socket = null;
- 
+    private boolean mReadyToSend = false;
     PrintWriter mBufferOut = null;
     BufferedReader mBufferIn = null;
  
@@ -24,6 +24,10 @@ public class TCPClient {
     public TCPClient(OnMessageReceived listener) {
         mMessageListener = listener;
         mTCPClient = this;
+    }
+    public boolean GetReadyToSend()
+    {
+    	return mReadyToSend;
     }
     public static TCPClient getTCP()
     {
@@ -39,6 +43,7 @@ public class TCPClient {
     {
         if (mBufferOut != null && !mBufferOut.checkError()) 
         {
+        	Log.e("SEND MSG: ", "MSG: " + message);
         	mBufferOut.println(message);
         	mBufferOut.flush();
         }
@@ -84,11 +89,15 @@ public class TCPClient {
             //create a socket to make the connection with the server
             socket = new Socket(serverAddr, SERVERPORT);
             Log.e("TCP Client", "C: Connecting done");
+            mReadyToSend = true;
             try {
  
                 //send the message to the server
             	mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
- 
+            	
+            	String message1 = "GET MODE";
+            	mBufferOut.println(message1);
+            	
                 Log.e("TCP Client", "C: Sent. ");
  
                 
