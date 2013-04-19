@@ -24,7 +24,7 @@ void Game::PlayGameMode2()
 	GraphicsEngine* mGe = GetGraphics();
 	
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
-	GetGraphics()->CreateSkyBox("Media/StarMap.dds"); 
+	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
 
 	iLight* mLights[5];
 	mLights[0] = mGe->CreateLight(Vector3(0, 50, 0));

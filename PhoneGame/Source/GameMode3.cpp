@@ -6,14 +6,15 @@
 void Game::PlayGameMode3()
 {
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
-	GetGraphics()->CreateSkyBox("Media/skymap.dds");
+	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 
 	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
 	model->Scale(1.0f * 0.05f);
 
-
+	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
+	GetGraphics()->GetCamera()->SetForward(Vector3(1, 0, 0));
 	GetGraphics()->GetCamera()->SetPosition(Vector3(100, 10, 100));
 
 	iTerrain* terrain = GetGraphics()->CreateTerrain(Vector3(0, 0, 0), Vector3(1000, 1, 1000), 256);
@@ -120,6 +121,8 @@ void Game::PlayGameMode3()
 	GetGraphics()->DeleteMesh(secrotor);
 
 	GetGraphics()->DeleteMesh(helipad);
+
+	GetGraphics()->DeleteTerrain(terrain);
 }
 
 // TODO:
