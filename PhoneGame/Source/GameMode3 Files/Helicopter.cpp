@@ -5,7 +5,7 @@
 
 // Increase air friction for better gameplay
 //#define AIR_FRICTION_CONSTANT 0.1f
-#define AIR_FRICTION_CONSTANT 10.0f
+#define AIR_FRICTION_CONSTANT 5.0f
 
 #define GROUND_FRICTION_CONSTANT 0.3f
 
@@ -106,17 +106,25 @@ void Helicopter::Update(float dt)
 
 	// Attune forward to direction.
 	Vector3 xzdir = this->direction;
-	xzdir.y = 0;
+	xzdir.y = 0.0f;
 	float xzlen = xzdir.GetLength();
-	Vector3 right = this->up.GetCrossProduct(this->forward);
-	right.y = 0.0f;
-	right.Normalize();
 	xzdir.Normalize();
-	float dotDirRight = right.GetDotProduct(xzdir);
+	Vector3 xzfor = this->forward;
+	xzfor.y = 0.0f;
+	xzfor.Normalize();
+	float dotDirFor = xzdir.GetDotProduct(xzfor);
+	Vector3 vecRight = xzfor.GetCrossProduct(Vector3(0, 1, 0));
+	vecRight.y = 0.0f;
+	vecRight.Normalize();
+	float dotDirRight = xzdir.GetDotProduct(vecRight);
 
-	float angle = dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
+	// When flying backwards remove the "BAM SNAP" effect when dot product gets 0.0f at the sides.
+	if(dotDirFor < 0.0f)
+		dotDirFor = 0.0f;
+
+	float angle = dt * xzlen * xzlen * xzlen * xzlen * (1 - abs(dotDirFor)) * 0.000001f;
 	if(dotDirRight < 0.0f)
-		dotDirRight *= -1.0f;
+		angle *= -1.0f;
 	this->forward.RotateAroundAxis(this->up, -angle);
 	this->chopper->RotateAxis(this->up, -angle);
 	this->rotor->RotateAxis(this->up, angle);

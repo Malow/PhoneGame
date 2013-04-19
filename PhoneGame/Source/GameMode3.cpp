@@ -5,6 +5,7 @@
 
 void Game::PlayGameMode3()
 {
+	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
@@ -28,14 +29,19 @@ void Game::PlayGameMode3()
 	terrain->SetTextures(fileNames);
 	terrain->SetTextureScale(10.0f);
 
-	iMesh* chopper = GetGraphics()->CreateMesh("Media/Apache_Maya_WO_SecRot.obj", Vector3(100, 50, 100));
-	iMesh* rotor = GetGraphics()->CreateMesh("Media/Apache_Rotor.obj", Vector3(100, 50, 100));
-	iMesh* secrotor = GetGraphics()->CreateMesh("Media/Apache_SecRotor.obj", Vector3(100, 50, 100));
+	iMesh* chopper = GetGraphics()->CreateMesh("Media/Apache_Maya_WO_SecRot.obj", Vector3(100, 20, 100));
+	iMesh* rotor = GetGraphics()->CreateMesh("Media/Apache_Rotor.obj", Vector3(100, 20, 100));
+	iMesh* secrotor = GetGraphics()->CreateMesh("Media/Apache_SecRotor.obj", Vector3(100, 20, 100));
 	chopper->Scale(5.0f);
 	rotor->Scale(5.0f);
 	secrotor->Scale(4.0f);
 	Helicopter* heli = NULL;
 	heli = new Helicopter(chopper, rotor, secrotor, terrain);
+
+	iMesh* helipad = GetGraphics()->CreateMesh("Media/Helipad.obj", Vector3(100, 0, 100));
+	helipad->SetScale(3.0f);
+
+	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	go = true;
 	GetGraphics()->Update();
@@ -112,9 +118,12 @@ void Game::PlayGameMode3()
 	GetGraphics()->DeleteMesh(chopper);
 	GetGraphics()->DeleteMesh(rotor);
 	GetGraphics()->DeleteMesh(secrotor);
+
+	GetGraphics()->DeleteMesh(helipad);
 }
 
 // TODO:
 
 // change skybox crashes when one is allready created.
-// Helicopter.cpp rad 109: GOGOGO!
+// Implement phone.
+// add texts for info

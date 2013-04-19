@@ -41,9 +41,6 @@ void Game::PlayGameMode1()
 
 	iMesh* arrow = GetGraphics()->CreateMesh("Media/RedArrow.obj", Vector3(10, 2000, 15));
 
-
-	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
-
 	Vector3 ourDir = Vector3(1, 0, 0);
 	Vector3 ourUp = Vector3(0, 1, 0);
 	float targetSpeed = 50.0f;
@@ -76,6 +73,8 @@ void Game::PlayGameMode1()
 	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
 	guiStar->SetOpacity(0.0f);
 	float starTimer = 0.0f;
+
+	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	go = true;
 	int starcolor = 2;
