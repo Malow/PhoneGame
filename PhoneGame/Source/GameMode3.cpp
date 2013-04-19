@@ -15,7 +15,8 @@ void Game::PlayGameMode3()
 
 	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
 	GetGraphics()->GetCamera()->SetForward(Vector3(1, 0, 0));
-	GetGraphics()->GetCamera()->SetPosition(Vector3(100, 10, 100));
+	GetGraphics()->GetCamera()->SetPosition(Vector3(100, 0, 100) + Vector3(0, 20, 0) - Vector3(1, 0, 0) * 40);
+	GetGraphics()->GetCamera()->LookAt(Vector3(100, 0, 100) + Vector3(1, 0, 0) * 30 + Vector3(0, 10, 0));
 
 	iTerrain* terrain = GetGraphics()->CreateTerrain(Vector3(0, 0, 0), Vector3(1000, 1, 1000), 256);
 	const char* fileNames[8];
@@ -30,9 +31,9 @@ void Game::PlayGameMode3()
 	terrain->SetTextures(fileNames);
 	terrain->SetTextureScale(10.0f);
 
-	iMesh* chopper = GetGraphics()->CreateMesh("Media/Apache_Maya_WO_SecRot.obj", Vector3(100, 20, 100));
-	iMesh* rotor = GetGraphics()->CreateMesh("Media/Apache_Rotor.obj", Vector3(100, 20, 100));
-	iMesh* secrotor = GetGraphics()->CreateMesh("Media/Apache_SecRotor.obj", Vector3(100, 20, 100));
+	iMesh* chopper = GetGraphics()->CreateMesh("Media/Apache_Maya_WO_SecRot.obj", Vector3(100, 0, 100));
+	iMesh* rotor = GetGraphics()->CreateMesh("Media/Apache_Rotor.obj", Vector3(100, 0, 100));
+	iMesh* secrotor = GetGraphics()->CreateMesh("Media/Apache_SecRotor.obj", Vector3(100, 0, 100));
 	chopper->Scale(5.0f);
 	rotor->Scale(5.0f);
 	secrotor->Scale(4.0f);
@@ -41,6 +42,10 @@ void Game::PlayGameMode3()
 
 	iMesh* helipad = GetGraphics()->CreateMesh("Media/Helipad.obj", Vector3(100, 0, 100));
 	helipad->SetScale(3.0f);
+
+
+	iText* altitudeText = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
+	iText* speedText = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -101,10 +106,11 @@ void Game::PlayGameMode3()
 
 
 
-
-
-
-
+		altitudeText->SetText(string("ALTITUDE: " + MaloW::convertNrToString((int)heli->GetPos().y)).c_str());
+		Vector3 dir = heli->GetDircetion();
+		dir.y = 0.0f;
+		float speed = dir.GetLength();
+		speedText->SetText(string("SPEED: " + MaloW::convertNrToString((int)speed)).c_str());
 	}
 
 
@@ -119,14 +125,23 @@ void Game::PlayGameMode3()
 	GetGraphics()->DeleteMesh(chopper);
 	GetGraphics()->DeleteMesh(rotor);
 	GetGraphics()->DeleteMesh(secrotor);
-
 	GetGraphics()->DeleteMesh(helipad);
 
 	GetGraphics()->DeleteTerrain(terrain);
+
+	GetGraphics()->DeleteText(altitudeText);
+	GetGraphics()->DeleteText(speedText);
 }
 
 // TODO:
 
-// change skybox crashes when one is allready created.
+// Come up with game-logic, what should the game be about?
+//		Probably fly collect some stuff both in the air and on the ground?
+
+// Add a way to move the camera angle up and down.
+
 // Implement phone.
+
 // add texts for info
+
+// Make it so u cant roll on the ground and increase ground friction as well as ground distance friction

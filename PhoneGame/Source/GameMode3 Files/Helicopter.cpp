@@ -128,6 +128,8 @@ void Helicopter::Update(float dt)
 	this->forward.RotateAroundAxis(this->up, -angle);
 	this->chopper->RotateAxis(this->up, -angle);
 	this->rotor->RotateAxis(this->up, angle);
+
+	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
@@ -141,7 +143,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 		else 
 			this->secRotorRPM += dt * 2;
 	}
-	if(this->decelerating)
+	else if(this->decelerating)
 	{
 		this->rotorRPM -= 2 * dt;		// 2 times quicker deceleration
 		if(this->rotorRPM < 0)
@@ -149,7 +151,14 @@ void Helicopter::UpdateChopperSpec(float dt)
 		else
 			this->secRotorRPM -= dt * 4;
 	}
-	
+	else
+	{
+		// Attunation of rotorspeed to make it auto-hover.
+		if(this->rotorRPM > 11.4f)
+		{
+			this->rotorRPM -= dt * 0.1f;
+		}
+	}
 	
 	// Apply yawing
 	if(this->rotorRPM / MAX_ROTOR_RPM > 0.3f)	// If spinning enough
@@ -222,11 +231,9 @@ void Helicopter::UpdateChopperSpec(float dt)
 	
 	//Apply lifting force by air-friction
 	float frictionForce = C * (0.5f * AIR_DENSITY * (bladeVelocity * bladeVelocity) * S);
-	float frictionAcc = liftForce / this->mass;
+	float frictionAcc = frictionForce / this->mass;
 	this->direction += this->up * frictionAcc * dt;
-
 	
-	//this->rpmtext->SetText("RPM: " + MaloW::convertNrToString(this->rotorRPM));
 	this->rotor->RotateAxis(this->up, dt * this->rotorRPM);
 	Vector3 vec(this->up);
 	Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
