@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager.WakeLock;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,28 +30,33 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         
         Button tButton = (Button) findViewById(R.id.game_1);
-        
+        // SpaceShip Button
         tButton.setOnClickListener(new OnClickListener() 
         {
 			@Override
 			public void onClick(View v) 
 			{
-				startActivity(new Intent(MainActivity.this, SpaceShipActivity.class));
+				String message = "KEYBOARD CHOSE MODE: 1";
+				if(mTcpClient != null)
+				{
+					mTcpClient.sendMessage(message);
+				}
+				startActivityByNr(1);
 			}
 		});
 
         // connect to the server.
         mConnectTask = (ConnectTask) new ConnectTask().execute("");
         
-        
         System.out.println("onCreate END");
     }
 	private void startActivityByNr(int nr)
 	{
 		if(nr == 1)
+		{
 			startActivity(new Intent(MainActivity.this, SpaceShipActivity.class));
+		}
 	}
-    // Overriding all onX events for debugging cause I'm a noob at Android programming.
     @Override
     public void onResume()
     {
@@ -99,6 +105,8 @@ public class MainActivity extends Activity
         
         if(mTcpClient != null)
         {
+ 			String message = "EXIT";
+ 			mTcpClient.sendMessage(message);
 	        mTcpClient.stopClient(); // Stop update if we close app
 	    	mConnectTask.cancel(true);
 	    	mConnectTask = null;
@@ -125,6 +133,7 @@ public class MainActivity extends Activity
                     publishProgress(message);
                 }
             });
+    		
     		if(mTcpClient != null)
     		{
     			mTcpClient.run();
@@ -136,7 +145,15 @@ public class MainActivity extends Activity
         protected void onProgressUpdate(String... values) 
         {
             super.onProgressUpdate(values);
-             // Somehow this needs to be here.
+            String[] SString = values[0].split(":");
+            if(SString[0].equals("CURRENT MODE"))
+            {
+            	int GameMode = Integer.parseInt(SString[1].trim());
+            	if(GameMode != 0)
+            	{
+            		startActivityByNr(GameMode);
+            	}
+            }
         }
     }
 }
