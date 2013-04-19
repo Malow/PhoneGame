@@ -52,7 +52,7 @@ void Game::PlayGameMode3()
 			go = false;
 
 
-		heli->Update(diff * 0.002f);
+		heli->Update(diff * 0.002f);	// double diff to get increased speed in gameplay
 
 
 		// Heli Controlls
@@ -99,6 +99,13 @@ void Game::PlayGameMode3()
 
 
 	}
+
+
+	if(this->networkController)
+	{
+		this->networkController->cc->sendData("QUITTING");
+	}
+
 
 	delete heli;
 	GetGraphics()->DeleteMesh(model);

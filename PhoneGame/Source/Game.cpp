@@ -111,9 +111,16 @@ void Game::Play()
 		}
 
 		if(GetGraphics()->GetKeyListener()->IsPressed('Q'))
+		{
 			play = false;
+		}
 
 		Sleep(2);
+	}
+
+	if(this->networkController)
+	{
+		this->networkController->cc->sendData("EXITING");
 	}
 
 	GetGraphics()->DeleteImage(gameModeImage);

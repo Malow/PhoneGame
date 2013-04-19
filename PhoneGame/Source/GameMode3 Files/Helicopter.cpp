@@ -109,21 +109,17 @@ void Helicopter::Update(float dt)
 	xzdir.y = 0;
 	float xzlen = xzdir.GetLength();
 	Vector3 right = this->up.GetCrossProduct(this->forward);
+	right.y = 0.0f;
 	right.Normalize();
-	Vector3 dirNorm = this->direction;
-	dirNorm.Normalize();
-	float dotDirRight = right.GetDotProduct(dirNorm);
-	if(dotDirRight < 0.0f)
-	{
-		this->secRotorRPM -= dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
-	}
-	else if(dotDirRight > 0.0f)
-	{
-		this->secRotorRPM += dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
-	}
+	xzdir.Normalize();
+	float dotDirRight = right.GetDotProduct(xzdir);
 
-	// Attune again
-	//this->AttuneSecRotorToMainRotor(dt);
+	float angle = dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
+	if(dotDirRight < 0.0f)
+		dotDirRight *= -1.0f;
+	this->forward.RotateAroundAxis(this->up, -angle);
+	this->chopper->RotateAxis(this->up, -angle);
+	this->rotor->RotateAxis(this->up, angle);
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
