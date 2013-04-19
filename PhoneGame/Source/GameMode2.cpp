@@ -3,7 +3,7 @@
 #include "PowerBall.h"
 
 #define PI 3.1415
-#define NROFPREV 100
+#define NROFPREV 20
 float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[])
 {
 	float totAngles = 0;

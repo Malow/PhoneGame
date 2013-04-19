@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="21" version="2.0">
+<workbench progressCount="18" version="2.0">
 <workbenchAdvisor/>
 <window height="862" maximized="true" width="1024" x="120" y="120">
 <fastViewData fastViewLocation="1024"/>
@@ -18,7 +18,7 @@
 <coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="80" y="22"/>
 <coolItem id="org.eclipse.ui.edit.text.actionSet.presentation" itemType="typeToolBarContribution" x="107" y="22"/>
 <coolItem id="org.eclipse.wst.xml.ui.perspective.NewFileToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
-<coolItem id="org.eclipse.wst.xml.ui.design.DesignToolBar" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.wst.xml.ui.design.DesignToolBar" itemType="typeToolBarContribution" x="61" y="22"/>
 <coolItem id="org.eclipse.debug.ui.launch.toolbar" itemType="typeToolBarContribution" x="-1" y="-1"/>
 <coolItem id="org.eclipse.debug.ui.main.toolbar" itemType="typeToolBarContribution" x="38" y="22"/>
 <coolItem id="group.nav" itemType="typeGroupMarker"/>
@@ -26,7 +26,7 @@
 <coolItem id="group.editor" itemType="typeGroupMarker"/>
 <coolItem id="com.android.ide.eclipse.editors.CommonXmlEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="org.eclipse.jdt.ui.ClassFileEditor" itemType="typePlaceholder" x="-1" y="-1"/>
-<coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.jdt.ui.CompilationUnitEditor" itemType="typePlaceholder" x="-1" y="-1"/>
 <coolItem id="group.help" itemType="typeGroupMarker"/>
 <coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
 </coolbarLayout>
@@ -35,31 +35,10 @@
 <editorArea activeWorkbook="DefaultEditorWorkbook">
 <info part="DefaultEditorWorkbook">
 <folder appearance="1" expanded="2">
-<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
-<part id="0"/>
-<part id="1"/>
-<part id="2"/>
-<part id="3"/>
-</presentation>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" partName="MainActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/MainActivity.java" title="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="2535" selectionTopPixel="1599"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TCPClient.java" partName="TCPClient.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/TCPClient.java" title="TCPClient.java" tooltip="WiiPhone/src/com/example/wiiphone/TCPClient.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1872" selectionTopPixel="939"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipView.java" partName="SpaceShipView.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/SpaceShipView.java" title="SpaceShipView.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipView.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/SpaceShipView.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="1" selectionOffset="2056" selectionTopPixel="1039"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipActivity.java" partName="SpaceShipActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java" title="SpaceShipActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="99" selectionOffset="3453" selectionTopPixel="1799"/>
-</editor>
 </editors>
 <views>
 <view id="com.android.ide.eclipse.ddms.views.DeviceView" partName="Devices"/>
@@ -128,7 +107,7 @@
 <viewState/>
 </view>
 </views>
-<perspectives activePart="org.eclipse.jdt.ui.CompilationUnitEditor" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
+<perspectives activePart="org.eclipse.jdt.ui.PackageExplorer" activePerspective="org.eclipse.jdt.ui.JavaPerspective">
 <perspective editorAreaTrimState="2" editorAreaVisible="0" fixed="0" version="0.016">
 <descriptor class="com.android.ide.eclipse.ddms.Perspective" id="com.android.ide.eclipse.ddms.Perspective" label="DDMS"/>
 <alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
@@ -322,169 +301,19 @@
 </perspective>
 </perspectives>
 <workingSets/>
-<navigationHistory>
-<editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/SpaceShipView.java"/>
-</editors>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="218" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1084" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="4051" y="30"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="1289" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1084" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3628" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1084" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1366" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1577" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3525" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1577" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="930" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3525" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="3844" y="237"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="930" y="0"/>
-</item>
-<item historyLabel="SpaceShipView.java" index="3">
-<position info="not_deleted" x="2056" y="1"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="4003" y="32"/>
-</item>
-<item historyLabel="SpaceShipView.java" index="3">
-<position info="not_deleted" x="2056" y="1"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="1289" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="930" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="2770" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="2768" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="1289" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3648" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3826" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3878" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3854" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="4083" y="0"/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="3844" y="191"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="4083" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3864" y="7"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="2422" y="0"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="3864" y="7"/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="1491" y="0"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="2422" y="0"/>
-</item>
-<item historyLabel="SpaceShipView.java" index="3">
-<position info="not_deleted" x="2056" y="1"/>
-</item>
-<item historyLabel="SpaceShipActivity.java" index="1">
-<position info="not_deleted" x="3453" y="99"/>
-</item>
-<item historyLabel="TCPClient.java" index="2">
-<position info="not_deleted" x="1872" y="0"/>
-</item>
-<item active="true" historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="1491" y="0"/>
-</item>
-</navigationHistory>
+<navigationHistory/>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
 </page>
 <workbenchWindowAdvisor/>
 <actionBarAdvisor/>
 <trimLayout>
+<trimArea IMemento.internal.id="16384">
+<trimItem IMemento.internal.id="left"/>
+</trimArea>
+<trimArea IMemento.internal.id="131072">
+<trimItem IMemento.internal.id="bottom"/>
+<trimItem IMemento.internal.id="right"/>
+</trimArea>
 <trimArea IMemento.internal.id="128">
 <trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
 </trimArea>
@@ -497,50 +326,50 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="AsyncTask.class" tooltip="android.os.AsyncTask">
-<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;android.os(AsyncTask.class"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.manifest.ManifestEditor" name="AndroidManifest.xml" tooltip="WiiPhone/AndroidManifest.xml">
+<persistable path="/WiiPhone/AndroidManifest.xml"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java">
 <persistable path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
 </file>
+<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="Paint.class" tooltip="android.graphics.Paint">
+<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;android.graphics(Paint.class"/>
+</file>
+<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="OvalShape.class" tooltip="android.graphics.drawable.shapes.OvalShape">
+<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;android.graphics.drawable.shapes(OvalShape.class"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipView.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipView.java">
 <persistable path="/WiiPhone/src/com/example/wiiphone/SpaceShipView.java"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TCPClient.java" tooltip="WiiPhone/src/com/example/wiiphone/TCPClient.java">
-<persistable path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LabyrinthView.java" tooltip="WiiPhone/src/com/example/wiiphone/LabyrinthView.java">
+<persistable path="/WiiPhone/src/com/example/wiiphone/LabyrinthView.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="LabyrinthActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/LabyrinthActivity.java">
+<persistable path="/WiiPhone/src/com/example/wiiphone/LabyrinthActivity.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java">
+<persistable path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
+</file>
+<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="Float.class" tooltip="java.lang.Float">
+<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;java.lang(Float.class"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="spaceship_main.xml" tooltip="WiiPhone/res/layout/spaceship_main.xml">
 <persistable path="/WiiPhone/res/layout/spaceship_main.xml"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.manifest.ManifestEditor" name="AndroidManifest.xml" tooltip="WiiPhone/AndroidManifest.xml">
-<persistable path="/WiiPhone/AndroidManifest.xml"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="labyrinth_main.xml" tooltip="WiiPhone/res/layout/labyrinth_main.xml">
+<persistable path="/WiiPhone/res/layout/labyrinth_main.xml"/>
+</file>
+<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="AsyncTask.class" tooltip="android.os.AsyncTask">
+<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;android.os(AsyncTask.class"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TCPClient.java" tooltip="WiiPhone/src/com/example/wiiphone/TCPClient.java">
+<persistable path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="strings.xml" tooltip="WiiPhone/res/values/strings.xml">
 <persistable path="/WiiPhone/res/values/strings.xml"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="activity_main.xml" tooltip="WiiPhone/res/layout/activity_main.xml">
 <persistable path="/WiiPhone/res/layout/activity_main.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java">
-<persistable path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="VerticalSeekBar.java" tooltip="WiiPhone/src/com/example/wiiphone/VerticalSeekBar.java">
-<persistable path="/WiiPhone/src/com/example/wiiphone/VerticalSeekBar.java"/>
-</file>
-<file factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" id="org.eclipse.jdt.ui.ClassFileEditor" name="PowerManager.class" tooltip="android.os.PowerManager">
-<persistable org.eclipse.jdt.ui.ClassFileIdentifier="=WiiPhone/D:\/Program\/Eclipse With AndroidSDK\/sdk\/platforms\/android-17\/android.jar&lt;android.os(PowerManager.class"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="list_item.xml" tooltip="WiiPhone/res/layout/list_item.xml">
-<persistable path="/WiiPhone/res/layout/list_item.xml"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" tooltip="LayoutTest/src/com/example/layouttest/MainActivity.java">
-<persistable path="/LayoutTest/src/com/example/layouttest/MainActivity.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MyCustomAdapter.java" tooltip="WiiPhone/src/com/example/wiiphone/MyCustomAdapter.java">
-<persistable path="/WiiPhone/src/com/example/wiiphone/MyCustomAdapter.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" name="activity_main.xml" tooltip="LayoutTest/res/layout/activity_main.xml">
-<persistable path="/LayoutTest/res/layout/activity_main.xml"/>
 </file>
 </mruList>
 </workbench>

@@ -2,6 +2,7 @@ package com.example.wiiphone;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.util.AttributeSet;
@@ -12,7 +13,8 @@ import android.view.View;
 public class SpaceShipView extends View
 {
 	private TCPClient mTcpClient = null;
-	private ShapeDrawable mDrawable = null;
+	private ShapeDrawable mDrawableInner = null;
+	private ShapeDrawable mDrawableOuter = null;
 	
 	public static final int AXIS_Y = 1;
 	
@@ -53,14 +55,21 @@ public class SpaceShipView extends View
                 
                 Log.e("SPD MESSAGE", message);
                 
-                int x = 0;
+                int x = 50;
                 int y =  (int) (super.getHeight() * (1 - (progress / 100)));
-                int width = 300;
+                int width = 150;
                 int height = (int) (super.getHeight() * (progress / 100));
 
-                mDrawable = new ShapeDrawable(new RectShape());
-                mDrawable.getPaint().setARGB(255,255,0,0);
-                mDrawable.setBounds(x, y, x + width, y + height);
+                mDrawableInner = new ShapeDrawable(new RectShape());
+                mDrawableInner.getPaint().setARGB(255,255,0,0);
+                mDrawableInner.setBounds(x, y, x + width, y + height);
+                
+                
+                mDrawableOuter = new ShapeDrawable(new RectShape());
+                mDrawableOuter.getPaint().setARGB(255,0,255,0);
+                mDrawableOuter.getPaint().setStyle(Paint.Style.STROKE);
+            	mDrawableOuter.getPaint().setStrokeWidth(10);
+                mDrawableOuter.setBounds(x, y, x + width, y + height);
                 postInvalidate();
             }
 			else
@@ -74,9 +83,13 @@ public class SpaceShipView extends View
     @Override
     protected void onDraw(Canvas canvas) 
     {
-    	if(mDrawable != null)
+    	if(mDrawableInner != null)
     	{
-    		mDrawable.draw(canvas);
+    		mDrawableInner.draw(canvas);
+    	}
+    	if(mDrawableOuter != null)
+    	{
+    		mDrawableOuter.draw(canvas);
     	}
     }
     

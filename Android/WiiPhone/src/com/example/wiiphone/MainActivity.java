@@ -36,12 +36,28 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-				String message = "KEYBOARD CHOSE MODE: 1";
+				String message = "GAM 1";
 				if(mTcpClient != null)
 				{
 					mTcpClient.sendMessage(message);
 				}
 				startActivityByNr(1);
+			}
+		});
+        
+        // Labyrinth Button
+        tButton = (Button) findViewById(R.id.game_2);
+        tButton.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "GAM 2";
+				if(mTcpClient != null)
+				{
+					mTcpClient.sendMessage(message);
+				}
+				startActivityByNr(2);
 			}
 		});
 
@@ -55,6 +71,10 @@ public class MainActivity extends Activity
 		if(nr == 1)
 		{
 			startActivity(new Intent(MainActivity.this, SpaceShipActivity.class));
+		}
+		if(nr == 2)
+		{
+			startActivity(new Intent(MainActivity.this, LabyrinthActivity.class));
 		}
 	}
     @Override
