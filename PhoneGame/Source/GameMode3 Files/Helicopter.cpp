@@ -11,8 +11,8 @@
 
 // Taken from http://www.defensie.nl/english/subjects/materiel/aircraft_and_helicopters/helicopters/apache_ah-64d_longbow_attack_helicopter
 // Not anymore
-#define MAX_ROTOR_RPM 12.5f
-#define MAX_SEC_ROTOR_RPM 50.0f
+#define MAX_ROTOR_RPM 15.0f
+#define MAX_SEC_ROTOR_RPM (MAX_ROTOR_RPM * 4.0f)
 
 
 #define ROLLING_COEF 0.2f
@@ -102,15 +102,28 @@ void Helicopter::Update(float dt)
 	lookAt.y = 0.0f;
 	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, 20, 0) - lookAt * 40);
 	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
-	//GetGraphics()->GetCamera()->SetForward(this->forward);
 
 
-	/*
-	// Attune forward to direction:
-	// If this Direction = right of us: this->yawingRight = true;
-	// If this Direction = left of us: this->yawingLeft = true;
-	// Ok not really using those bools, but do what they do inside their If's but only like 1/10'ths of it.
-	*/
+	// Attune forward to direction.
+	Vector3 xzdir = this->direction;
+	xzdir.y = 0;
+	float xzlen = xzdir.GetLength();
+	Vector3 right = this->up.GetCrossProduct(this->forward);
+	right.Normalize();
+	Vector3 dirNorm = this->direction;
+	dirNorm.Normalize();
+	float dotDirRight = right.GetDotProduct(dirNorm);
+	if(dotDirRight < 0.0f)
+	{
+		this->secRotorRPM -= dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
+	}
+	else if(dotDirRight > 0.0f)
+	{
+		this->secRotorRPM += dt * xzlen * (1 - abs(dotDirRight)) * 0.5f;
+	}
+
+	// Attune again
+	//this->AttuneSecRotorToMainRotor(dt);
 }
 
 void Helicopter::UpdateChopperSpec(float dt)

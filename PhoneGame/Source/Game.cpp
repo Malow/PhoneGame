@@ -70,6 +70,7 @@ void Game::Play()
 
 			// -1 means that keep looping like 0 but that it's the first loop so send msg to phone that it should choose mode.
 		case -1:
+			this->HandleEvent(diff);
 			if(this->networkController)
 			{
 				this->networkController->cc->sendData("CHOOSE GAMEMODE");
