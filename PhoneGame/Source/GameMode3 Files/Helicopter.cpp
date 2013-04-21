@@ -103,7 +103,7 @@ void Helicopter::Update(float dt)
 	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, 20, 0) - lookAt * 40);
 	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
 
-	/*
+	
 	// Attune forward to direction.
 	Vector3 xzdir = this->direction;
 	xzdir.y = 0.0f;
@@ -130,12 +130,7 @@ void Helicopter::Update(float dt)
 	this->rotor->RotateAxis(this->up, angle);
 
 	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
-	*/
-
-	float yDir = this->direction.y;
-	this->direction.y -= yDir * 0.1f * dt;
-	this->direction -= this->direction * 0.1f * dt;
-
+	direction.y *= 1.0f - dt;
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
