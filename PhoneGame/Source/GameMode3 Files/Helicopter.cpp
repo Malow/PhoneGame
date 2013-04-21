@@ -130,7 +130,7 @@ void Helicopter::Update(float dt)
 	this->rotor->RotateAxis(this->up, angle);
 
 	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
-	direction.y *= 1.0f - dt;
+	//direction.y *= 1.0f - dt;
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
