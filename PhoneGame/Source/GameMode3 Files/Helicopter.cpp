@@ -102,34 +102,6 @@ void Helicopter::Update(float dt)
 	lookAt.y = 0.0f;
 	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, 20, 0) - lookAt * 40);
 	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
-
-
-	// Attune forward to direction.
-	Vector3 xzdir = this->direction;
-	xzdir.y = 0.0f;
-	float xzlen = xzdir.GetLength();
-	xzdir.Normalize();
-	Vector3 xzfor = this->forward;
-	xzfor.y = 0.0f;
-	xzfor.Normalize();
-	float dotDirFor = xzdir.GetDotProduct(xzfor);
-	Vector3 vecRight = xzfor.GetCrossProduct(Vector3(0, 1, 0));
-	vecRight.y = 0.0f;
-	vecRight.Normalize();
-	float dotDirRight = xzdir.GetDotProduct(vecRight);
-
-	// When flying backwards remove the "BAM SNAP" effect when dot product gets 0.0f at the sides.
-	if(dotDirFor < 0.0f)
-		dotDirFor = 0.0f;
-
-	float angle = dt * xzlen * xzlen * xzlen * xzlen * (1 - abs(dotDirFor)) * 0.000001f;
-	if(dotDirRight < 0.0f)
-		angle *= -1.0f;
-	this->forward.RotateAroundAxis(this->up, -angle);
-	this->chopper->RotateAxis(this->up, -angle);
-	this->rotor->RotateAxis(this->up, angle);
-
-	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
