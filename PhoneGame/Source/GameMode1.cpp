@@ -36,6 +36,8 @@ void Game::PlayGameMode1()
 
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	GetGraphics()->ChangeShadowQuality(0);
+	GetGraphics()->UseShadow(false);
 	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
 	model->Scale(1.0f * 0.05f);
 

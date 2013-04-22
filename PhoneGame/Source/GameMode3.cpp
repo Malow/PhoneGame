@@ -32,6 +32,8 @@ void Game::PlayGameMode3()
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	GetGraphics()->ChangeShadowQuality(4);
+	GetGraphics()->UseShadow(true);
 
 	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
 	model->Scale(1.0f * 0.05f);
@@ -149,19 +151,16 @@ void Game::PlayGameMode3()
 		else
 			heli->RollRight(false);
 
-		/*
-		// Emulate heli input;
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_LEFT))
-			phoneDir.RotateAroundAxis(heli->GetForwardVector(), diff * 0.002f);
+		
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_UP))
-			phoneDir.RotateAroundAxis(heli->GetRightVector(), diff * 0.002f);
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_RIGHT))
-			phoneDir.RotateAroundAxis(heli->GetForwardVector(), -diff * 0.002f);
+			heli->camOffsetHeight += diff * 0.01f;
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_DOWN))
-			phoneDir.RotateAroundAxis(heli->GetRightVector(), -diff * 0.002f);
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
-			phoneDir = Vector3(0, 1, 0);
-		*/
+			heli->camOffsetHeight -= diff * 0.01f;
+
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
+			heli->camOffsetDistance -= diff * 0.01f;
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT))
+			heli->camOffsetDistance += diff * 0.01f;
 
 
 		if(this->networkController)
@@ -262,7 +261,7 @@ void Game::PlayGameMode3()
 
 
 		// Update arrow pointing towards next game objective
-		Vector3 VecToObjective =  human->GetPosition() - GetGraphics()->GetCamera()->GetPosition();
+		Vector3 VecToObjective =  human->GetPosition() - heli->GetPos();
 		GetGraphics()->GetCamera()->SetMesh(arrow, Vector3(GetGraphics()->GetCamera()->GetForward() * -4 + GetGraphics()->GetCamera()->GetUpVector() * -1));
 		arrow->ResetRotation();
 		Vector3 vec = Vector3(0, -1, 0);
@@ -279,6 +278,7 @@ void Game::PlayGameMode3()
 		this->networkController->cc->sendData("QUITTING");
 	}
 
+	GetGraphics()->GetCamera()->RemoveMesh();
 
 	delete heli;
 	GetGraphics()->DeleteMesh(model);
@@ -305,5 +305,3 @@ void Game::PlayGameMode3()
 // Add a way to move the camera angle up and down.
 
 // add texts for info
-
-// fix human spawn posses

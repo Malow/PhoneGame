@@ -44,6 +44,9 @@ Helicopter::Helicopter(iMesh* chopper, iMesh* rotor, iMesh* secrotor, iTerrain* 
 	bool yawingRight = false;
 	bool yawingLeft = false;
 	this->secRotorRPM = 0;
+	this->engineStarted = false;
+	this->camOffsetHeight = 20.0f;
+	this->camOffsetDistance = 40.0f;
 	//this->rpmtext = GetGraphicsEngine()->CreateText("RPM: " + MaloW::convertNrToString(this->rotorRPM), D3DXVECTOR2(50, 50), 1.0f, "Media/Fonts/1");
 }
 
@@ -128,7 +131,15 @@ void Helicopter::Update(float dt)
 	}
 
 	this->UpdateChopperSpec(dt);
-	
+
+
+	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
+	//direction.y *= 1.0f - dt;
+
+	// AutoHoverEffect
+	this->AutoHover(dt);
+
+
 	this->pos += this->direction * dt;
 	this->chopper->SetPosition(this->pos);
 	this->rotor->SetPosition(this->pos);
@@ -136,7 +147,7 @@ void Helicopter::Update(float dt)
 
 	Vector3 lookAt = this->forward;
 	lookAt.y = 0.0f;
-	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, 20, 0) - lookAt * 40);
+	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, this->camOffsetHeight, 0) - lookAt * this->camOffsetDistance);
 	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
 
 	
@@ -164,9 +175,6 @@ void Helicopter::Update(float dt)
 	this->forward.RotateAroundAxis(this->up, -angle);
 	this->chopper->RotateAxis(this->up, -angle);
 	this->rotor->RotateAxis(this->up, angle);
-
-	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
-	//direction.y *= 1.0f - dt;
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
@@ -174,6 +182,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 	// Acc and Dec
 	if(this->accelerating)
 	{
+		this->engineStarted = true;
 		this->rotorRPM += dt;
 		if(this->rotorRPM > MAX_ROTOR_RPM)
 			this->rotorRPM = MAX_ROTOR_RPM;
@@ -184,9 +193,12 @@ void Helicopter::UpdateChopperSpec(float dt)
 	{
 		this->rotorRPM -= 2 * dt;		// 2 times quicker deceleration
 		if(this->rotorRPM < 0)
-			this->rotorRPM = 0;
+			this->rotorRPM = 0.0f;
 		else
 			this->secRotorRPM -= dt * 4;
+
+		if(this->rotorRPM == 0.0f)
+			this->engineStarted = false;
 	}
 	else
 	{
@@ -414,6 +426,36 @@ float Helicopter::GetMaxRPM()
 float Helicopter::GetCurrentRPM()
 {
 	return this->rotorRPM;
+}
+
+void Helicopter::AutoHover( float dt )
+{
+	float hoverRPM = 0.0f;	// Find out using below:
+
+	if(this->up.y == 0.0f)
+		return;
+
+	float C = 10.0f;
+	float S = 0.8f;
+	hoverRPM = 9.82f * 0.5f * (1.0f / this->up.y) * this->mass * (1.0f / C) * (1.0f / S) * 2.0f * (1.0f / AIR_DENSITY) * (1.0f / 1.5f) * (1.0f / 60.0f);
+
+	// Attune rotorRPM to hoverRPM:
+	if(this->engineStarted)
+	{
+		if(hoverRPM > this->rotorRPM && !this->decelerating && !this->accelerating)
+		{
+			this->rotorRPM += dt;
+			if(this->rotorRPM > MAX_ROTOR_RPM)
+				this->rotorRPM = MAX_ROTOR_RPM;
+			else 
+				this->secRotorRPM += dt * 2;
+		}
+		if(hoverRPM < this->rotorRPM && !this->accelerating && !this->decelerating)
+		{
+			this->rotorRPM -= dt;
+			this->secRotorRPM -= dt * 2;
+		}
+	}
 }
 
 

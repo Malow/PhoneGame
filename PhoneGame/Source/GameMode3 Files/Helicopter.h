@@ -6,6 +6,9 @@
 class Helicopter
 {
 public:
+	float camOffsetHeight;
+	float camOffsetDistance;
+
 	Helicopter(iMesh* chopper, iMesh* rotor, iMesh* secrotor, iTerrain* terr);
 	virtual ~Helicopter();
 
@@ -70,11 +73,15 @@ private:
 	bool rollingLeft;
 
 
+	bool engineStarted;
+
+
 	float rotorRPM;
 	float secRotorRPM;
 	Vector3 up;
 	Vector3 forward;
 
+	void AutoHover(float dt);
 };
 
 
