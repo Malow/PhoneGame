@@ -47,6 +47,8 @@ Helicopter::Helicopter(iMesh* chopper, iMesh* rotor, iMesh* secrotor, iTerrain* 
 	this->engineStarted = false;
 	this->camOffsetHeight = 20.0f;
 	this->camOffsetDistance = 40.0f;
+
+	this->health = 100.0f;
 	//this->rpmtext = GetGraphicsEngine()->CreateText("RPM: " + MaloW::convertNrToString(this->rotorRPM), D3DXVECTOR2(50, 50), 1.0f, "Media/Fonts/1");
 }
 
@@ -61,21 +63,31 @@ void Helicopter::Update(float dt)
 	// Gravity
 	this->direction.y -= GRAVITY * dt;
 
-
 	// Air friction
 	float velocity = this->GetVelocity();
 	float newVelocity = velocity - ((AIR_FRICTION_CONSTANT * (velocity * velocity)) / this->mass) * dt;
 	float dv = newVelocity / velocity;
 	this->direction *= dv;
 	
-
+	
 	// Collision against terrain
 	float terrY = this->terrain->GetYPositionAt(this->pos.x, this->pos.z);
 	if(this->pos.y + this->direction.y * dt <= terrY)
 	{
 		// Bounce
 		this->direction.y = 0 - this->direction.y * this->elacticity;
+
+		// Take damage
+		float damage = (abs(this->direction.y * 5) + abs(this->direction.x) + abs(this->direction.z)); 
+		if(damage > 5.0f)
+			this->health -= damage;
 	}
+
+
+	// Regen health:
+	this->health += dt;
+	if(this->health > 100.0f)
+		this->health = 100.0f;
 	
 	
 	// Friction against terrain here if close to it, simplified calculating only in the XZ plane and not angled terrain.
@@ -101,36 +113,37 @@ void Helicopter::Update(float dt)
 		defup.Normalize();
 		Vector3 cross = this->up.GetCrossProduct(this->forward);
 		cross.Normalize();
-		float dotCrossPhone = cross.GetDotProduct(defup);
+		float dotCrossDefup = cross.GetDotProduct(defup);
 		// Roll left
-		if(dotCrossPhone < 0.0f)
+		if(dotCrossDefup < 0.0f)
 		{
 			this->RollLeft(true);
 			this->RollRight(false);
 		}
 		// Roll right
-		else if(dotCrossPhone > 0.0f)
+		else if(dotCrossDefup > 0.0f)
 		{
 			this->RollLeft(false);
 			this->RollRight(true);
 		}
 
-		float dotForPhone = this->forward.GetDotProduct(defup);
+		float dotForUp = this->forward.GetDotProduct(defup);
 		// Roll forward
-		if(dotForPhone > 0.0f)
+		if(dotForUp > 0.0f)
 		{
 			this->RollForward(true);
 			this->RollBackward(false);
 		}
 		// Roll backward
-		else if(dotForPhone < 0.0f)
+		else if(dotForUp < 0.0f)
 		{
 			this->RollForward(false);
 			this->RollBackward(true);
 		}
 	}
-
-	this->UpdateChopperSpec(dt);
+	
+	if(this->health > 95.0f)
+		this->UpdateChopperSpec(dt);
 
 
 	// For funness we need to reset the direction.y a little, it's too hard to handle up&downs otherwise
@@ -139,42 +152,44 @@ void Helicopter::Update(float dt)
 	// AutoHoverEffect
 	this->AutoHover(dt);
 
+	if(this->health > 95.0f)
+	{
+		this->pos += this->direction * dt;
+		this->chopper->SetPosition(this->pos);
+		this->rotor->SetPosition(this->pos);
+		this->secrotor->SetPosition(this->pos - this->forward * 28 + this->up * 11);	// Adding offset for the second rotor.
 
-	this->pos += this->direction * dt;
-	this->chopper->SetPosition(this->pos);
-	this->rotor->SetPosition(this->pos);
-	this->secrotor->SetPosition(this->pos - this->forward * 28 + this->up * 11);	// Adding offset for the second rotor.
+		Vector3 lookAt = this->forward;
+		lookAt.y = 0.0f;
+		GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, this->camOffsetHeight, 0) - lookAt * this->camOffsetDistance);
+		GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
 
-	Vector3 lookAt = this->forward;
-	lookAt.y = 0.0f;
-	GetGraphics()->GetCamera()->SetPosition(this->pos + Vector3(0, this->camOffsetHeight, 0) - lookAt * this->camOffsetDistance);
-	GetGraphics()->GetCamera()->LookAt(this->pos + lookAt * 30 + Vector3(0, 10, 0));
 
-	
-	// Attune forward to direction.
-	Vector3 xzdir = this->direction;
-	xzdir.y = 0.0f;
-	float xzlen = xzdir.GetLength();
-	xzdir.Normalize();
-	Vector3 xzfor = this->forward;
-	xzfor.y = 0.0f;
-	xzfor.Normalize();
-	float dotDirFor = xzdir.GetDotProduct(xzfor);
-	Vector3 vecRight = xzfor.GetCrossProduct(Vector3(0, 1, 0));
-	vecRight.y = 0.0f;
-	vecRight.Normalize();
-	float dotDirRight = xzdir.GetDotProduct(vecRight);
+		// Attune forward to direction.
+		Vector3 xzdir = this->direction;
+		xzdir.y = 0.0f;
+		float xzlen = xzdir.GetLength();
+		xzdir.Normalize();
+		Vector3 xzfor = this->forward;
+		xzfor.y = 0.0f;
+		xzfor.Normalize();
+		float dotDirFor = xzdir.GetDotProduct(xzfor);
+		Vector3 vecRight = xzfor.GetCrossProduct(Vector3(0, 1, 0));
+		vecRight.y = 0.0f;
+		vecRight.Normalize();
+		float dotDirRight = xzdir.GetDotProduct(vecRight);
 
-	// When flying backwards remove the "BAM SNAP" effect when dot product gets 0.0f at the sides.
-	if(dotDirFor < 0.0f)
-		dotDirFor = 0.0f;
+		// When flying backwards remove the "BAM SNAP" effect when dot product gets 0.0f at the sides.
+		if(dotDirFor < 0.0f)
+			dotDirFor = 0.0f;
 
-	float angle = dt * xzlen * xzlen * xzlen * xzlen * (1 - abs(dotDirFor)) * 0.000001f;
-	if(dotDirRight < 0.0f)
-		angle *= -1.0f;
-	this->forward.RotateAroundAxis(this->up, -angle);
-	this->chopper->RotateAxis(this->up, -angle);
-	this->rotor->RotateAxis(this->up, angle);
+		float angle = dt * xzlen * xzlen * xzlen * xzlen * (1 - abs(dotDirFor)) * 0.000001f;
+		if(dotDirRight < 0.0f)
+			angle *= -1.0f;
+		this->forward.RotateAroundAxis(this->up, -angle);
+		this->chopper->RotateAxis(this->up, -angle);
+		this->rotor->RotateAxis(this->up, angle);
+	}
 }
 
 void Helicopter::UpdateChopperSpec(float dt)
@@ -202,11 +217,12 @@ void Helicopter::UpdateChopperSpec(float dt)
 	}
 	else
 	{
+		// Deprecated, implemented a way more advanced thing in autoHover function
 		// Attunation of rotorspeed to make it auto-hover.
-		if(this->rotorRPM > 11.4f)
-		{
-			this->rotorRPM -= dt * 0.1f;
-		}
+		//if(this->rotorRPM > 11.4f)
+		//{
+		//	this->rotorRPM -= dt * 0.1f;
+		//}
 	}
 	
 	// Apply yawing
@@ -235,8 +251,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 	{
 		if(this->rollingForward)
 		{
-			Vector3 vec(this->up);
-			Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
+			Vector3 around = this->up.GetCrossProduct(Vector3(this->forward));
 			float angle = -dt * ROLLING_COEF;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
@@ -245,8 +260,7 @@ void Helicopter::UpdateChopperSpec(float dt)
 		}
 		if(this->rollingBackward)
 		{
-			Vector3 vec(this->up);
-			Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
+			Vector3 around = this->up.GetCrossProduct(Vector3(this->forward));
 			float angle = dt * ROLLING_COEF;
 			this->forward.RotateAroundAxis(around, -angle);
 			this->up.RotateAroundAxis(around, -angle);
@@ -294,11 +308,11 @@ void Helicopter::AttuneSecRotorToMainRotor(float dt)
 	// Attune sec to keep the sec-rotor rpm linear with the main rotor to simulate balancing spin.
 	if((this->secRotorRPM / MAX_SEC_ROTOR_RPM) * 2 < (this->rotorRPM / MAX_ROTOR_RPM))
 	{
-		this->secRotorRPM += dt * 0.5f;
+		this->secRotorRPM += dt;
 	}
 	if((this->secRotorRPM / MAX_SEC_ROTOR_RPM) * 2 > (this->rotorRPM / MAX_ROTOR_RPM))
 	{
-		this->secRotorRPM -= dt * 0.5f;
+		this->secRotorRPM -= dt;
 	}
 	
 
@@ -310,112 +324,10 @@ void Helicopter::AttuneSecRotorToMainRotor(float dt)
 		this->secRotorRPM = 0;
 }
 
-void Helicopter::SetUpVector(Vector3 nUp)
-{
-	nUp.Normalize();
-	Vector3 cross = this->up.GetCrossProduct(this->forward);
-	cross.Normalize();
-	float dotCrossnUp = cross.GetDotProduct(nUp);
-
-	// Roll left
-	if(dotCrossnUp < 0.0f)
-	{
-		float angle = dotCrossnUp * 3.1415f * 0.5f;
-		this->up.RotateAroundAxis(this->forward, -angle);
-		this->chopper->RotateAxis(this->forward, -angle);
-		this->rotor->RotateAxis(this->forward, -angle);
-	}
-	// Roll right
-	else
-	{
-		float angle = dotCrossnUp * 3.1415f * 0.5f;
-		this->up.RotateAroundAxis(this->forward, -angle);
-		this->chopper->RotateAxis(this->forward, -angle);
-		this->rotor->RotateAxis(this->forward, -angle);
-	}
-	
-	float dotFornUp = this->forward.GetDotProduct(nUp);
-	// Roll forward
-	if(dotFornUp < 0.0f)
-	{
-		Vector3 vec(this->up);
-		Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
-		float angle = dotFornUp * 3.1415f * 0.5f;
-		this->forward.RotateAroundAxis(around, -angle);
-		this->up.RotateAroundAxis(around, -angle);
-		this->chopper->RotateAxis(around, -angle);
-		this->rotor->RotateAxis(around, -angle);
-	}
-	// Roll backward
-	else
-	{
-		Vector3 vec(this->up);
-		Vector3 around = vec.GetCrossProduct(Vector3(this->forward));
-		float angle = dotFornUp * 3.1415f * 0.5f;
-		this->forward.RotateAroundAxis(around, -angle);
-		this->up.RotateAroundAxis(around, -angle);
-		this->chopper->RotateAxis(around, -angle);
-		this->rotor->RotateAxis(around, -angle);
-	}
-}
-
 Vector3 Helicopter::GetRightVector()
 {
 	Vector3 right = this->up.GetCrossProduct(this->forward);
 	return right;
-}
-
-void Helicopter::PhoneInput(Vector3 phoneDir, float dt)
-{
-	phoneDir.Normalize();
-	Vector3 cross = this->up.GetCrossProduct(this->forward);
-	cross.Normalize();
-	float dotCrossPhone = cross.GetDotProduct(phoneDir);
-
-	// Roll left
-	if(dotCrossPhone < 0.0f)
-	{
-		float angle = dotCrossPhone * dt * PHONE_INPUT_COEF;
-		this->up.RotateAroundAxis(this->forward, -angle);
-		this->chopper->RotateAxis(this->forward, -angle);
-		this->rotor->RotateAxis(this->forward, -angle);
-	}
-	// Roll right
-	else
-	{
-		float angle = dotCrossPhone * dt * PHONE_INPUT_COEF;
-		this->up.RotateAroundAxis(this->forward, -angle);
-		this->chopper->RotateAxis(this->forward, -angle);
-		this->rotor->RotateAxis(this->forward, -angle);
-	}
-	/*
-	float dotForPhone = this->forward.GetDotProduct(phoneDir);
-	// Roll forward
-	if(dotForPhone > 0.0f)
-	{
-		Vector3 around = this->up.GetCrossProduct(this->forward);
-		float angle = dotForPhone * dt * PHONE_INPUT_COEF;
-		this->forward.RotateAroundAxis(around, -angle);
-		this->up.RotateAroundAxis(around, -angle);
-
-		this->up = around.GetCrossProduct(this->forward);
-
-		this->chopper->RotateAxis(around, -angle);
-		this->rotor->RotateAxis(around, -angle);
-	}
-	// Roll backward
-	else if(dotForPhone < 0.0f)
-	{
-		Vector3 around = this->up.GetCrossProduct(this->forward);
-		float angle = dotForPhone * dt * PHONE_INPUT_COEF;
-		this->forward.RotateAroundAxis(around, -angle);
-		this->up.RotateAroundAxis(around, -angle);
-
-		this->up = around.GetCrossProduct(this->forward);
-
-		this->chopper->RotateAxis(around, -angle);
-		this->rotor->RotateAxis(around, -angle);
-	}*/
 }
 
 float Helicopter::GetMaxRPM()

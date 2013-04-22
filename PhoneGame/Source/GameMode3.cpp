@@ -69,18 +69,20 @@ void Game::PlayGameMode3()
 	helipad->SetScale(3.0f);
 
 
-	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 65), 1.0f, "Media/fonts/new");
-	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/new");
+	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 65), 1.0f, "Media/fonts/newBorder");
+	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/newBorder");
 
-
-	iText* altitudeText = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/new");
-	iText* speedText = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/new");
+	iText* altitudeText = GetGraphics()->CreateText("", Vector2(50, 5), 1.0f, "Media/fonts/newBorder");
+	iText* speedText = GetGraphics()->CreateText("", Vector2(50, 30), 1.0f, "Media/fonts/newBorder");
+	iText* healthText = GetGraphics()->CreateText("", Vector2(50, 150), 1.0f, "Media/fonts/new");
 
 	iFBXMesh* human = GetGraphics()->CreateFBXMesh("Media/Token/token_anims.fbx", Vector3(100, 0, 110));
 	human->SetScale(0.2f);
 	human->SetPosition(humanPos[0]);
 
-	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
+	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 75), Vector2(75, 75), "Media/star.png");
+	iImage* warningDamage = GetGraphics()->CreateImage(Vector2(200, 160), Vector2(90, 75), "Media/warning.png");
+	warningDamage->SetOpacity(0.0f);
 	guiStar->SetOpacity(0.0f);
 	float starTimer = 0.0f;
 
@@ -111,8 +113,6 @@ void Game::PlayGameMode3()
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
 
-
-		
 
 
 		// Heli Controlls
@@ -234,6 +234,17 @@ void Game::PlayGameMode3()
 		dir.y = 0.0f;
 		float xzspeed = dir.GetLength();
 		speedText->SetText(string("SPEED: " + MaloW::convertNrToString((int)xzspeed)).c_str());
+		float health = heli->GetHealth();
+		healthText->SetText(string("HEALTH: " + MaloW::convertNrToString((int)health)).c_str());
+		if(health < 50.0f)
+			healthText->SetColor(Vector3(0.0f, -256.0f + health * 5.1f, -128.0f));
+		else
+			healthText->SetColor(Vector3(-(health - 50.0f) * 5.1f, 0.0f, -128.0f));
+
+		if(heli->GetHealth() < 95.0f)
+			warningDamage->SetOpacity(1.0f);
+		else
+			warningDamage->SetOpacity(0.0f);
 
 		//////////////////////////////////////////////////////////////////////////
 		// GAME LOGIC
@@ -241,7 +252,7 @@ void Game::PlayGameMode3()
 			time += diff * 0.001f;
 
 		float distance = (heli->GetPos() - human->GetPosition()).GetLength();
-		if(distance < 15.0f && heli->GetPos().y < 1.0f && xzspeed < 1.0f)
+		if(distance < 25.0f && heli->GetPos().y < 1.0f && xzspeed < 1.0f)
 		{
 			if(score == 0)
 				started = true;
@@ -293,15 +304,28 @@ void Game::PlayGameMode3()
 	GetGraphics()->DeleteTerrain(terrain);
 
 	GetGraphics()->DeleteText(altitudeText);
-	GetGraphics()->DeleteText(speedText);
+	GetGraphics()->DeleteText(speedText);	
+	GetGraphics()->DeleteText(healthText);
 
 	GetGraphics()->DeleteText(timeTxt);
 	GetGraphics()->DeleteText(scoreTxt);
 
 	GetGraphics()->DeleteImage(guiStar);
+	GetGraphics()->DeleteImage(warningDamage);
 }
 
 // TODO:
-// Add a way to move the camera angle up and down.
+// When laying the chopper upside down the rotorblades stops and then u get teleported to #INF
+//    When upvector is pointing downwards and it does the autorolling on ground?
 
-// add texts for info
+// Rotation of shit gets fucked sometimes, either find what part of the program that fucks it, or find a way / place where I can reset all rotations and re-rotate around a simple way.
+
+
+
+
+
+
+
+
+
+
