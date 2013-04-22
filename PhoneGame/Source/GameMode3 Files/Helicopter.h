@@ -41,7 +41,13 @@ public:
 	void AttuneSecRotorToMainRotor(float dt);
 
 	Vector3 GetForwardVector() { return this->forward; }
+	Vector3 GetUpVector() { return this->up; }
+	Vector3 GetRightVector();
+	void SetUpVector(Vector3 nUp);
 
+	void PhoneInput(Vector3 phoneDir, float dt);
+	float GetMaxRPM();
+	float GetCurrentRPM();
 private:
 	iTerrain* terrain;
 	iMesh* chopper;
