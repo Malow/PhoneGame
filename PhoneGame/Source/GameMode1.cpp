@@ -306,5 +306,3 @@ void Game::PlayGameMode1()
 
 // TEST the new algorithm with the phone... I now only make non-linear scaling between 0 - 0.1, and then linear from there on.
 // Implement game mode-thingy on the phone.
-
-// Make turning like it was before, less sens and more turning IRL required.
