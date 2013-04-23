@@ -3,9 +3,9 @@
 #include "GameMode3 Files\PhysMesh.h"
 #include "GameMode3 Files\Helicopter.h"
 
-#define HUMAN_POS_COUNT 10
+#define NR_OF_HUMANS 10
 #define YOFFSET 0.0f
-static const Vector3 humanPos[HUMAN_POS_COUNT] = 
+static const Vector3 humanPos[NR_OF_HUMANS] = 
 {
 	Vector3(-114, YOFFSET, -112),
 	Vector3(17, YOFFSET, 161),
@@ -30,6 +30,7 @@ void Game::PlayGameMode3()
 
 
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
+	GetGraphics()->ChangeCamera(RTS);
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->ChangeShadowQuality(4);
@@ -87,6 +88,14 @@ void Game::PlayGameMode3()
 	float starTimer = 0.0f;
 
 	iMesh* arrow = GetGraphics()->CreateMesh("Media/RedArrow.obj", Vector3(10, 2000, 15));
+
+
+#ifdef _DEBUG
+	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 155), 1.0f, "Media/fonts/newBorder");
+	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 185), 1.0f, "Media/fonts/newBorder");
+	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/newBorder");
+#endif
+
 
 	Vector3 phoneDir = Vector3(0, 1, 0);
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -170,9 +179,30 @@ void Game::PlayGameMode3()
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(0, 1, 0);
 
+			phoneDir = Vector3(-phoneDir.x, phoneDir.z, -phoneDir.y); // recreate phonedir as we want it.
 
+			if(phoneDir.x > 0.1f)
+			{
+				heli->RollForward(true);
+				heli->RollBackward(false);
+			}
+			else if(phoneDir.x < -0.1f)
+			{
+				heli->RollForward(false);
+				heli->RollBackward(true);
+			}
+			if(phoneDir.z > 0.1f)
+			{
+				heli->RollLeft(true);
+				heli->RollRight(false);
+			}
+			if(phoneDir.z < -0.1f)
+			{
+				heli->RollLeft(false);
+				heli->RollRight(true);
+			}
 
-			phoneDir.Normalize();
+			/*
 			Vector3 cross = heli->GetUpVector().GetCrossProduct(heli->GetForwardVector());
 			cross.Normalize();
 			float dotCrossPhone = cross.GetDotProduct(phoneDir);
@@ -202,8 +232,8 @@ void Game::PlayGameMode3()
 				heli->RollForward(false);
 				heli->RollBackward(true);
 			}
-
-			
+			*/
+			/*
 			float maxSpeed = heli->GetMaxRPM();
 			float minSpeed = 0.0f;
 			// min / max: 10 / 100: speed: 10 -> min(10) + input(10) * range(0.9) = 19
@@ -223,7 +253,15 @@ void Game::PlayGameMode3()
 			{
 				heli->Accelerate(false);
 				heli->Decelerate(true);
-			}
+			}*/
+
+
+#ifdef _DEBUG
+			phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneDir.x)).c_str());
+			phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneDir.y)).c_str());
+			phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneDir.z)).c_str());
+#endif
+
 		}
 
 		heli->Update(diff * 0.002f);	// double diff to get increased speed in gameplay
@@ -257,7 +295,7 @@ void Game::PlayGameMode3()
 			if(score == 0)
 				started = true;
 			score++;
-			human->SetPosition(humanPos[score % HUMAN_POS_COUNT]);
+			human->SetPosition(humanPos[score % NR_OF_HUMANS]);
 
 			starTimer = 2.0f;
 		}
@@ -312,6 +350,12 @@ void Game::PlayGameMode3()
 
 	GetGraphics()->DeleteImage(guiStar);
 	GetGraphics()->DeleteImage(warningDamage);
+
+#ifdef _DEBUG
+	GetGraphics()->DeleteText(phoneDirTxtX);
+	GetGraphics()->DeleteText(phoneDirTxtY);
+	GetGraphics()->DeleteText(phoneDirTxtZ);
+#endif
 }
 
 // TODO:
@@ -320,7 +364,7 @@ void Game::PlayGameMode3()
 
 // Rotation of shit gets fucked sometimes, either find what part of the program that fucks it, or find a way / place where I can reset all rotations and re-rotate around a simple way.
 
-
+// add some deriavte stuff to make it more smooth when controlling with phone.
 
 
 

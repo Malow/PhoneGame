@@ -31,6 +31,7 @@ void Game::PlayGameMode1()
 
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
+	GetGraphics()->ChangeCamera(RTS);
 	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
 	GetGraphics()->GetCamera()->LookAt(Vector3(0, 0, 0));
 
@@ -151,15 +152,18 @@ void Game::PlayGameMode1()
 
 			// The smaller the value is the smaller the turn will be, should give a nice non-linear acceleration like spotify. 
 			// right now 0.0 - 0.1 is increased non-linearly, and then linearly after that.
-			if(abs(phoneDir.y) < 0.2f)
-				phoneDir.y *= abs(phoneDir.y) * 5;
+			
+			if(abs(phoneDir.y) < 0.33f)
+				phoneDir.y *= abs(phoneDir.y) * 3;
 
-			if(abs(phoneDir.z) < 0.2f)
-				phoneDir.z *= abs(phoneDir.z) * 5;
-
+			if(abs(phoneDir.z) < 0.33f)
+				phoneDir.z *= abs(phoneDir.z) * 3;
+				
 			// Double the value to increase the sens so u dont have to turn the phone completely for full effect.
+			/*
 			phoneDir.y *= 1.5f;
 			phoneDir.z *= 1.5f;
+			*/
 
 			// Limit values to -1.0 - 1.0
 			if(phoneDir.z > 1.0f)
@@ -286,6 +290,7 @@ void Game::PlayGameMode1()
 	GetGraphics()->DeleteText(speedTxt);
 	GetGraphics()->DeleteText(timeTxt);
 	GetGraphics()->DeleteText(scoreTxt);
+
 #ifdef _DEBUG
 	GetGraphics()->DeleteText(phoneDirTxtX);
 	GetGraphics()->DeleteText(phoneDirTxtY);
@@ -301,5 +306,3 @@ void Game::PlayGameMode1()
 
 // TEST the new algorithm with the phone... I now only make non-linear scaling between 0 - 0.1, and then linear from there on.
 // Implement game mode-thingy on the phone.
-
-// Make turning like it was before, less sens and more turning IRL required.

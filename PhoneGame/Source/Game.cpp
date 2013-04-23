@@ -101,6 +101,13 @@ void Game::Play()
 
 		case 3:
 			gameModeImage->SetOpacity(0.0f);
+			this->PlayGameMode4();
+			this->gameMode = -1;
+			gameModeImage->SetOpacity(1.0f);
+			break;
+
+		case 4:
+			gameModeImage->SetOpacity(0.0f);
 			this->PlayGameMode3();
 			this->gameMode = -1;
 			gameModeImage->SetOpacity(1.0f);

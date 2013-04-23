@@ -71,6 +71,7 @@ private:
 	void PlayGameMode1();
 	void PlayGameMode2();
 	void PlayGameMode3();
+	void PlayGameMode4();
 
 public:
 	Game();
