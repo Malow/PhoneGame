@@ -1867,7 +1867,7 @@ void PhysicsEngine::DoCollisionRayVsFBXMesh( Vector3 rayOrigin, Vector3 rayDirec
 #include "..\..\PhoneGame\Source\PowerBall.h"
 #include "..\..\PhoneGame\NDYGFX\Include\Vector.h"
 #include "..\..\PhoneGame\Source\Matrix4.h"
-bool RayTriIntersect(Vector3 origin, Vector3 direction, Vector3 p0, Vector3 p1, Vector3 p2, float &u, float &v, float &t)
+bool RayTriIntersectSpecial(Vector3 origin, Vector3 direction, Vector3 p0, Vector3 p1, Vector3 p2, float &u, float &v, float &t)
 {
 	Vector3 e1, e2, q, s, r;
 	u = v = t = 0;
@@ -1892,14 +1892,14 @@ bool RayTriIntersect(Vector3 origin, Vector3 direction, Vector3 p0, Vector3 p1, 
 	t = f*(e2.GetDotProduct(q));
 	return true;
 }
-bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vector3& normal, float diff )
+bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vector3& sendBackNormal, float diff )
 {
 	if(Mesh* mesh = dynamic_cast<Mesh*>(ball->GetMesh()))
 	{
-		MaloW::Array<MeshStrip*>* temp =  dynamic_cast<Mesh*>(map->GetMesh())->GetStrips();
+	MaloW::Array<MeshStrip*>* temp =  dynamic_cast<Mesh*>(map->GetMesh())->GetStrips();
 	//int sizeMstrip = temp->size();
 	int sizeVertexS0 = temp->get(0)->getNrOfVerts();
-	Vertex* verts;
+	VertexNormalMap* verts;
 	//Vector3 origin = this->GetPositionVector3();
 	Vector3 origin = ball->GetTempPosition();
 	Vector3 dir = ball->GetVelocity();
@@ -1959,7 +1959,7 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 		float tempLength;
 		Vector3 ny;
 		Vector3 projN;
-		if(RayTriIntersect(origin , rayDirection, p0, p1, p2, u, v, t) )
+		if(RayTriIntersectSpecial(origin , rayDirection, p0, p1, p2, u, v, t) )
 		{
 			normal = rayDirection;
 			ny = origin - p0;
@@ -2132,22 +2132,22 @@ bool PhysicsEngine::DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vecto
 			
 			//this->SetPosition(newPo);
 			ball->SetTempPosition(newPo);
-			normal = normalStore;
+			sendBackNormal = normalStore;
 			//this->mNormalContact = normalPlane;
 			//this->mHasContact  = true;
 			return true;
 		}
 		else
 		{
-			normal = Vector3(0,0,0);
+			sendBackNormal = Vector3(0,0,0);
 			//this->mNormalContact = normalPlane;
 			//this->mHasContact  = false;
 			return false;
 		}
 		
 	}
-	normal = Vector3(0,0,0);
-	ball->SetNormalContact(normal);
+	sendBackNormal = Vector3(0,0,0);
+	ball->SetNormalContact(sendBackNormal);
 	//this->mHasContact  = false;
 	return false;
 	}

@@ -15,7 +15,7 @@ Map::Map(string meshFilePath, Vector3 position)
 	this->mRadius	     = 100000.0f;
 	this->mScaledRadius  = this->mRadius;
 	this->mMass			 = 100000.0f;
-	this->mRestitution   = 0.60f;
+	this->mRestitution   = 0.0f;
 	this->mIsRotating	 = false;
 	this->mAngleX		 = 0.0f;
 	this->mAngleZ		 = 0.0f;

@@ -793,8 +793,8 @@ void PowerBall::collisionPlatformResponse(Map* p, Vector3 normalPlane, float dt)
 	{
 		if( (v1y.GetLength() < 2.0f) && (v1y.GetLength() > 0.0f) )
 			v1y -= v1y*this->mFriction*newdt;
-		if( v1y.GetLength() < 0.1f && (v1y.GetLength() > 0.0f) )
-			v1y *= this->mFriction*newdt;
+		//if( v1y.GetLength() < 0.1f && (v1y.GetLength() > 0.0f) )
+			//v1y *= this->mFriction*newdt;
 	}	
 	
 	

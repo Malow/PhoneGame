@@ -1,9 +1,10 @@
 #include "Game.h"
 #include "Map.h"
 #include "PowerBall.h"
+#include "GameObject.h"
 
 #define PI 3.1415
-#define NROFPREV 20
+#define NROFPREV 1
 float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[])
 {
 	float totAngles = 0;
@@ -61,6 +62,8 @@ void Game::PlayGameMode2()
 	int score = 0;
 	bool started = false;
 
+	float delayTimer = 1000.0f;
+
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
@@ -71,6 +74,12 @@ void Game::PlayGameMode2()
 	for(int i = 0; i < NROFPREV; i++)
 	{
 		prevVectors[i] = DefaultDir;
+	}
+
+	while(delayTimer > 0)
+	{
+		float diff = GetGraphics()->Update();
+		delayTimer -= diff;
 	}
 
 	while(GetGraphics()->IsRunning() && go)
@@ -104,7 +113,10 @@ void Game::PlayGameMode2()
 	
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
-		
+		if(GetGraphics()->GetKeyListener()->IsPressed('R'))
+		{
+			mBalls->SetPosition(Vector3(-13.0f,27,-13));
+		}
 		iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 		mBalls->UpdateBallParentMode(mPlatform);
 		mBalls->Update(diff);
@@ -132,15 +144,44 @@ void Game::PlayGameMode2()
 				angle = -0.5;
 			mPlatform->ResetXZAngles();
 			mPlatform->RotateAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
+
+
+			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
+			tempPos.RotateAroundAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
 		if(mGe->GetKeyListener()->IsPressed('W'))
+		{
 			mPlatform->RotateX(-diff);
+
+			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
+			tempPos.RotateAroundAxis(Vector3(1,0,0), (PI/8.0f)*-diff*0.001f);
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
+		}
 		if(mGe->GetKeyListener()->IsPressed('S'))
+		{
 			mPlatform->RotateX(diff);
+
+			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
+			tempPos.RotateAroundAxis(Vector3(1,0,0), (PI/8.0f)*diff*0.001f);
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
+		}
 		if(mGe->GetKeyListener()->IsPressed('A'))
+		{
 			mPlatform->RotateZ(-diff);
+
+			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
+			tempPos.RotateAroundAxis(Vector3(0,0,1), (PI/8.0f)*-diff*0.001f);
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
+		}
 		if(mGe->GetKeyListener()->IsPressed('D'))
+		{
 			mPlatform->RotateZ(diff);
+
+			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
+			tempPos.RotateAroundAxis(Vector3(0,0,1), (PI/8.0f)*diff*0.001f);
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
+		}
 
 		if(started)
 			time += diff * 0.001f;
