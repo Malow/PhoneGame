@@ -151,15 +151,15 @@ void Game::PlayGameMode1()
 
 			// The smaller the value is the smaller the turn will be, should give a nice non-linear acceleration like spotify. 
 			// right now 0.0 - 0.1 is increased non-linearly, and then linearly after that.
-			if(abs(phoneDir.y) < 0.1f)
-				phoneDir.y *= abs(phoneDir.y) * 10;
+			if(abs(phoneDir.y) < 0.2f)
+				phoneDir.y *= abs(phoneDir.y) * 5;
 
-			if(abs(phoneDir.z) < 0.1f)
-				phoneDir.z *= abs(phoneDir.z) * 10;
+			if(abs(phoneDir.z) < 0.2f)
+				phoneDir.z *= abs(phoneDir.z) * 5;
 
 			// Double the value to increase the sens so u dont have to turn the phone completely for full effect.
-			phoneDir.y *= 2;
-			phoneDir.z *= 2;
+			phoneDir.y *= 1.5f;
+			phoneDir.z *= 1.5f;
 
 			// Limit values to -1.0 - 1.0
 			if(phoneDir.z > 1.0f)
@@ -301,3 +301,5 @@ void Game::PlayGameMode1()
 
 // TEST the new algorithm with the phone... I now only make non-linear scaling between 0 - 0.1, and then linear from there on.
 // Implement game mode-thingy on the phone.
+
+// Make turning like it was before, less sens and more turning IRL required.
