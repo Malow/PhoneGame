@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.util.AttributeSet"/>
 <fullyQualifiedTypeName name="android.graphics.Canvas"/>
@@ -23,4 +22,5 @@
 <fullyQualifiedTypeName name="com.example.wiiphone.R.layout"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.R"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.R.attr"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
 </qualifiedTypeNameHistroy>

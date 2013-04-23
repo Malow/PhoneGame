@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 @SuppressWarnings("deprecation")
 public class HelicopterActivity extends Activity implements SensorEventListener
@@ -18,7 +21,7 @@ public class HelicopterActivity extends Activity implements SensorEventListener
     private PowerManager mPowerManager = null;
     private WakeLock mWakeLock = null;
     private TCPClient mTcpClient = null;
-    private HelicopterView HView = null;
+    private JoystickView JView = null;
     
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -49,10 +52,39 @@ public class HelicopterActivity extends Activity implements SensorEventListener
         {
         	mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
         }
+        Button btnTemp = (Button) findViewById(R.id.button1);
+        btnTemp.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "UP";
+				if(mTcpClient != null)
+				{
+					Log.e("SEND MSG:", "MSG: " + message);
+					mTcpClient.sendMessage(message);
+				}
+			}
+		});
+        btnTemp = (Button) findViewById(R.id.button2);
+        btnTemp.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "DW";
+				if(mTcpClient != null)
+				{
+					Log.e("SEND MSG:", "MSG: " + message);
+					mTcpClient.sendMessage(message);
+				}
+			}
+		});
         
-       // HView = (HelicopterView) findViewById(R.id.helicopterview);
+        
+        JView = (JoystickView) findViewById(R.id.joyview);
         mTcpClient = TCPClient.getTCP();
-       // HView.setTcpClient(mTcpClient);
+        JView.setTcpClient(mTcpClient);
         
         
         System.out.println("Labyrinth Activity: onCreate END");
@@ -76,7 +108,7 @@ public class HelicopterActivity extends Activity implements SensorEventListener
     	System.out.println("Labyrinth Activity: onPause START");
         super.onPause();
         
-        //HView.setTcpClient(null);
+        JView.setTcpClient(null);
         
         if(mWakeLock != null)
         {
@@ -127,7 +159,7 @@ public class HelicopterActivity extends Activity implements SensorEventListener
     	   			 + Float.toString(event.values[1]) + " " + Float.toString(event.values[2]);
     		mTcpClient.sendMessage(message);
     		
-    		//HView.InvalidateView(event.values[0], event.values[1], event.values[2]);
+    		JView.InvalidateView(event.values[0], event.values[1], event.values[2]);
     		
     		Log.e("ACC MESSAGE", message);
     	}

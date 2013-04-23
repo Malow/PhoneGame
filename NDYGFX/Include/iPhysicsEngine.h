@@ -69,6 +69,6 @@ extern "C"
 		virtual CollisionData GetCollisionBoundingOnly(iMesh* mesh, iTerrain* terr) = 0;
 
 
-		virtual bool DoSpecialPhoneCollisionGame(class PowerBall* ball, class Map* map, Vector3& normal, float diff) = 0;
+		virtual bool DoSpecialPhoneCollisionGame(class PowerBall* ball, class Map* map, Vector3& sendBackNormal, float diff) = 0;
 	};
 }

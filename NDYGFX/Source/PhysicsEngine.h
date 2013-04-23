@@ -78,5 +78,5 @@ public:
 	virtual CollisionData GetCollisionBoundingOnly(iMesh* mesh1, iMesh* mesh2);
 	virtual CollisionData GetCollisionBoundingOnly(iMesh* mesh, iTerrain* terr);
 	
-	virtual bool DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vector3& normal, float diff);
+	virtual bool DoSpecialPhoneCollisionGame(PowerBall* ball, Map* map, Vector3& sendBackNormal, float diff);
 };
