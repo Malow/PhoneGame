@@ -148,7 +148,7 @@ void Game::PlayGameMode2()
 
 			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
 			tempPos.RotateAroundAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
-
+			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
 		if(mGe->GetKeyListener()->IsPressed('W'))
 		{

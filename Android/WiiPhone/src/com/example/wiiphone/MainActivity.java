@@ -210,6 +210,14 @@ public class MainActivity extends Activity
             	startActivity(intentB);*/
             	mCurrentMode += 0;
             }
+            if(SString[0].equals("KEYBOARD CHOSE MODE"))
+            {
+            	int GameMode = Integer.parseInt(SString[1].trim());
+            	if(GameMode != 0)
+            	{
+            		startActivityByNr(GameMode);
+            	}
+            }
         }
     }
 }
