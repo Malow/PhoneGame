@@ -6,8 +6,8 @@
 #define MAXIMUM_SPEED 100.0f
 
 
-#define star_POS_COUNT 10
-static const Vector3 starPos[star_POS_COUNT] = 
+#define STAR_POS_COUNT 10
+static const Vector3 starPos[STAR_POS_COUNT] = 
 {
 	Vector3(-16, 17, -9),
 	Vector3(-26, 10, -50),
@@ -36,6 +36,8 @@ void Game::PlayGameMode1()
 
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	GetGraphics()->ChangeShadowQuality(0);
+	GetGraphics()->UseShadow(false);
 	iMesh* model = GetGraphics()->CreateMesh("Media/bth.obj", Vector3(15, 20, 20));
 	model->Scale(1.0f * 0.05f);
 
@@ -221,7 +223,7 @@ void Game::PlayGameMode1()
 		if((GetGraphics()->GetCamera()->GetPosition() - star->GetPosition()).GetLength() < 3.0f)
 		{
 			GetGraphics()->DeleteMesh(star);
-			star = GetGraphics()->CreateMesh(string("Media/Star" + MaloW::convertNrToString(starcolor++) + ".obj").c_str(), starPos[score%star_POS_COUNT]);
+			star = GetGraphics()->CreateMesh(string("Media/Star" + MaloW::convertNrToString(starcolor++) + ".obj").c_str(), starPos[score%STAR_POS_COUNT]);
 
 			if(starcolor > 2)
 				starcolor = 1;
