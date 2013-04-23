@@ -1,4 +1,4 @@
-content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="android.graphics.Paint$Style"/></lhs></history>
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="android.graphics.Paint$Style"/></lhs><lhs name\="android.content.Context"><rhs name\="com.example.wiiphone.MainActivity"/><rhs name\="com.example.wiiphone.SpaceShipActivity"/></lhs><lhs name\="android.graphics.drawable.Drawable"><rhs name\="android.graphics.drawable.ShapeDrawable"/></lhs><lhs name\="android.graphics.drawable.ShapeDrawable"><rhs name\="android.graphics.drawable.ShapeDrawable"/></lhs><lhs name\="java.lang.Cloneable"><rhs name\="android.graphics.drawable.shapes.RectShape"/></lhs><lhs name\="android.graphics.drawable.shapes.Shape"><rhs name\="android.graphics.drawable.shapes.RectShape"/></lhs></history>
 content_assist_number_of_computers=12
 content_assist_proposals_background=255,255,255
 content_assist_proposals_foreground=0,0,0

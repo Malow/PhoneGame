@@ -13,6 +13,14 @@
 <fullyQualifiedTypeName name="android.util.DisplayMetrics"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.R.id"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
-<fullyQualifiedTypeName name="com.example.wiiphone.SpaceShipActivity"/>
 <fullyQualifiedTypeName name="android.graphics.Paint.Style"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.MainActivity"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.SpaceShipActivity"/>
+<fullyQualifiedTypeName name="android.graphics.drawable.ShapeDrawable"/>
+<fullyQualifiedTypeName name="android.graphics.drawable.shapes.RectShape"/>
+<fullyQualifiedTypeName name="android.view.View"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.JoystickHorizontalView"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.R.layout"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.R"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.R.attr"/>
 </qualifiedTypeNameHistroy>

@@ -18,7 +18,7 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
     private PowerManager mPowerManager = null;
     private WakeLock mWakeLock = null;
     private TCPClient mTcpClient = null;
-    private LabyrinthView SSView = null;
+    private LabyrinthView LView = null;
     
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -50,9 +50,9 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
         	mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
         }
         
-        SSView = (LabyrinthView) findViewById(R.id.labyrinthview);
+        LView = (LabyrinthView) findViewById(R.id.labyrinthview);
         mTcpClient = TCPClient.getTCP();
-        SSView.setTcpClient(mTcpClient);
+        LView.setTcpClient(mTcpClient);
         
         
         System.out.println("Labyrinth Activity: onCreate END");
@@ -76,7 +76,7 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
     	System.out.println("Labyrinth Activity: onPause START");
         super.onPause();
         
-    	SSView.setTcpClient(null);
+        LView.setTcpClient(null);
         
         if(mWakeLock != null)
         {
@@ -127,7 +127,7 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
     	   			 + Float.toString(event.values[1]) + " " + Float.toString(event.values[2]);
     		mTcpClient.sendMessage(message);
     		
-    		SSView.InvalidateView(event.values[0], event.values[1], event.values[2]);
+    		LView.InvalidateView(event.values[0], event.values[1], event.values[2]);
     		
     		Log.e("ACC MESSAGE", message);
     	}

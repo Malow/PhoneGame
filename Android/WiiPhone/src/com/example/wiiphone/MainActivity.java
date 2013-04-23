@@ -16,6 +16,7 @@ public class MainActivity extends Activity
     private WakeLock mWakeLock = null;
     private TCPClient mTcpClient = null;
     private ConnectTask mConnectTask = null;
+    private int mCurrentMode = 0;
     
     public TCPClient GetTCP()
     {
@@ -39,9 +40,10 @@ public class MainActivity extends Activity
 				String message = "GAM 1";
 				if(mTcpClient != null)
 				{
+					mCurrentMode = 1;
 					mTcpClient.sendMessage(message);
+					startActivityByNr(1);
 				}
-				startActivityByNr(1);
 			}
 		});
         
@@ -55,9 +57,27 @@ public class MainActivity extends Activity
 				String message = "GAM 2";
 				if(mTcpClient != null)
 				{
+					mCurrentMode = 2;
 					mTcpClient.sendMessage(message);
+					startActivityByNr(2);
 				}
-				startActivityByNr(2);
+			}
+		});
+        
+        // Helicopter Button
+        tButton = (Button) findViewById(R.id.game_3);
+        tButton.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "GAM 3";
+				if(mTcpClient != null)
+				{
+					mCurrentMode = 3;
+					mTcpClient.sendMessage(message);
+					startActivityByNr(3);
+				}
 			}
 		});
 
@@ -72,9 +92,13 @@ public class MainActivity extends Activity
 		{
 			startActivity(new Intent(MainActivity.this, SpaceShipActivity.class));
 		}
-		if(nr == 2)
+		else if(nr == 2)
 		{
 			startActivity(new Intent(MainActivity.this, LabyrinthActivity.class));
+		}
+		else if(nr == 3)
+		{
+			startActivity(new Intent(MainActivity.this, HelicopterActivity.class));
 		}
 	}
     @Override
@@ -165,6 +189,8 @@ public class MainActivity extends Activity
         protected void onProgressUpdate(String... values) 
         {
             super.onProgressUpdate(values);
+            values[0] = values[0].trim();
+            System.out.println(values[0]);
             String[] SString = values[0].split(":");
             if(SString[0].equals("CURRENT MODE"))
             {
@@ -173,6 +199,16 @@ public class MainActivity extends Activity
             	{
             		startActivityByNr(GameMode);
             	}
+            }
+            if(SString[0].equals("QUITTING"))
+            {
+            	Log.e("QUIT", "QUTIING GAMEMODE");
+        		
+            	/*Intent intentB = new Intent();
+            	intentB.setClass(SpaceShipActivity.this, MainActivity.class);
+            	intentB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(intentB);*/
+            	mCurrentMode += 0;
             }
         }
     }

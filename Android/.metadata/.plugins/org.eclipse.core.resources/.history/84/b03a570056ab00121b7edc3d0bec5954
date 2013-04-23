@@ -1,0 +1,84 @@
+package com.example.wiiphone;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+
+public class JoystickHorizontalView extends View
+{
+	private static final int AXIS_X = 0;
+	private ShapeDrawable mDrawableInner = null;
+	private ShapeDrawable mDrawableOuter = null;
+	private ShapeDrawable mDrawCircle = null;
+	private int mXPos = 50;
+	private int mYPos = 250;
+	private int mWidth = 250;
+	private int mHeight = 50;
+	private int mSteeringCircle = 175;
+	private int mCircleWidth = 20;
+	
+	public JoystickHorizontalView(Context context, AttributeSet attrs) 
+	{
+		super(context, attrs);
+		mXPos = (int) super.getLeft();
+		mYPos = (int) super.getTop();
+		mWidth = super.getWidth();
+		mHeight = super.getHeight();
+		mSteeringCircle = mXPos + (mWidth / 2);
+		
+		mDrawableInner = new ShapeDrawable(new RectShape());
+		mDrawableInner.getPaint().setARGB(255,255,0,0);
+		mDrawableInner.setBounds((int) super.getLeft(), mYPos, (int) super.getLeft() + mWidth, mYPos + mHeight);
+		
+		mDrawableOuter = new ShapeDrawable(new RectShape());
+		mDrawableOuter.setBounds((int) super.getLeft(), mYPos, (int) super.getLeft() + mWidth, mYPos + mHeight);
+        mDrawableOuter.getPaint().setARGB(255,255,255,255);
+        mDrawableOuter.getPaint().setStyle(Paint.Style.STROKE);
+		mDrawableOuter.getPaint().setStrokeWidth(10);
+		
+		mDrawCircle = new ShapeDrawable(new OvalShape());
+		mDrawCircle.getPaint().setARGB(255,255,0,0);
+		mDrawCircle.setBounds(mXPos, mSteeringCircle, mXPos + mCircleWidth, mSteeringCircle + mCircleWidth);
+		
+	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		mSteeringCircle = (int) event.getAxisValue(AXIS_X);
+		if(mSteeringCircle > mXPos + mWidth)
+		{
+			mSteeringCircle = mXPos + mWidth;
+		}
+		
+		if(mSteeringCircle < mXPos)
+		{
+			mSteeringCircle = mXPos;
+		}
+		
+		postInvalidate();
+		return super.onTouchEvent(event);
+	} 
+	@Override
+	protected void onDraw(Canvas canvas) 
+	{
+		super.onDraw(canvas);
+		
+		if(mDrawableInner != null)
+		{
+			mDrawableInner.draw(canvas);
+		}
+		if(mDrawableOuter != null)
+		{
+			mDrawableOuter.draw(canvas);
+		}
+		if(mDrawCircle != null)
+		{
+			mDrawCircle.draw(canvas);
+		}
+	}
+}

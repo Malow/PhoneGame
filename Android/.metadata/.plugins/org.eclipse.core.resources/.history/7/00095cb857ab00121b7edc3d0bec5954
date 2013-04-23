@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+        <com.example.wiiphone.HelicopterView
+            android:id="@+id/helicopterview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="64dp" />
+
+        <com.example.wiiphone.JoystickHorizontalView
+            android:id="@+id/joyview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="14dp"
+            android:height="75dp"
+            android:text="@string/button_down"
+            android:width="100dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:height="75dp"
+            android:text="@string/button_up"
+            android:width="100dp" />
+
+</LinearLayout>
