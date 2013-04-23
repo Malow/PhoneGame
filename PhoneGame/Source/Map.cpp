@@ -40,32 +40,35 @@ Vector3 Map::GetPositionXZ() const
 }
 void Map::Update(const float dt)
 {
+	float multiplier = 0.005f;
 	if(this->mIsRotating)
 	{		
 		float angle;
-		float speed = PI/26.0f;
-		if(this->mTargetAngleX <0)
-			angle = -speed*dt*0.001f;
+		float speed = 1;
+		speed = abs(this->mTargetAngleX - this->mAngleX) * 2;
+		if(speed > 0.5f)
+			speed = 0.5f;
+		if(this->mTargetAngleX < this->mAngleX)
+			angle = -speed*dt*multiplier;
 		else
-			angle = speed*dt*0.001f;
+			angle = speed*dt*multiplier;
 		Matrix3 temp;
 		temp.SetRotationZ(this->mAngleZ);
 		Vector3 xA = Vector3(1,0,0);
 		Vector3 xAnew = temp * xA;
 		this->mAngleX += angle;
 		this->mMesh->RotateAxis(xAnew, angle);
-		
-		if(this->mTargetAngleZ <0)
-			angle = -speed*dt*0.001f;
+
+		speed = abs(this->mTargetAngleZ - this->mAngleZ) * 2;
+		if(speed > 0.5f)
+			speed = 0.5f;
+		if(this->mTargetAngleZ < this->mAngleZ)
+			angle = -speed*dt*multiplier;
 		else
-			angle = speed*dt*0.001f;
+			angle = speed*dt*multiplier;
 		this->mAngleZ += angle;
 		this->mMesh->RotateAxis(Vector3(0,0,1), angle);
 	}
-	float newdt = dt * 0.001f;
-	float fraction = 1.0f - this->mShrink * newdt;
-	//this->mMesh->Scale(Vector3(fraction,1,fraction));
-	this->mScaledRadius *= fraction;//this->mScaledRadius/this->mRadius;
 }
 /*void Map::Update(const float dt)
 {

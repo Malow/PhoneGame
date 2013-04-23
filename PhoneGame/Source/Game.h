@@ -37,12 +37,14 @@ public:
 	MaloW::ClientChannel* cc;
 	Vector3 direction;
 	float speed;
+	bool needRestart;
 
 	NetworkController()
 	{
 		this->cc = NULL;
 		this->direction = Vector3(0, 0, 0);
 		this->speed = 50.0f;
+		this->needRestart = false;
 	}
 
 	virtual ~NetworkController()

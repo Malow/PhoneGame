@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 @SuppressWarnings("deprecation")
 public class LabyrinthActivity extends Activity implements SensorEventListener
@@ -30,16 +33,14 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
         
         // Get an instance of the SensorManager.
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        
         // Get the sensor (Accelerometer).
         if(mSensorManager != null)
         {
         	mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        
         	// Register Delays and Listeners.
         	if(mAccelerometer != null)
         	{
-        		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        		mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         	}
         }
         // Get an instance of the PowerManager.
@@ -49,6 +50,20 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
         {
         	mWakeLock = mPowerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getClass().getName());
         }
+        
+        Button btnTemp = (Button) findViewById(R.id.buttonrestart);
+        btnTemp.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "RESTART";
+				if(mTcpClient != null)
+				{
+					mTcpClient.sendMessage(message);
+				}
+			}
+		});
         
         LView = (LabyrinthView) findViewById(R.id.labyrinthview);
         mTcpClient = TCPClient.getTCP();
@@ -123,13 +138,23 @@ public class LabyrinthActivity extends Activity implements SensorEventListener
     	
     	if (mTcpClient != null) 
     	{
+    		/*float tempFloats[] = {event.values[0], event.values[1], event.values[2]};
+    		for(int i = 0; i < 3; i++)
+    		{
+    			int temp = (int) (tempFloats[i] * 100);
+    			tempFloats[i] = (float) (temp * 0.01);
+    			Log.d("TEST", "TEST: " + tempFloats[i]);
+    			Log.d("TEST", "TEST1: " + event.values[i]);
+    		}
+    		
+    		String message = "ACC " + Float.toString(tempFloats[0]) + " "
+    	   			 + Float.toString(tempFloats[1]) + " " + Float.toString(tempFloats[2]);*/
     		String message = "ACC " + Float.toString(event.values[0]) + " "
-    	   			 + Float.toString(event.values[1]) + " " + Float.toString(event.values[2]);
+   	   			 + Float.toString(event.values[1]) + " " + Float.toString(event.values[2]);
+    		
     		mTcpClient.sendMessage(message);
     		
     		LView.InvalidateView(event.values[0], event.values[1], event.values[2]);
-    		
-    		Log.e("ACC MESSAGE", message);
     	}
     }
     

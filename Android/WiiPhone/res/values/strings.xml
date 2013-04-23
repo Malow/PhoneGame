@@ -13,4 +13,5 @@
 	<string name="joysticktext1">Turn</string>
 	<string name="joysticktext2">Balance</string>
 	<string name="creators">Projekt by MaloW and eXpliCo</string>
+	<string name="restart">Restart</string>
 </resources>

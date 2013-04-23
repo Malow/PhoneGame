@@ -165,7 +165,11 @@ void Game::HandleEvent(float diff)
 				float spd = atof(msg.c_str());
 				this->networkController->speed = spd;
 			}
-
+			// Answer current game mode
+			if(msg.substr(0, 7) == "RESTART")
+			{
+				this->networkController->needRestart = true;
+			}
 			// Answer current game mode
 			if(msg.substr(0, 8) == "GET MODE")
 			{

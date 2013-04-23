@@ -161,7 +161,6 @@ public class HelicopterActivity extends Activity implements SensorEventListener
     		
     		JView.InvalidateView(event.values[0], event.values[1], event.values[2]);
     		
-    		Log.e("ACC MESSAGE", message);
     	}
     }
     

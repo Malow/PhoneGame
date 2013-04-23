@@ -25,15 +25,16 @@ public final class R {
         public static final int start_button=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000a;
+        public static final int action_settings=0x7f08000b;
         public static final int button1=0x7f080005;
         public static final int button2=0x7f080004;
+        public static final int buttonrestart=0x7f080009;
         public static final int game_1=0x7f080000;
         public static final int game_2=0x7f080001;
         public static final int game_3=0x7f080002;
         public static final int joyview=0x7f080003;
         public static final int labyrinthview=0x7f080008;
-        public static final int spaceshipview=0x7f080009;
+        public static final int spaceshipview=0x7f08000a;
         public static final int textView1=0x7f080007;
         public static final int textView2=0x7f080006;
     }
@@ -58,6 +59,7 @@ public final class R {
         public static final int hello_world=0x7f050002;
         public static final int joysticktext1=0x7f050009;
         public static final int joysticktext2=0x7f05000a;
+        public static final int restart=0x7f05000c;
         public static final int start_button_text=0x7f050003;
     }
     public static final class style {
