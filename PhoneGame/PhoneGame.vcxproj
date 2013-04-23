@@ -17,6 +17,7 @@
     <ClCompile Include="Source\GameMode3 Files\Helicopter.cpp" />
     <ClCompile Include="Source\GameMode3 Files\PhysMesh.cpp" />
     <ClCompile Include="Source\GameMode3.cpp" />
+    <ClCompile Include="Source\GameMode4.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\MaloWLib\ClientChannel.cpp" />

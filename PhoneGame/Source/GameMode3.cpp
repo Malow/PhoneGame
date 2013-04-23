@@ -3,9 +3,9 @@
 #include "GameMode3 Files\PhysMesh.h"
 #include "GameMode3 Files\Helicopter.h"
 
-#define HUMAN_POS_COUNT 10
+#define NR_OF_HUMANS 10
 #define YOFFSET 0.0f
-static const Vector3 humanPos[HUMAN_POS_COUNT] = 
+static const Vector3 humanPos[NR_OF_HUMANS] = 
 {
 	Vector3(-114, YOFFSET, -112),
 	Vector3(17, YOFFSET, 161),
@@ -30,6 +30,7 @@ void Game::PlayGameMode3()
 
 
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
+	GetGraphics()->ChangeCamera(RTS);
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->ChangeShadowQuality(4);
@@ -294,7 +295,7 @@ void Game::PlayGameMode3()
 			if(score == 0)
 				started = true;
 			score++;
-			human->SetPosition(humanPos[score % HUMAN_POS_COUNT]);
+			human->SetPosition(humanPos[score % NR_OF_HUMANS]);
 
 			starTimer = 2.0f;
 		}

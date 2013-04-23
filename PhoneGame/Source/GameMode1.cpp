@@ -31,6 +31,7 @@ void Game::PlayGameMode1()
 
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
+	GetGraphics()->ChangeCamera(RTS);
 	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
 	GetGraphics()->GetCamera()->LookAt(Vector3(0, 0, 0));
 
@@ -289,6 +290,7 @@ void Game::PlayGameMode1()
 	GetGraphics()->DeleteText(speedTxt);
 	GetGraphics()->DeleteText(timeTxt);
 	GetGraphics()->DeleteText(scoreTxt);
+
 #ifdef _DEBUG
 	GetGraphics()->DeleteText(phoneDirTxtX);
 	GetGraphics()->DeleteText(phoneDirTxtY);
