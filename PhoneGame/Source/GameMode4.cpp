@@ -221,7 +221,7 @@ void Game::PlayGameMode4()
 			// Maybe works?! :P Kinda haxx
 			phoneAim = this->networkController->aim;
 			Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight);
-			mousePos += phoneAim;
+			mousePos += phoneAim * diff * 0.1f;
 			GetGraphics()->GetKeyListener()->SetMousePosition(mousePos);
 
 
