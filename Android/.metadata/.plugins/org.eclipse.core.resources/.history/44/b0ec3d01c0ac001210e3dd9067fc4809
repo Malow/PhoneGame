@@ -1,0 +1,10 @@
+package com.example.wiiphone;
+
+public class Vector2 {
+	private x = 0.0f;
+	private y = 0.0f;
+	public Vector2(float x, floaty)
+	{
+		
+	}
+}

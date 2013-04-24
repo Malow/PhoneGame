@@ -10,7 +10,6 @@
 <fullyQualifiedTypeName name="android.view.View.OnTouchListener"/>
 <fullyQualifiedTypeName name="android.view.Display"/>
 <fullyQualifiedTypeName name="android.util.DisplayMetrics"/>
-<fullyQualifiedTypeName name="com.example.wiiphone.R.id"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="android.graphics.Paint.Style"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.MainActivity"/>
@@ -23,4 +22,5 @@
 <fullyQualifiedTypeName name="com.example.wiiphone.R"/>
 <fullyQualifiedTypeName name="com.example.wiiphone.R.attr"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.example.wiiphone.R.id"/>
 </qualifiedTypeNameHistroy>

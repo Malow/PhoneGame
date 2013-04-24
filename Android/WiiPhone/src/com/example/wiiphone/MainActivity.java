@@ -16,7 +16,6 @@ public class MainActivity extends Activity
     private WakeLock mWakeLock = null;
     private TCPClient mTcpClient = null;
     private ConnectTask mConnectTask = null;
-    private int mCurrentMode = 0;
     
     public TCPClient GetTCP()
     {
@@ -40,7 +39,6 @@ public class MainActivity extends Activity
 				String message = "GAM 1";
 				if(mTcpClient != null)
 				{
-					mCurrentMode = 1;
 					mTcpClient.sendMessage(message);
 					startActivityByNr(1);
 				}
@@ -57,7 +55,6 @@ public class MainActivity extends Activity
 				String message = "GAM 2";
 				if(mTcpClient != null)
 				{
-					mCurrentMode = 2;
 					mTcpClient.sendMessage(message);
 					startActivityByNr(2);
 				}
@@ -74,7 +71,6 @@ public class MainActivity extends Activity
 				String message = "GAM 3";
 				if(mTcpClient != null)
 				{
-					mCurrentMode = 3;
 					mTcpClient.sendMessage(message);
 					startActivityByNr(3);
 				}
@@ -98,7 +94,7 @@ public class MainActivity extends Activity
 		}
 		else if(nr == 3)
 		{
-			startActivity(new Intent(MainActivity.this, HelicopterActivity.class));
+			startActivity(new Intent(MainActivity.this, FPSGameActivity.class));
 		}
 	}
     @Override
@@ -208,7 +204,6 @@ public class MainActivity extends Activity
             	intentB.setClass(SpaceShipActivity.this, MainActivity.class);
             	intentB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             	startActivity(intentB);*/
-            	mCurrentMode += 0;
             }
             if(SString[0].equals("KEYBOARD CHOSE MODE"))
             {
