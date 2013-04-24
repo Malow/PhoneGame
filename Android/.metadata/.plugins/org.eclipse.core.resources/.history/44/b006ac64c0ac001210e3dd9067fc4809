@@ -1,0 +1,16 @@
+package com.example.wiiphone;
+
+public class Vector2 {
+	private float x = 0.0f;
+	private float y = 0.0f;
+	public Vector2(float lx, float ly)
+	{
+		x = lx;
+		y = ly;
+	}
+	
+	public Vector2 add ( const Vector2& lVec)
+	{
+		)
+	}
+}

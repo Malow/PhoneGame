@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.util.Log;
 
 @SuppressWarnings("deprecation")
 public class SpaceShipActivity extends Activity implements SensorEventListener
