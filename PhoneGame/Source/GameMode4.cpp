@@ -1,50 +1,42 @@
 #include "Game.h"
 
 #define NR_OF_HUMANS 10
-#define YOFFSET 0.0f
 static const Vector3 humanPos[NR_OF_HUMANS] = 
 {
-	Vector3(-114, YOFFSET, 0),
+	Vector3(-114, 0.0f, 0),
 	Vector3(-120, 40, -95),
 	Vector3(-122, 40, -63),
 	Vector3(-81, 24, 50),
-	Vector3(-145, YOFFSET, 14),
-	Vector3(-160, YOFFSET, -50),
-	Vector3(-203, YOFFSET, -35),
-	Vector3(-210, YOFFSET, -30),
-	Vector3(-165, YOFFSET, 75),
-	Vector3(-170, YOFFSET, -15)
+	Vector3(-145, 0.0f, 14),
+	Vector3(-160, 0.0f, -50),
+	Vector3(-203, 0.0f, -35),
+	Vector3(-210, 0.0f, -30),
+	Vector3(-165, 0.0f, 75),
+	Vector3(-170, 0.0f, -15)
 };
 
 #define NR_OF_TREES 6
 static const Vector3 treePos[NR_OF_TREES] = 
 {
-	Vector3(-107, YOFFSET, -32),
-	Vector3(-106, YOFFSET, 31),
-	Vector3(-225, YOFFSET, 15),
-	Vector3(-220, YOFFSET, 1),
-	Vector3(-212, YOFFSET, 15),
-	Vector3(-166, YOFFSET, 122)/*,
-	Vector3(-439, YOFFSET, 420),
-	Vector3(-97, YOFFSET, -85),
-	Vector3(-27, YOFFSET, 456),
-	Vector3(-226, YOFFSET, 17),
-	Vector3(-114, YOFFSET, 0),
-	Vector3(17, YOFFSET, 161),
-	Vector3(-248, YOFFSET, -167),
-	Vector3(-406, YOFFSET, -274),
-	Vector3(-12, YOFFSET, -401),
-	Vector3(-139, YOFFSET, 202),
-	Vector3(-439, YOFFSET, 420),
-	Vector3(-97, YOFFSET, -85),
-	Vector3(-27, YOFFSET, 456),
-	Vector3(-226, YOFFSET, 17)*/
+	Vector3(-107, 0.0f, -32),
+	Vector3(-106, 0.0f, 31),
+	Vector3(-225, 0.0f, 15),
+	Vector3(-220, 0.0f, 1),
+	Vector3(-212, 0.0f, 15),
+	Vector3(-166, 0.0f, 122)
 };
+
+#define NR_OF_PREVPHONEDIR 10
+static Vector3 prevPhoneDir[NR_OF_PREVPHONEDIR];
 
 
 void Game::PlayGameMode4()
 {
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
+
+	float prevMouseSens = GetGraphics()->GetEngineParameters().MouseSensativity;
+	float prevFOV = GetGraphics()->GetEngineParameters().FOV;
+	int prevShadowQual = GetGraphics()->GetEngineParameters().ShadowMapSettings;
 
 	// Score / results:
 	float time = 0.0f;
@@ -54,9 +46,21 @@ void Game::PlayGameMode4()
 	bool isScopedIn = false;
 	bool scopeIn = false;
 	bool shoot = false;
+	bool moveLeft = false;
+	bool moveRight = false;
+	float shootTimer = 0.0f;
+	float yRecoil = 0.0f;
+	float recoilTimer = 0.0f;
+	float mouseX = 0.0f;
+	float mouseY = 0.0f;
 	bool humanAlive[NR_OF_HUMANS];
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 		humanAlive[i] = true;
+
+
+	bool firstPhoneDir = true;
+	int phoneDirPlace = 0;
+	float phoneDirTimer = 0.5f;
 
 	Vector3 phoneDir = Vector3(0, 1, 0);	
 	Vector2 phoneAim = Vector2(0, 0);
@@ -125,6 +129,18 @@ void Game::PlayGameMode4()
 	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 155), 1.0f, "Media/fonts/newBorder");
 	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 185), 1.0f, "Media/fonts/newBorder");
 	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/newBorder");
+
+
+
+	iText* debugText1 = GetGraphics()->CreateText("", Vector2(50, 300), 1.0f, "Media/fonts/newBorder");
+	iText* debugText2 = GetGraphics()->CreateText("", Vector2(50, 330), 1.0f, "Media/fonts/newBorder");
+	iText* debugText3 = GetGraphics()->CreateText("", Vector2(50, 360), 1.0f, "Media/fonts/newBorder");
+	iText* debugText4 = GetGraphics()->CreateText("", Vector2(50, 390), 1.0f, "Media/fonts/newBorder");
+	iText* debugText5 = GetGraphics()->CreateText("", Vector2(50, 420), 1.0f, "Media/fonts/newBorder");
+	iText* debugText6 = GetGraphics()->CreateText("", Vector2(50, 450), 1.0f, "Media/fonts/newBorder");
+	iText* debugText7 = GetGraphics()->CreateText("", Vector2(50, 480), 1.0f, "Media/fonts/newBorder");
+	iText* debugText8 = GetGraphics()->CreateText("", Vector2(50, 510), 1.0f, "Media/fonts/newBorder");
+	iText* debugText9 = GetGraphics()->CreateText("", Vector2(50, 540), 1.0f, "Media/fonts/newBorder");
 #endif
 
 	iMesh* humans[NR_OF_HUMANS];
@@ -191,8 +207,174 @@ void Game::PlayGameMode4()
 
 		// A and D movement
 		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
-			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, -diff) * 0.01f);
+			moveLeft = true;
 		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
+			moveRight = true;
+		//////////////////////////////////////////////////////////////////////////
+
+
+		if(this->networkController)
+		{
+			phoneDir = this->networkController->direction;
+			phoneDir.Normalize();
+			if(phoneDir == Vector3(0, 0, 0))
+				phoneDir = Vector3(0, 1, 0);
+
+			// Store and access previous phone dirs
+			if(firstPhoneDir && phoneDir != Vector3(0, 0, 0) && phoneDir != Vector3(0, 1, 0))
+			{
+				for(int i = 0; i < NR_OF_PREVPHONEDIR; i++)
+					prevPhoneDir[i] = phoneDir;
+				firstPhoneDir = false;
+			}
+
+			if(!firstPhoneDir)
+				phoneDirTimer -= diff * 0.001f;
+
+			if(phoneDirTimer < 0.0f)
+			{
+				prevPhoneDir[phoneDirPlace] = phoneDir;
+				phoneDirPlace++;
+				if(phoneDirPlace == NR_OF_PREVPHONEDIR)
+					phoneDirPlace = 0;
+				phoneDirTimer = 0.5f;
+			}
+
+			Vector3 avgPhoneDir;
+			for(int i = 0; i < NR_OF_PREVPHONEDIR; i++)
+				avgPhoneDir += prevPhoneDir[i];
+			avgPhoneDir /= NR_OF_PREVPHONEDIR;
+
+
+
+			phoneAim = this->networkController->aim;
+			float phoneAimLength = phoneAim.GetLength();
+			if(phoneAimLength > 0.001f)	// Otherwise phoneAim is 0, 0
+			{			
+#ifdef _DEBUG
+				phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneAim.x)).c_str());
+				phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneAim.y)).c_str());
+				phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneAimLength)).c_str());
+#endif
+				
+				// in -150 - 150, semi-normalized vector (meaning the highest both can be at the same time is around 105, 105)
+				float x = phoneAim.x;
+				float y = phoneAim.y;
+
+				// -1 - 1 now, still circular like above.
+				x /= 150.0f;
+				y /= 150.0f;
+
+#ifdef _DEBUG
+				debugText1->SetText(string("-1 TO 1: X: " + MaloW::convertNrToString(x)).c_str());
+				debugText2->SetText(string("-1 TO 1: Y: " + MaloW::convertNrToString(y)).c_str());
+#endif
+
+				// Clamp to 0 if the value is too small, to create a deadzone. Value now is between -0.9 - 0.9
+				static const float deadZone = 0.1f;
+				if(abs(x) < deadZone)
+					x = 0.0f;
+				else
+				{
+					if(x < 0.0f)
+						x += deadZone;
+					else
+						x -= deadZone;
+				}
+
+				if(abs(y) < deadZone)
+					y = 0.0f;
+				else
+				{
+					if(y < 0.0f)
+						y += deadZone;
+					else
+						y -= deadZone;
+				}
+
+#ifdef _DEBUG
+				debugText3->SetText(string("DEADZONED: X: " + MaloW::convertNrToString(x)).c_str());
+				debugText4->SetText(string("DEADZONED: Y: " + MaloW::convertNrToString(y)).c_str());
+#endif
+
+				// Exponential increase
+				x *= abs(x);
+				y *= abs(y);
+
+#ifdef _DEBUG
+				debugText5->SetText(string("EXPOD: X: " + MaloW::convertNrToString(x)).c_str());
+				debugText6->SetText(string("EXPOD: Y: " + MaloW::convertNrToString(y)).c_str());
+#endif
+				
+				x *= 10.0f;
+				y *= 10.0f;
+
+#ifdef _DEBUG
+				debugText7->SetText(string("FINAL: X: " + MaloW::convertNrToString(x)).c_str());
+				debugText8->SetText(string("FINAL: Y: " + MaloW::convertNrToString(y)).c_str());
+#endif
+
+
+				Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth / 2, GetGraphics()->GetEngineParameters().WindowHeight / 2);
+				if(isScopedIn)
+				{
+					mouseX += x * diff * 0.5f;
+					mouseY += y * diff * 0.5f;
+				}
+				else
+				{
+					mouseX += x * diff;
+					mouseY += y * diff;
+				}
+				Vector2 offset = Vector2(0, 0);
+				offset.x += (int)mouseX;
+				offset.y += (int)mouseY;
+				mouseY -= (int)mouseY;
+				mouseX -= (int)mouseX;
+				
+				GetGraphics()->GetKeyListener()->SetMousePosition(mousePos + offset);
+			}
+
+			
+			// shoot
+			if(this->networkController->shoot)
+			{
+				this->networkController->shoot = false;
+				shoot = true;
+			}
+
+			
+			// scopein
+			// Needs more advanced, use phoneDir to interpret
+			/*
+			if(this->networkController->scopeIn)
+			{
+				this->networkController->scopeIn = false;
+				scopeIn = true;
+			}*/
+			
+
+			// Move left and right
+			if(this->networkController->direction.y < avgPhoneDir.y - 0.1f)
+				moveLeft = true;
+			if(this->networkController->direction.y > avgPhoneDir.y + 0.1f)
+				moveRight = true;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// GAME LOGIC
+		shootTimer -= diff * 0.001f;
+		if(shootTimer < 0.0f)
+			shootTimer = 0.0f;
+
+		recoilTimer -= diff * 0.001f;
+		if(recoilTimer < 0.0f)
+			recoilTimer = 0.0f;	
+
+		// Move left and right
+		if(moveLeft)
+			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, -diff) * 0.01f);
+		if(moveRight)	
 			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, diff) * 0.01f);
 		if(GetGraphics()->GetCamera()->GetPosition().z > 34.0f)
 		{
@@ -206,68 +388,38 @@ void Game::PlayGameMode4()
 			pos.z = -34.0f;
 			GetGraphics()->GetCamera()->SetPosition(pos);
 		}
+		moveLeft = false;
+		moveRight = false;
 
-		//////////////////////////////////////////////////////////////////////////
-
-
-		if(this->networkController)
+		//Recoil up
+		if(recoilTimer > 1.0f)
 		{
-			phoneDir = this->networkController->direction;
-			phoneDir.Normalize();
-			if(phoneDir == Vector3(0, 0, 0))
-				phoneDir = Vector3(0, 1, 0);
-
-
-			// Maybe works?! :P Kinda haxx
-			phoneAim = this->networkController->aim;
 			Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth / 2, GetGraphics()->GetEngineParameters().WindowHeight / 2);
-			mousePos += phoneAim * diff * 0.1f;
-			GetGraphics()->GetKeyListener()->SetMousePosition(mousePos);
-
-
-			// shoot
-			if(this->networkController->shoot)
-			{
-				this->networkController->shoot = false;
-				shoot = true;
-			}
-
-			// scopein
-			// Needs more advanced, use phoneDir to interpret
-			/*
-			if(this->networkController->scopeIn)
-			{
-				this->networkController->scopeIn = false;
-				scopeIn = true;
-			}*/
-			
-
-#ifdef _DEBUG
-			phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneDir.x)).c_str());
-			phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneDir.y)).c_str());
-			phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneDir.z)).c_str());
-#endif
-
+			GetGraphics()->GetKeyListener()->SetMousePosition(mousePos + Vector2(0, -diff * 10.0f));
+		}
+		// recoil down at normal speed
+		else if(recoilTimer > 0.0f)
+		{
+			Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth / 2, GetGraphics()->GetEngineParameters().WindowHeight / 2);
+			GetGraphics()->GetKeyListener()->SetMousePosition(mousePos + Vector2(0, diff));
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		// GAME LOGIC
 		if(scopeIn)
 		{
 			if(!isScopedIn)
 			{
 				scope->SetOpacity(1.0f);
 				sniper->SetOpacity(0.0f);
-				GetGraphics()->GetEngineParameters().FOV = 25.0f;
-				GetGraphics()->GetEngineParameters().MouseSensativity = 0.3f;
+				GetGraphics()->GetEngineParameters().FOV = prevFOV * 0.33f;
+				GetGraphics()->GetEngineParameters().MouseSensativity = prevMouseSens * 0.3f;
 				isScopedIn = true;
 			}
 			else
 			{
 				scope->SetOpacity(0.0f);
 				sniper->SetOpacity(1.0f);
-				GetGraphics()->GetEngineParameters().FOV = 75.0f;
-				GetGraphics()->GetEngineParameters().MouseSensativity = 1.0f;
+				GetGraphics()->GetEngineParameters().FOV = prevFOV;
+				GetGraphics()->GetEngineParameters().MouseSensativity = prevMouseSens;
 				isScopedIn = false;
 			}
 
@@ -280,28 +432,36 @@ void Game::PlayGameMode4()
 			if(score == 0)
 				started = true;
 
-			// Do collision, if you hit something:
-			Vector3 camFor = GetGraphics()->GetCamera()->GetForward();
-			Vector3 camPos = GetGraphics()->GetCamera()->GetPosition();
-			for(int i = 0; i < NR_OF_HUMANS; i++)
+			if(shootTimer == 0.0f)
 			{
-				if(humanAlive[i])
+				// Do collision, if you hit something:
+				Vector3 camFor = GetGraphics()->GetCamera()->GetForward();
+				Vector3 camPos = GetGraphics()->GetCamera()->GetPosition();
+				for(int i = 0; i < NR_OF_HUMANS; i++)
 				{
-					CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(camPos, camFor, humans[i]);
-					if(cd.collision)
+					if(humanAlive[i])
 					{
-						humanAlive[i] = false;
-						humans[i]->DontRender(true);
-						score++;
-						starTimer = 2.0f;
-						i = NR_OF_HUMANS;
+						CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(camPos, camFor, humans[i]);
+						if(cd.collision)
+						{
+							humanAlive[i] = false;
+							humans[i]->DontRender(true);
+							score++;
+
+							if(score == NR_OF_HUMANS)
+								started = false;
+
+							starTimer = 2.0f;
+							i = NR_OF_HUMANS;
+						}
 					}
 				}
+				shootTimer = 1.0f;
+				recoilTimer = 1.1f;
 			}
+
 			shoot = false;
 		}
-
-
 
 		if(started)
 			time += diff * 0.001f;
@@ -357,18 +517,19 @@ void Game::PlayGameMode4()
 	GetGraphics()->DeleteText(phoneDirTxtY);
 	GetGraphics()->DeleteText(phoneDirTxtZ);
 #endif
+	
+	GetGraphics()->GetEngineParameters().MouseSensativity = prevMouseSens;
+	GetGraphics()->GetEngineParameters().FOV = prevFOV;
+	GetGraphics()->ChangeShadowQuality(prevShadowQual);
 }
 
 // TODO:
+// implement scope-in for phone
 
-// elegant way of setting mousesens, FOV and shadow qual back to config file settings instead of hardcore, goes for heli game too.
+// Add ammo / reload??
 
-// When phone is scoped in lower sens
+// More humans / respawn? Moving humans? following a path moving back and forth.
+	// Game needs to be harder and longer. Maybe always have 5 standing still and 5 walking + respawns, making it so u dont need to kill the walking ones if ur bad.
+	// Mayeb respawn time tho to reward killing the walking ones.
 
-// implement scope in for phone
-
-// Add ammo / reload / bolt action delay between shots
-
-// Add a deadzone on the aim vector (if less than 10% set to 0), then scale 0-100% from 10-100%
-
-
+// Look into more precise mouse stuff? Like reading the DPI of the mouse.

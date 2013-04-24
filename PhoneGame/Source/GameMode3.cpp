@@ -23,6 +23,8 @@ void Game::PlayGameMode3()
 {
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 
+	int prevShadowQual = GetGraphics()->GetEngineParameters().ShadowMapSettings;
+
 	// Score / results:
 	float time = 0.0f;
 	int score = 0;
@@ -356,6 +358,8 @@ void Game::PlayGameMode3()
 	GetGraphics()->DeleteText(phoneDirTxtY);
 	GetGraphics()->DeleteText(phoneDirTxtZ);
 #endif
+
+	GetGraphics()->ChangeShadowQuality(prevShadowQual);
 }
 
 // TODO:
