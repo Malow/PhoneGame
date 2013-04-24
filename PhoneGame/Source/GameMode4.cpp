@@ -51,6 +51,11 @@ void Game::PlayGameMode4()
 	int score = 0;
 	bool started = false;
 
+	bool scopedIn = false;
+	bool humanAlive[NR_OF_HUMANS];
+	for(int i = 0; i < NR_OF_HUMANS; i++)
+		humanAlive[i] = true;
+
 	Vector3 phoneDir = Vector3(0, 1, 0);	
 	
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
@@ -87,7 +92,7 @@ void Game::PlayGameMode4()
 
 	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
 	GetGraphics()->GetCamera()->SetForward(Vector3(1, 0, 0));
-	GetGraphics()->GetCamera()->SetPosition(Vector3(-14, 58.0f, 0));
+	GetGraphics()->GetCamera()->SetPosition(Vector3(-17.0f, 56.0f, 0));
 	GetGraphics()->GetCamera()->LookAt(GetGraphics()->GetCamera()->GetPosition() - Vector3(1, 0.3f, 0));
 
 	iTerrain* terrain = GetGraphics()->CreateTerrain(Vector3(0, 0, 0), Vector3(1500, 1, 1500), 256);
@@ -107,6 +112,7 @@ void Game::PlayGameMode4()
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/newBorder");
 
 	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 75), Vector2(75, 75), "Media/star.png");
+	guiStar->SetStrata(400.0f);
 	iImage* sniper = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/AS50.png");
 	iImage* scope = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/scope.png");
 	scope->SetOpacity(0.0f);
@@ -119,10 +125,10 @@ void Game::PlayGameMode4()
 	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/newBorder");
 #endif
 
-	iFBXMesh* humans[NR_OF_HUMANS];
+	iMesh* humans[NR_OF_HUMANS];
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
-		humans[i] = GetGraphics()->CreateFBXMesh("Media/Token/token_anims.fbx", Vector3(0, 0, 0));
+		humans[i] = GetGraphics()->CreateMesh("Media/temp_guy.obj", Vector3(0, 0, 0));
 		humans[i]->SetScale(0.2f);
 		humans[i]->SetPosition(humanPos[i]);
 	}
@@ -130,9 +136,12 @@ void Game::PlayGameMode4()
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
-
+	
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
+		humans[i]->RotateAxis(Vector3(0, 1, 0), -3.1415f * 0.5f);
+		i++;
+		/*
 		humans[i]->SetScale(0.2f);
 		humans[i]->SetAnimation((unsigned int)0);
 		humans[i]->HideModel("bow_v01", true);
@@ -140,8 +149,9 @@ void Game::PlayGameMode4()
 		humans[i]->HideModel("pocketknife_v01", true);
 		humans[i]->HideModel("arrow_in_hand", true);
 		humans[i]->HideModel("canteen", true);
+		*/
 	}
-
+	
 	go = true;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
@@ -161,12 +171,8 @@ void Game::PlayGameMode4()
 		// Debug Controlls
 		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
 			GetGraphics()->GetCamera()->MoveForward(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
-			GetGraphics()->GetCamera()->MoveLeft(diff * 10.0f);
 		if(GetGraphics()->GetKeyListener()->IsPressed('S'))	
 			GetGraphics()->GetCamera()->MoveBackward(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
-			GetGraphics()->GetCamera()->MoveRight(diff * 10.0f);
 
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
 			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f + diff * 0.01f));
@@ -199,20 +205,39 @@ void Game::PlayGameMode4()
 		//////////////////////////////////////////////////////////////////////////
 		// GAME LOGIC
 
+		// A and D movement
+		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
+			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, -diff) * 0.01f);
+		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
+			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, diff) * 0.01f);
+		if(GetGraphics()->GetCamera()->GetPosition().z > 34.0f)
+		{
+			Vector3 pos = GetGraphics()->GetCamera()->GetPosition();
+			pos.z = 34.0f;
+			GetGraphics()->GetCamera()->SetPosition(pos);
+		}
+		if(GetGraphics()->GetCamera()->GetPosition().z < -34.0f)
+		{
+			Vector3 pos = GetGraphics()->GetCamera()->GetPosition();
+			pos.z = -34.0f;
+			GetGraphics()->GetCamera()->SetPosition(pos);
+		}
 
 
-		static bool fesd = true;
-		static int qual = 0;
+		// Zoom in
+		static bool mouse2b = true;
+		static int mouse2i = 0;
 		if(GetGraphics()->GetKeyListener()->IsClicked(2))
 		{
-			if(fesd)
+			if(mouse2b)
 			{
-				if(qual % 2 == 0)
+				if(mouse2i % 2 == 0)
 				{
 					scope->SetOpacity(1.0f);
 					sniper->SetOpacity(0.0f);
 					GetGraphics()->GetEngineParameters().FOV = 25.0f;
 					GetGraphics()->GetEngineParameters().MouseSensativity = 0.3f;
+					scopedIn = true;
 				}
 				else
 				{
@@ -220,28 +245,55 @@ void Game::PlayGameMode4()
 					sniper->SetOpacity(1.0f);
 					GetGraphics()->GetEngineParameters().FOV = 75.0f;
 					GetGraphics()->GetEngineParameters().MouseSensativity = 1.0f;
+					scopedIn = false;
 				}
-				qual++;
-				fesd = false;
+				mouse2i++;
+				mouse2b = false;
 			}			
 		}
 		else
-			fesd = true;
+			mouse2b = true;
+
+
+		// Shoot
+		static bool mouse1b = true;
+		if(GetGraphics()->GetKeyListener()->IsClicked(1))
+		{
+			if(mouse1b)
+			{
+				if(score == 0)
+					started = true;
+
+				// Do collision, if you hit something:
+				Vector3 camFor = GetGraphics()->GetCamera()->GetForward();
+				Vector3 camPos = GetGraphics()->GetCamera()->GetPosition();
+				for(int i = 0; i < NR_OF_HUMANS; i++)
+				{
+					if(humanAlive[i])
+					{
+						CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(camPos, camFor, humans[i]);
+						if(cd.collision)
+						{
+							humanAlive[i] = false;
+							humans[i]->DontRender(true);
+							score++;
+							starTimer = 2.0f;
+							i = NR_OF_HUMANS;
+						}
+					}
+				}
+
+				mouse1b = false;
+			}			
+		}
+		else
+			mouse1b = true;
+
 
 
 		if(started)
 			time += diff * 0.001f;
 
-		// Do collision for shooting etc
-		if(false)
-		{
-			if(score == 0)
-				started = true;
-			score++;
-			//human->SetPosition(humanPos[score % NR_OF_HUMANS]);
-
-			starTimer = 2.0f;
-		}
 		starTimer -= diff * 0.001f;
 		if(starTimer < 0.0f)
 			starTimer = 0.0f;
@@ -275,7 +327,7 @@ void Game::PlayGameMode4()
 	
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
-		GetGraphics()->DeleteFBXMesh(humans[i]);
+		GetGraphics()->DeleteMesh(humans[i]);
 	}
 
 	GetGraphics()->DeleteTerrain(terrain);
