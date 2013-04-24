@@ -363,9 +363,12 @@ void Game::PlayGameMode4()
 
 // elegant way of setting mousesens, FOV and shadow qual back to config file settings instead of hardcore, goes for heli game too.
 
+// When phone is scoped in lower sens
 
+// implement scope in for phone
 
+// Add ammo / reload / bolt action delay between shots
 
-
+// Add a deadzone on the aim vector (if less than 10% set to 0), then scale 0-100% from 10-100%
 
 
