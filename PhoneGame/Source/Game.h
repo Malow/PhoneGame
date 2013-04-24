@@ -38,6 +38,8 @@ public:
 	Vector3 direction;
 	float speed;
 	bool needRestart;
+	Vector2 aim;
+	bool shoot;
 
 	NetworkController()
 	{
@@ -45,6 +47,8 @@ public:
 		this->direction = Vector3(0, 0, 0);
 		this->speed = 50.0f;
 		this->needRestart = false;
+		this->aim = Vector2(0, 0);
+		this->shoot = false;
 	}
 
 	virtual ~NetworkController()

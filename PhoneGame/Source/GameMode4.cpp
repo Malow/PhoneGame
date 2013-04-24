@@ -51,7 +51,15 @@ void Game::PlayGameMode4()
 	int score = 0;
 	bool started = false;
 
+	bool isScopedIn = false;
+	bool scopeIn = false;
+	bool shoot = false;
+	bool humanAlive[NR_OF_HUMANS];
+	for(int i = 0; i < NR_OF_HUMANS; i++)
+		humanAlive[i] = true;
+
 	Vector3 phoneDir = Vector3(0, 1, 0);	
+	Vector2 phoneAim = Vector2(0, 0);
 	
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
 	GetGraphics()->ChangeCamera(FPS);
@@ -64,7 +72,7 @@ void Game::PlayGameMode4()
 	model->Scale(1.0f * 0.05f);
 
 
-	///
+	/// Trees and buildings
 	iMesh* building1 = GetGraphics()->CreateMesh("Media/TallBuilding.obj", Vector3(0, -20.0f, 0));
 	building1->Scale(Vector3(4, 4, 8));
 
@@ -81,13 +89,12 @@ void Game::PlayGameMode4()
 		trees[i] = GetGraphics()->CreateMesh("Media/Tree_01_03.obj", treePos[i]);
 		trees[i]->Scale(0.1f);
 	}
-
 	///
 
 
 	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
 	GetGraphics()->GetCamera()->SetForward(Vector3(1, 0, 0));
-	GetGraphics()->GetCamera()->SetPosition(Vector3(-14, 58.0f, 0));
+	GetGraphics()->GetCamera()->SetPosition(Vector3(-17.0f, 56.0f, 0));
 	GetGraphics()->GetCamera()->LookAt(GetGraphics()->GetCamera()->GetPosition() - Vector3(1, 0.3f, 0));
 
 	iTerrain* terrain = GetGraphics()->CreateTerrain(Vector3(0, 0, 0), Vector3(1500, 1, 1500), 256);
@@ -107,6 +114,7 @@ void Game::PlayGameMode4()
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/newBorder");
 
 	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 75), Vector2(75, 75), "Media/star.png");
+	guiStar->SetStrata(400.0f);
 	iImage* sniper = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/AS50.png");
 	iImage* scope = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/scope.png");
 	scope->SetOpacity(0.0f);
@@ -119,10 +127,10 @@ void Game::PlayGameMode4()
 	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/newBorder");
 #endif
 
-	iFBXMesh* humans[NR_OF_HUMANS];
+	iMesh* humans[NR_OF_HUMANS];
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
-		humans[i] = GetGraphics()->CreateFBXMesh("Media/Token/token_anims.fbx", Vector3(0, 0, 0));
+		humans[i] = GetGraphics()->CreateMesh("Media/temp_guy.obj", Vector3(0, 0, 0));
 		humans[i]->SetScale(0.2f);
 		humans[i]->SetPosition(humanPos[i]);
 	}
@@ -130,18 +138,13 @@ void Game::PlayGameMode4()
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
-
+	
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
-		humans[i]->SetScale(0.2f);
-		humans[i]->SetAnimation((unsigned int)0);
-		humans[i]->HideModel("bow_v01", true);
-		humans[i]->HideModel("machete_v3", true);
-		humans[i]->HideModel("pocketknife_v01", true);
-		humans[i]->HideModel("arrow_in_hand", true);
-		humans[i]->HideModel("canteen", true);
+		humans[i]->RotateAxis(Vector3(0, 1, 0), -3.1415f * 0.5f);
+		i++;	// Every other
 	}
-
+	
 	go = true;
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
@@ -157,27 +160,54 @@ void Game::PlayGameMode4()
 			go = false;
 
 
-#ifdef _DEBUG
-		// Debug Controlls
-		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
-			GetGraphics()->GetCamera()->MoveForward(diff * 10.0f);
+		//////////////////////////////////////////////////////////////////////////
+		// Keyboard / mouse inputs
+		// Scope in
+		static bool mouse2b = true;
+		if(GetGraphics()->GetKeyListener()->IsClicked(2))
+		{
+			if(mouse2b)
+			{
+				scopeIn = true;
+				mouse2b = false;
+			}			
+		}
+		else
+			mouse2b = true;
+
+
+		// Shoot
+		static bool mouse1b = true;
+		if(GetGraphics()->GetKeyListener()->IsClicked(1))
+		{
+			if(mouse1b)
+			{
+				shoot = true;
+				mouse1b = false;
+			}			
+		}
+		else
+			mouse1b = true;
+
+		// A and D movement
 		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
-			GetGraphics()->GetCamera()->MoveLeft(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed('S'))	
-			GetGraphics()->GetCamera()->MoveBackward(diff * 10.0f);
+			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, -diff) * 0.01f);
 		if(GetGraphics()->GetKeyListener()->IsPressed('D'))	
-			GetGraphics()->GetCamera()->MoveRight(diff * 10.0f);
+			GetGraphics()->GetCamera()->SetPosition(GetGraphics()->GetCamera()->GetPosition() + Vector3(0, 0, diff) * 0.01f);
+		if(GetGraphics()->GetCamera()->GetPosition().z > 34.0f)
+		{
+			Vector3 pos = GetGraphics()->GetCamera()->GetPosition();
+			pos.z = 34.0f;
+			GetGraphics()->GetCamera()->SetPosition(pos);
+		}
+		if(GetGraphics()->GetCamera()->GetPosition().z < -34.0f)
+		{
+			Vector3 pos = GetGraphics()->GetCamera()->GetPosition();
+			pos.z = -34.0f;
+			GetGraphics()->GetCamera()->SetPosition(pos);
+		}
 
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ADD))
-			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f + diff * 0.01f));
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SUBTRACT))
-			GetGraphics()->GetCamera()->SetSpeed(GetGraphics()->GetCamera()->GetSpeed() * (1.0f - diff * 0.01f));
-
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_SPACE))
-			GetGraphics()->GetCamera()->MoveUp(diff * 10.0f);
-		if(GetGraphics()->GetKeyListener()->IsPressed(VK_CONTROL))
-			GetGraphics()->GetCamera()->MoveDown(diff * 10.0f);
-#endif
+		//////////////////////////////////////////////////////////////////////////
 
 
 		if(this->networkController)
@@ -186,6 +216,30 @@ void Game::PlayGameMode4()
 			phoneDir.Normalize();
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(0, 1, 0);
+
+
+			// Maybe works?! :P Kinda haxx
+			phoneAim = this->networkController->aim;
+			Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight);
+			mousePos += phoneAim * diff * 0.1f;
+			GetGraphics()->GetKeyListener()->SetMousePosition(mousePos);
+
+
+			// shoot
+			if(this->networkController->shoot)
+			{
+				this->networkController->shoot = false;
+				shoot = true;
+			}
+
+			// scopein
+			// Needs more advanced, use phoneDir to interpret
+			/*
+			if(this->networkController->scopeIn)
+			{
+				this->networkController->scopeIn = false;
+				scopeIn = true;
+			}*/
 			
 
 #ifdef _DEBUG
@@ -198,50 +252,60 @@ void Game::PlayGameMode4()
 
 		//////////////////////////////////////////////////////////////////////////
 		// GAME LOGIC
-
-
-
-		static bool fesd = true;
-		static int qual = 0;
-		if(GetGraphics()->GetKeyListener()->IsClicked(2))
+		if(scopeIn)
 		{
-			if(fesd)
+			if(!isScopedIn)
 			{
-				if(qual % 2 == 0)
-				{
-					scope->SetOpacity(1.0f);
-					sniper->SetOpacity(0.0f);
-					GetGraphics()->GetEngineParameters().FOV = 25.0f;
-					GetGraphics()->GetEngineParameters().MouseSensativity = 0.3f;
-				}
-				else
-				{
-					scope->SetOpacity(0.0f);
-					sniper->SetOpacity(1.0f);
-					GetGraphics()->GetEngineParameters().FOV = 75.0f;
-					GetGraphics()->GetEngineParameters().MouseSensativity = 1.0f;
-				}
-				qual++;
-				fesd = false;
-			}			
+				scope->SetOpacity(1.0f);
+				sniper->SetOpacity(0.0f);
+				GetGraphics()->GetEngineParameters().FOV = 25.0f;
+				GetGraphics()->GetEngineParameters().MouseSensativity = 0.3f;
+				isScopedIn = true;
+			}
+			else
+			{
+				scope->SetOpacity(0.0f);
+				sniper->SetOpacity(1.0f);
+				GetGraphics()->GetEngineParameters().FOV = 75.0f;
+				GetGraphics()->GetEngineParameters().MouseSensativity = 1.0f;
+				isScopedIn = false;
+			}
+
+			scopeIn = false;
 		}
-		else
-			fesd = true;
+
+
+		if(shoot)
+		{
+			if(score == 0)
+				started = true;
+
+			// Do collision, if you hit something:
+			Vector3 camFor = GetGraphics()->GetCamera()->GetForward();
+			Vector3 camPos = GetGraphics()->GetCamera()->GetPosition();
+			for(int i = 0; i < NR_OF_HUMANS; i++)
+			{
+				if(humanAlive[i])
+				{
+					CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(camPos, camFor, humans[i]);
+					if(cd.collision)
+					{
+						humanAlive[i] = false;
+						humans[i]->DontRender(true);
+						score++;
+						starTimer = 2.0f;
+						i = NR_OF_HUMANS;
+					}
+				}
+			}
+			shoot = false;
+		}
+
 
 
 		if(started)
 			time += diff * 0.001f;
 
-		// Do collision for shooting etc
-		if(false)
-		{
-			if(score == 0)
-				started = true;
-			score++;
-			//human->SetPosition(humanPos[score % NR_OF_HUMANS]);
-
-			starTimer = 2.0f;
-		}
 		starTimer -= diff * 0.001f;
 		if(starTimer < 0.0f)
 			starTimer = 0.0f;
@@ -275,7 +339,7 @@ void Game::PlayGameMode4()
 	
 	for(int i = 0; i < NR_OF_HUMANS; i++)
 	{
-		GetGraphics()->DeleteFBXMesh(humans[i]);
+		GetGraphics()->DeleteMesh(humans[i]);
 	}
 
 	GetGraphics()->DeleteTerrain(terrain);

@@ -165,6 +165,16 @@ void Game::HandleEvent(float diff)
 				this->networkController->direction = dir;
 			}
 
+			// Aim message for GameMode4 (3)
+			if(msg.substr(0, 3) == "AIM")
+			{
+				msg = msg.substr(4);
+				int spacePos = msg.find(' ');
+				float x = atof(msg.substr(0, spacePos).c_str());
+				float y = atof(msg.substr(spacePos + 1).c_str());
+				this->networkController->aim = Vector2(x, y);
+			}
+
 			// Speed message
 			if(msg.substr(0, 3) == "SPD")
 			{
@@ -172,11 +182,19 @@ void Game::HandleEvent(float diff)
 				float spd = atof(msg.c_str());
 				this->networkController->speed = spd;
 			}
-			// Answer current game mode
+
+			// Shoot message for GameMode4 (3)
+			if(msg.substr(0, 5) == "SHOOT")
+			{
+				this->networkController->shoot = true;
+			}
+
+			// Restart for gameMode2
 			if(msg.substr(0, 7) == "RESTART")
 			{
 				this->networkController->needRestart = true;
 			}
+
 			// Answer current game mode
 			if(msg.substr(0, 8) == "GET MODE")
 			{
@@ -190,12 +208,13 @@ void Game::HandleEvent(float diff)
 				this->gameMode = atoi(msg.c_str());
 			}
 
-
+			// Quit the game mode
 			if(msg.substr(0, 4) == "QUIT")
 			{
 				this->go = false;
 			}
 
+			// Exit the program
 			if(msg.substr(0, 4) == "EXIT")
 			{
 				this->go = false;
