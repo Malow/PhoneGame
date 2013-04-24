@@ -7,7 +7,6 @@ import android.graphics.PointF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -20,34 +19,29 @@ public class FPSGameView extends View
 	private int mSwingMultiplier = 10;
 	private int mXPos = 50;
 	private int mYPos = 250;
-	private int mSteeringCircleX = 175;
-	private int mSteeringCircleY = 175;
 	private int mCircleWidth = 175;
 	private TCPClient mTcpClient = null;
-	private float mMaxLength = 1.0f;
+	private float mMaxLength = 150.0f;
 	
 	public FPSGameView(Context context, AttributeSet attrs) 
 	{
 		super(context, attrs);
 		
-		mXPos = (int) 100;
+		mXPos = (int) 300;
 		mYPos = (int) 310;
-		mCircleWidth = 125;
-		
-		mSteeringCircleX = mXPos - (mCircleWidth / 2);
-		mSteeringCircleY = mYPos - (mCircleWidth / 2);
+		mCircleWidth = 200;
 		
 		mDrawableCircleInner = new ShapeDrawable(new OvalShape());
     	mDrawableCircleInner.getPaint().setARGB(255,255,0,0);
-    	mDrawableCircleInner.setBounds(mSteeringCircleX, mSteeringCircleY,
-    			mSteeringCircleX + mCircleWidth, mSteeringCircleY + mCircleWidth);
+    	mDrawableCircleInner.setBounds(mXPos - (mCircleWidth / 2), mYPos - (mCircleWidth / 2),
+    			mXPos + (mCircleWidth) - (mCircleWidth / 2), mYPos + (mCircleWidth) - (mCircleWidth / 2));
     	
     	mDrawableCircleOuter = new ShapeDrawable(new OvalShape());
     	mDrawableCircleOuter.getPaint().setARGB(255,0,255,0);
     	mDrawableCircleOuter.getPaint().setStyle(Paint.Style.STROKE);
     	mDrawableCircleOuter.getPaint().setStrokeWidth(10);
-    	mDrawableCircleOuter.setBounds(mSteeringCircleX, mSteeringCircleY,
-    			mSteeringCircleX - (mCircleWidth / 2), mSteeringCircleY - (mCircleWidth / 2));
+    	mDrawableCircleOuter.setBounds(mXPos - 5 - (mCircleWidth / 2), mYPos - 5 - (mCircleWidth / 2),
+    			mXPos + mCircleWidth + 5 - (mCircleWidth / 2), mYPos + mCircleWidth + 5 - (mCircleWidth / 2));
 		
 		/*mDrawableInner = new ShapeDrawable(new RectShape());
 		mDrawableInner.getPaint().setARGB(255,255,0,0);
@@ -71,14 +65,14 @@ public class FPSGameView extends View
 	
 	public void InvalidateView(float x, float y, float z)
     {
-    	int mMiddleX = super.getWidth() / 2;
+    	/*int mMiddleX = super.getWidth() / 2;
     	int mMiddleY = super.getHeight() / 4;
     	postInvalidate();
     	int width = 100;
     	int height = 100;
     	
     	int lY = (int)x * mSwingMultiplier + mMiddleY - (height / 2);
-    	int lX = (int)y * mSwingMultiplier + mMiddleX - (width / 2);
+    	int lX = (int)y * mSwingMultiplier + mMiddleX - (width / 2);*/
     	
     	
     	
@@ -91,13 +85,13 @@ public class FPSGameView extends View
 		PointF joyVector = new PointF(0.0f ,0.0f);
 		PointF joySMid = new PointF(0.0f ,0.0f);
 		PointF pos = new PointF(0.0f ,0.0f);
-		
+		if(event.getAxisValue(AXIS_X) < super.getWidth() / 2
 		if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN)  
 		{
 			joySMid = new PointF(mXPos, mYPos);
-			pos = new PointF(event.getAxisValue(AXIS_X) - (mCircleWidth / 2),
-	    			event.getAxisValue(AXIS_Y) - (mCircleWidth / 2));
-	    	joyVector = new PointF(joySMid.x - pos.x, joySMid.y - pos.y);
+			pos = new PointF(event.getAxisValue(AXIS_X),
+	    			event.getAxisValue(AXIS_Y));
+	    	joyVector = new PointF(pos.x - joySMid.x , pos.y - joySMid.y);
 	    	
 	    	if(joyVector.length() > mMaxLength)
 	    	{
@@ -108,6 +102,8 @@ public class FPSGameView extends View
 	    		joyVector.x *= mMaxLength;
 	    		joyVector.y *= mMaxLength;
 	    	}
+	    	joyVector.x += mXPos;
+	    	joyVector.y += mYPos;
 		}
 		if(event.getAction() == MotionEvent.ACTION_UP)
 		{
@@ -115,11 +111,13 @@ public class FPSGameView extends View
 		}
 		if(mTcpClient != null)
 		{
-			String message = "AIM " + joyVector.x + " " + joyVector.y + " ";
+			String message = "AIM " + (joyVector.x - mXPos) + " " + (joyVector.y - mYPos) + " ";
 			mTcpClient.sendMessage(message);
 		}
-		mDrawableCircleInner.setBounds((int) joyVector.x, (int) joyVector.y , (int) (joyVector.x + mCircleWidth), (int) (joyVector.y + mCircleWidth));
+		mDrawableCircleInner.setBounds((int) (joyVector.x) - (mCircleWidth / 2), (int) (joyVector.y) - (mCircleWidth / 2) , 
+				(int) (joyVector.x + mCircleWidth) - (mCircleWidth / 2), (int) (joyVector.y + mCircleWidth) - (mCircleWidth / 2));
 		postInvalidate();
+		
 		return true;
 	} 
 	@Override

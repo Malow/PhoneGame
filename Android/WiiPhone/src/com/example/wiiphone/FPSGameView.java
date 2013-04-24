@@ -85,8 +85,11 @@ public class FPSGameView extends View
 		PointF joyVector = new PointF(0.0f ,0.0f);
 		PointF joySMid = new PointF(0.0f ,0.0f);
 		PointF pos = new PointF(0.0f ,0.0f);
-		
-		if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN)  
+		if(event.getAxisValue(AXIS_X) > super.getWidth() / 2)
+		{
+			joyVector = new PointF(mXPos, mYPos);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN)  
 		{
 			joySMid = new PointF(mXPos, mYPos);
 			pos = new PointF(event.getAxisValue(AXIS_X),
@@ -105,7 +108,7 @@ public class FPSGameView extends View
 	    	joyVector.x += mXPos;
 	    	joyVector.y += mYPos;
 		}
-		if(event.getAction() == MotionEvent.ACTION_UP)
+		else if(event.getAction() == MotionEvent.ACTION_UP)
 		{
 			joyVector = new PointF(mXPos, mYPos);
 		}
