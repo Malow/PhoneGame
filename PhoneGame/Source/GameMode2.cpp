@@ -49,6 +49,9 @@ void Game::PlayGameMode2()
 	for(int i = 0; i < 5; i++)
 		mLights[i]->SetIntensity(30.0f);
 
+	GetGraphics()->SetSunLightDisabled();
+	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+
 	Vector3 centerPlatform = Vector3(0,20,0);
 	Map* mPlatform = new Map("Media/MazeMap.obj", centerPlatform);
 	Map* mBox = new Map("Media/MazeMapFrame.obj", centerPlatform + Vector3(0,1,0) );
@@ -57,7 +60,7 @@ void Game::PlayGameMode2()
 	/* set so we cant tilt it more than these angles. */
 	mPlatform->SetMaxAngleX(10.0f*(PI/180.0f));
 	mPlatform->SetMaxAngleZ(10.0f*(PI/180.0f));
-	mPlatform->SetRotate(true);
+	mPlatform->SetRotate(false);
 	mPlatform->SetTargetAngleX(0.5f);
 	mPlatform->SetTargetAngleZ(-0.5f);
 
@@ -73,13 +76,11 @@ void Game::PlayGameMode2()
 
 	// Score / results:
 	float time = 0.0f;
-	int score = 0;
 	bool started = false;
 
 	float delayTimer = 1000.0f;
 
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
-	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
 	go = true;
 	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);
@@ -153,6 +154,7 @@ void Game::PlayGameMode2()
 
 		if(this->networkController)
 		{
+			mPlatform->SetRotate(true);
 			Vector3 phoneDirr = Vector3(this->networkController->direction.y, this->networkController->direction.z, -this->networkController->direction.x);
 			//Vector3 phoneDirr = this->networkController->direction;
 			phoneDirr.Normalize();
@@ -176,17 +178,6 @@ void Game::PlayGameMode2()
 			currentPrev++;
 			if(currentPrev >= NROFPREV)
 				currentPrev = 0;
-			/*if(angle > 0.5)
-				angle = 0.5;
-			if(angle < -0.5)
-				angle = -0.5;*/
-			//mPlatform->ResetXZAngles();
-			//mPlatform->RotateAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
-
-
-			//Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
-			//tempPos.RotateAroundAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
-			//mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
 		if(mGe->GetKeyListener()->IsPressed('W'))
 		{
@@ -231,8 +222,7 @@ void Game::PlayGameMode2()
 			}
 		}
 
-		// print score and time text.
-		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
+		// print score and time text
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
 	}
 
@@ -246,7 +236,7 @@ void Game::PlayGameMode2()
 
 	delete mPlatform;
 	delete mBalls;
+	delete mBox;
 
-	mGe->DeleteText(scoreTxt);
 	mGe->DeleteText(timeTxt);
 }
