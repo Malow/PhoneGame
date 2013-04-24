@@ -61,27 +61,10 @@ public class LabyrinthView extends View
     @Override
     public boolean onTouchEvent(MotionEvent event) 
     {
-        if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN
-        		|| event.getAction() == MotionEvent.ACTION_UP)  
+        if(event.getAction() == MotionEvent.ACTION_DOWN)  
         {
-			float progress = event.getAxisValue(AXIS_Y);
-			progress = (progress / super.getHeight()); 
-			progress = ((1 - progress) * 100);
 			if (mTcpClient != null) 
 			{
-				if(progress > 100)
-				{
-					progress = 100.0f;
-				}
-				else if(progress < 0)
-				{
-					progress = 0.0f;
-				}
-				String message = "SPD " +  Float.toString(progress);
-                mTcpClient.sendMessage(message);
-                
-                Log.e("SPD MESSAGE", message);
-                
             }
 			else
 			{

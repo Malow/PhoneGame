@@ -46,13 +46,13 @@ PowerBall::PowerBall(const std::string meshFilePath, Vector3 position)
 	this->mDistanceCam	= 5;
 	this->mMaxVelocity	 = 15.0f; // 10.0f
 	this->mAcceleration	 = Vector3(0, -9.81f , 0); // remove " * 2"
-	this->mDamping		 = 0.70f;//0.9995f; //0.995
-	this->mMass			 = 9;
+	this->mDamping		 = 0.99995f;//0.9995f; //0.995
+	this->mMass			 = 999;
 	this->mSumAddedForce = Vector3(0,0,0);
-	this->mRestitution   = 1.0f; //0.95f
+	this->mRestitution   = 0.0f; //0.95f
 	this->mForcePress	 = 180.0f; // 180.0f
 	this->mInTheAir		 = true;	// we are dropped from air
-	this->mFriction		 = 0.9f;	// this is in the opposite direction to velocity, if this is 0, then no friction (only damping will decrese the speed)
+	this->mFriction		 = 1.0f;	// this is in the opposite direction to velocity, if this is 0, then no friction (only damping will decrese the speed)
 	this->mKnockoutMode = false;
 	this->mStartPosition = position;
 	this->mLivesLeft	 = 2;

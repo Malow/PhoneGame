@@ -127,8 +127,6 @@ public class SpaceShipActivity extends Activity implements SensorEventListener
     		String message = "ACC " + Float.toString(event.values[0]) + " "
     	   			 + Float.toString(event.values[1]) + " " + Float.toString(event.values[2]);
     		mTcpClient.sendMessage(message);
-    		
-    		Log.e("ACC MESSAGE", message);
     	}
     }
     

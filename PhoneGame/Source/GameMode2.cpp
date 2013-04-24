@@ -5,19 +5,32 @@
 
 #define PI 3.1415
 #define NROFPREV 1
-float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[])
+float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[], int current)
 {
 	float totAngles = 0;
-	for(int i = 0; i < NROFPREV; i++)
+	float returnAngle;
+	int i = current + 1;
+	if(i == NROFPREV)
+		i = 0;
+	while(i != current)
 	{
 		phoneDirr += prevVectors[i];
 		float dot = prevVectors[i].GetDotProduct(DefaultDir);
 		float angles = acos(dot);
 		totAngles += angles;
+
+		i++;
+		if(i == NROFPREV)
+			i = 0;
 	}
 	phoneDirr /= NROFPREV;
 	phoneDirr.Normalize();
-	return totAngles / NROFPREV;
+	phoneDirr = (phoneDirr + prevVectors[current]) / 2;
+	phoneDirr.Normalize();
+
+	returnAngle = totAngles / NROFPREV;
+	returnAngle = (returnAngle + acos(prevVectors[current].GetDotProduct(DefaultDir))) / 2;
+	return returnAngle;
 }
 
 void Game::PlayGameMode2()
@@ -36,21 +49,25 @@ void Game::PlayGameMode2()
 	for(int i = 0; i < 5; i++)
 		mLights[i]->SetIntensity(30.0f);
 
+	GetGraphics()->SetSunLightDisabled();
+	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+
 	Vector3 centerPlatform = Vector3(0,20,0);
 	Map* mPlatform = new Map("Media/MazeMap.obj", centerPlatform);
 	Map* mBox = new Map("Media/MazeMapFrame.obj", centerPlatform + Vector3(0,1,0) );
-	mPlatform->SetRotate(false);
 	mPlatform->SetShrinkValue(0.0f);
 
 	/* set so we cant tilt it more than these angles. */
 	mPlatform->SetMaxAngleX(10.0f*(PI/180.0f));
 	mPlatform->SetMaxAngleZ(10.0f*(PI/180.0f));
+	mPlatform->SetRotate(false);
+	mPlatform->SetTargetAngleX(0.5f);
+	mPlatform->SetTargetAngleZ(-0.5f);
 
 	PowerBall* mBalls = new PowerBall("Media/Ball.obj", Vector3(-13.0f,27,-13));
 	mBalls->SetForwardVector(Vector3(0,0,1));
 	mBalls->SetKnockoutMode();
-	mBalls->SetAcceleration(mBalls->GetAcceleration()*3.0f);
-	mBalls->SetForcePressed(mBalls->GetForcePressed()/15.0f);
+	mBalls->SetAcceleration(mBalls->GetAcceleration()*30.0f);
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -59,13 +76,11 @@ void Game::PlayGameMode2()
 
 	// Score / results:
 	float time = 0.0f;
-	int score = 0;
 	bool started = false;
 
 	float delayTimer = 1000.0f;
 
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
-	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 90), 1.0f, "Media/fonts/new");
 
 	go = true;
 	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);
@@ -113,9 +128,20 @@ void Game::PlayGameMode2()
 	
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
-		if(GetGraphics()->GetKeyListener()->IsPressed('R'))
+		if(GetGraphics()->GetKeyListener()->IsPressed('R') || (this->networkController != NULL && this->networkController->needRestart == true))
 		{
-			mBalls->SetPosition(Vector3(-13.0f,27,-13));
+			if(this->networkController != NULL)
+			{
+				this->networkController->needRestart = false;
+			}
+			delete mBalls;
+			mBalls = new PowerBall("Media/Ball.obj", Vector3(-13.0f,27,-13));
+			mBalls->SetForwardVector(Vector3(0,0,1));
+			mBalls->SetKnockoutMode();
+			mBalls->SetAcceleration(mBalls->GetAcceleration()*15.0f);
+
+			mPlatform->ResetXZAngles();
+			mPlatform->RotateX(0);
 		}
 		iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 		mBalls->UpdateBallParentMode(mPlatform);
@@ -128,27 +154,30 @@ void Game::PlayGameMode2()
 
 		if(this->networkController)
 		{
+			mPlatform->SetRotate(true);
 			Vector3 phoneDirr = Vector3(this->networkController->direction.y, this->networkController->direction.z, -this->networkController->direction.x);
 			//Vector3 phoneDirr = this->networkController->direction;
 			phoneDirr.Normalize();
 			prevVectors[currentPrev] = phoneDirr;
+			float angle = CalcAngle(phoneDirr, DefaultDir, prevVectors, currentPrev);
+
+			float angleX = acos(DefaultDir.GetDotProduct(Vector3(0, phoneDirr.y , phoneDirr.z).Normalize()));
+			float angleZ = acos(DefaultDir.GetDotProduct(Vector3(phoneDirr.x, phoneDirr.y, 0).Normalize()));
+			if(phoneDirr.z > 0)
+			{
+				angleX *= -1;
+			}
+			if(phoneDirr.x < 0)
+			{
+				angleZ *= -1;
+			}
+			mPlatform->SetTargetAngleX(angleX/4);
+			mPlatform->SetTargetAngleZ(angleZ/4);
+
+			angle /= 4;
 			currentPrev++;
 			if(currentPrev >= NROFPREV)
 				currentPrev = 0;
-
-			float angle = CalcAngle(phoneDirr, DefaultDir, prevVectors);
-			
-			if(angle > 0.5)
-				angle = 0.5;
-			if(angle < -0.5)
-				angle = -0.5;
-			mPlatform->ResetXZAngles();
-			mPlatform->RotateAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
-
-
-			Vector3 tempPos = mBalls->GetPosition() - mPlatform->GetMesh()->GetPosition();
-			tempPos.RotateAroundAxis(phoneDirr.GetCrossProduct(DefaultDir), angle);
-			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
 		if(mGe->GetKeyListener()->IsPressed('W'))
 		{
@@ -182,12 +211,18 @@ void Game::PlayGameMode2()
 			tempPos.RotateAroundAxis(Vector3(0,0,1), (PI/8.0f)*diff*0.001f);
 			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
-
+		Vector3 tabort = mBalls->GetPosition();
 		if(started)
 			time += diff * 0.001f;
+		else
+		{
+			if((mBalls->GetPosition() - Vector3(-13.0f,25,-13)).GetLength() > 3)
+			{
+				started = true;
+			}
+		}
 
-		// print score and time text.
-		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
+		// print score and time text
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
 	}
 
@@ -201,7 +236,7 @@ void Game::PlayGameMode2()
 
 	delete mPlatform;
 	delete mBalls;
+	delete mBox;
 
-	mGe->DeleteText(scoreTxt);
 	mGe->DeleteText(timeTxt);
 }
