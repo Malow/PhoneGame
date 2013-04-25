@@ -26,7 +26,7 @@ static const Vector3 treePos[NR_OF_TREES] =
 	Vector3(-166, 0.0f, 122)
 };
 
-#define NR_OF_PREVPHONEDIR 10
+#define NR_OF_PREVPHONEDIR 20
 static Vector3 prevPhoneDir[NR_OF_PREVPHONEDIR];
 
 
@@ -129,18 +129,6 @@ void Game::PlayGameMode4()
 	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 155), 1.0f, "Media/fonts/newBorder");
 	iText* phoneDirTxtY = GetGraphics()->CreateText("", Vector2(50, 185), 1.0f, "Media/fonts/newBorder");
 	iText* phoneDirTxtZ = GetGraphics()->CreateText("", Vector2(50, 215), 1.0f, "Media/fonts/newBorder");
-
-
-
-	iText* debugText1 = GetGraphics()->CreateText("", Vector2(50, 300), 1.0f, "Media/fonts/newBorder");
-	iText* debugText2 = GetGraphics()->CreateText("", Vector2(50, 330), 1.0f, "Media/fonts/newBorder");
-	iText* debugText3 = GetGraphics()->CreateText("", Vector2(50, 360), 1.0f, "Media/fonts/newBorder");
-	iText* debugText4 = GetGraphics()->CreateText("", Vector2(50, 390), 1.0f, "Media/fonts/newBorder");
-	iText* debugText5 = GetGraphics()->CreateText("", Vector2(50, 420), 1.0f, "Media/fonts/newBorder");
-	iText* debugText6 = GetGraphics()->CreateText("", Vector2(50, 450), 1.0f, "Media/fonts/newBorder");
-	iText* debugText7 = GetGraphics()->CreateText("", Vector2(50, 480), 1.0f, "Media/fonts/newBorder");
-	iText* debugText8 = GetGraphics()->CreateText("", Vector2(50, 510), 1.0f, "Media/fonts/newBorder");
-	iText* debugText9 = GetGraphics()->CreateText("", Vector2(50, 540), 1.0f, "Media/fonts/newBorder");
 #endif
 
 	iMesh* humans[NR_OF_HUMANS];
@@ -220,6 +208,12 @@ void Game::PlayGameMode4()
 			if(phoneDir == Vector3(0, 0, 0))
 				phoneDir = Vector3(0, 1, 0);
 
+#ifdef _DEBUG
+			phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneDir.x)).c_str());
+			phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneDir.y)).c_str());
+			phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneDir.z)).c_str());
+#endif
+
 			// Store and access previous phone dirs
 			if(firstPhoneDir && phoneDir != Vector3(0, 0, 0) && phoneDir != Vector3(0, 1, 0))
 			{
@@ -250,13 +244,7 @@ void Game::PlayGameMode4()
 			phoneAim = this->networkController->aim;
 			float phoneAimLength = phoneAim.GetLength();
 			if(phoneAimLength > 0.001f)	// Otherwise phoneAim is 0, 0
-			{			
-#ifdef _DEBUG
-				phoneDirTxtX->SetText(string("PHONEDIR: X: " + MaloW::convertNrToString(phoneAim.x)).c_str());
-				phoneDirTxtY->SetText(string("PHONEDIR: Y: " + MaloW::convertNrToString(phoneAim.y)).c_str());
-				phoneDirTxtZ->SetText(string("PHONEDIR: Z: " + MaloW::convertNrToString(phoneAimLength)).c_str());
-#endif
-				
+			{							
 				// in -150 - 150, semi-normalized vector (meaning the highest both can be at the same time is around 105, 105)
 				float x = phoneAim.x;
 				float y = phoneAim.y;
@@ -265,10 +253,6 @@ void Game::PlayGameMode4()
 				x /= 150.0f;
 				y /= 150.0f;
 
-#ifdef _DEBUG
-				debugText1->SetText(string("-1 TO 1: X: " + MaloW::convertNrToString(x)).c_str());
-				debugText2->SetText(string("-1 TO 1: Y: " + MaloW::convertNrToString(y)).c_str());
-#endif
 
 				// Clamp to 0 if the value is too small, to create a deadzone. Value now is between -0.9 - 0.9
 				static const float deadZone = 0.1f;
@@ -292,27 +276,14 @@ void Game::PlayGameMode4()
 						y -= deadZone;
 				}
 
-#ifdef _DEBUG
-				debugText3->SetText(string("DEADZONED: X: " + MaloW::convertNrToString(x)).c_str());
-				debugText4->SetText(string("DEADZONED: Y: " + MaloW::convertNrToString(y)).c_str());
-#endif
 
 				// Exponential increase
 				x *= abs(x);
 				y *= abs(y);
 
-#ifdef _DEBUG
-				debugText5->SetText(string("EXPOD: X: " + MaloW::convertNrToString(x)).c_str());
-				debugText6->SetText(string("EXPOD: Y: " + MaloW::convertNrToString(y)).c_str());
-#endif
 				
 				x *= 10.0f;
 				y *= 10.0f;
-
-#ifdef _DEBUG
-				debugText7->SetText(string("FINAL: X: " + MaloW::convertNrToString(x)).c_str());
-				debugText8->SetText(string("FINAL: Y: " + MaloW::convertNrToString(y)).c_str());
-#endif
 
 
 				Vector2 mousePos = Vector2(GetGraphics()->GetEngineParameters().WindowWidth / 2, GetGraphics()->GetEngineParameters().WindowHeight / 2);
@@ -345,19 +316,23 @@ void Game::PlayGameMode4()
 
 			
 			// scopein
-			// Needs more advanced, use phoneDir to interpret
-			/*
-			if(this->networkController->scopeIn)
+			static bool phone1b = true;
+			if(this->networkController->direction.x < avgPhoneDir.x - 0.2f && this->networkController->direction.z > avgPhoneDir.z + 0.2f)
 			{
-				this->networkController->scopeIn = false;
-				scopeIn = true;
-			}*/
+				if(phone1b)
+				{
+					scopeIn = true;
+					phone1b = false;
+				}			
+			}
+			else
+				phone1b = true;
 			
 
 			// Move left and right
-			if(this->networkController->direction.y < avgPhoneDir.y - 0.1f)
+			if(this->networkController->direction.y < avgPhoneDir.y - 0.3f)
 				moveLeft = true;
-			if(this->networkController->direction.y > avgPhoneDir.y + 0.1f)
+			if(this->networkController->direction.y > avgPhoneDir.y + 0.3f)
 				moveRight = true;
 		}
 
