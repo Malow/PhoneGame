@@ -3,6 +3,20 @@
 #define NR_OF_HUMANS 10
 static const Vector3 humanPos[NR_OF_HUMANS] = 
 {
+	Vector3(-110, 0.0f, 60),
+	Vector3(-120, 40, -95),
+	Vector3(-85, 40, -63),
+	Vector3(-81, 24, 50),
+	Vector3(-138, 0.0f, -77),
+	Vector3(-160, 0.0f, -85),
+	Vector3(-203, 0.0f, -35),
+	Vector3(-236, 0.0f, 16),
+	Vector3(-165, 0.0f, 75),
+	Vector3(-170, 0.0f, -15)
+};
+
+static const Vector3 humanWayPoint[NR_OF_HUMANS] = 
+{
 	Vector3(-114, 0.0f, 0),
 	Vector3(-120, 40, -95),
 	Vector3(-122, 40, -63),
@@ -54,8 +68,14 @@ void Game::PlayGameMode4()
 	float mouseX = 0.0f;
 	float mouseY = 0.0f;
 	bool humanAlive[NR_OF_HUMANS];
+	float humanRespawnTimer[NR_OF_HUMANS];
+	bool humanWayPointForward[NR_OF_HUMANS];
 	for(int i = 0; i < NR_OF_HUMANS; i++)
+	{
 		humanAlive[i] = true;
+		humanRespawnTimer[i] = 5.0f;
+		humanWayPointForward[i] = true;
+	}
 
 
 	bool firstPhoneDir = true;
@@ -163,6 +183,18 @@ void Game::PlayGameMode4()
 
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
+
+
+
+		//////////////////////////////////////////////////////////////////////////
+		// Cheat controls
+		/*
+		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
+			GetGraphics()->GetCamera()->MoveForward(diff * 10.0f);
+		if(GetGraphics()->GetKeyListener()->IsPressed('S'))	
+			GetGraphics()->GetCamera()->MoveBackward(diff * 10.0f);
+			*/
+		//////////////////////////////////////////////////////////////////////////
 
 
 		//////////////////////////////////////////////////////////////////////////
@@ -345,6 +377,43 @@ void Game::PlayGameMode4()
 
 		//////////////////////////////////////////////////////////////////////////
 		// GAME LOGIC
+		for(int i = 0; i < NR_OF_HUMANS; i++)
+		{
+			// respawn dead humans
+			if(!humanAlive[i])
+			{
+				humanRespawnTimer[i] -= diff * 0.001f;
+				if(humanRespawnTimer[i] < 0.0f)
+				{
+					humanAlive[i] = true;
+					humans[i]->DontRender(false);
+					humanRespawnTimer[i] = 5.0f;
+					humans[i]->SetPosition(humanPos[i]);
+				}
+			}
+			// Move to and from waypoint
+			else
+			{
+				Vector3 to;
+				if(humanWayPointForward[i])
+					to = humanWayPoint[i] - humanPos[i];
+				else
+					to = humanPos[i] - humanWayPoint[i];
+
+				float toLength = to.GetLength();
+				to.Normalize();
+
+				humans[i]->MoveBy(to * diff * 0.01f);
+
+				if((humans[i]->GetPosition() - humanWayPoint[i]).GetLength() > toLength)
+					humanWayPointForward[i] = true;
+
+				if((humans[i]->GetPosition() - humanPos[i]).GetLength() > toLength)
+					humanWayPointForward[i] = false;
+			}
+		}
+
+
 		shootTimer -= diff * 0.001f;
 		if(shootTimer < 0.0f)
 			shootTimer = 0.0f;
@@ -506,10 +575,6 @@ void Game::PlayGameMode4()
 }
 
 // TODO:
-// More humans / respawn? Moving humans? following a path moving back and forth.
-	// Game needs to be harder and longer. Maybe always have 5 standing still and 5 walking + respawns, making it so u dont need to kill the walking ones if ur bad.
-	// Mayeb respawn time tho to reward killing the walking ones.
-
 // Add ammo / reload??
 
 // Look into more precise mouse stuff? Like reading the DPI of the mouse.
