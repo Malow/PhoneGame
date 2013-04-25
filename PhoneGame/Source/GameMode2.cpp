@@ -40,6 +40,11 @@ void Game::PlayGameMode2()
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
 
+	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
+	GetGraphics()->GetCamera()->SetForward(Vector3(1, 0, 0));
+	GetGraphics()->GetCamera()->SetPosition(Vector3(-17.0f, 56.0f, 0));
+	GetGraphics()->GetCamera()->LookAt(GetGraphics()->GetCamera()->GetPosition() - Vector3(1, 0.3f, 0));
+
 	iLight* mLights[5];
 	mLights[0] = mGe->CreateLight(Vector3(0, 50, 0));
 	mLights[1] = mGe->CreateLight(Vector3(0, 50, -20)); 
