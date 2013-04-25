@@ -81,6 +81,32 @@ public class TCPClient {
  
         try 
         {
+			/*
+			// Get your IP Adress in int
+			WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+			int ipAddress = wifiInfo.getIpAddress();
+
+			// Convert it to string
+			String ipBinary = Integer.toBinaryString(ipAddress);
+			//Leading zeroes are removed by toBinaryString, this will add them back.
+			while(ipBinary.length() < 32) {
+				ipBinary = "0" + ipBinary;
+			}
+			//get the four different parts
+			String a=ipBinary.substring(0,8);
+			String b=ipBinary.substring(8,16);
+			String c=ipBinary.substring(16,24);
+			String d=ipBinary.substring(24,32);
+			//Convert to numbers
+			String actualIpAddress = Integer.parseInt(d,2)+"."+Integer.parseInt(c,2)+"."+Integer.parseInt(b,2)+"."+Integer.parseInt(a,2);
+
+			// Remove the last digits
+			String parts[] = actualIpAddress.trim().split(".");
+			actualIpAddress = parts[0] + "." + parts[1] + "." + parts[2] + ".";
+
+			*/
+
             //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVERIP);
  
@@ -88,6 +114,23 @@ public class TCPClient {
  
             //create a socket to make the connection with the server
             socket = new Socket(serverAddr, SERVERPORT);
+
+			/*
+			do
+			{
+				try
+				{
+					InetAddress serverAddr = InetAddress.getByName(actualIpAddress);
+					socket = new Socket(serverAddr, SERVERPORT);
+				}
+				catch(IOException e)
+				{
+					socket = null;
+				}
+			}
+			while(!socket);
+			*/
+
             Log.e("TCP Client", "C: Connecting done");
             mReadyToSend = true;
             try {

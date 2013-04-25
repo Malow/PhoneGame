@@ -70,12 +70,16 @@ private:
 	int gameMode;
 	bool go;
 	bool play;
+	float pingTimer;
+	bool isPinging;
 
 	void HandleEvent(float diff);
 	void PlayGameMode1();
 	void PlayGameMode2();
 	void PlayGameMode3();
 	void PlayGameMode4();
+
+	void FinishScreen(int score, string gamemode, float time);
 
 public:
 	Game();
