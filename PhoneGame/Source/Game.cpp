@@ -82,7 +82,7 @@ void Game::Play()
 			}
 			break;
 
-			// 0 is default and means keep looping waiting for input from phone.
+			// 0 is default and means keep looping waiting for input from phone. Also take "P" keypress to make a ping and write MS in MaloW::Debug.
 		case 0:
 			if(isPinging)
 				this->pingTimer += diff;
