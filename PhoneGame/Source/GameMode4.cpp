@@ -61,6 +61,7 @@ void Game::PlayGameMode4()
 	bool firstPhoneDir = true;
 	int phoneDirPlace = 0;
 	float phoneDirTimer = 0.5f;
+	float phoneScopeTimer = 0.5f;
 
 	Vector3 phoneDir = Vector3(0, 1, 0);	
 	Vector2 phoneAim = Vector2(0, 0);
@@ -316,12 +317,18 @@ void Game::PlayGameMode4()
 
 			
 			// scopein
+			phoneScopeTimer -= diff * 0.001f;
+			if(phoneScopeTimer < 0.0f)
+				phoneScopeTimer = 0.0f;
+			Vector3 crossAvg = avgPhoneDir.GetCrossProduct(Vector3(0, 1, 0));
+			float dotAvg = crossAvg.GetDotProduct(phoneDir);
 			static bool phone1b = true;
-			if(this->networkController->direction.x < avgPhoneDir.x - 0.2f && this->networkController->direction.z > avgPhoneDir.z + 0.2f)
+			if(dotAvg > 0.55f && phoneScopeTimer == 0.0f)
 			{
 				if(phone1b)
 				{
 					scopeIn = true;
+					phoneScopeTimer = 0.5f;
 					phone1b = false;
 				}			
 			}
@@ -330,9 +337,9 @@ void Game::PlayGameMode4()
 			
 
 			// Move left and right
-			if(this->networkController->direction.y < avgPhoneDir.y - 0.3f)
+			if(this->networkController->direction.y < avgPhoneDir.y - 0.35f)
 				moveLeft = true;
-			if(this->networkController->direction.y > avgPhoneDir.y + 0.3f)
+			if(this->networkController->direction.y > avgPhoneDir.y + 0.35f)
 				moveRight = true;
 		}
 
@@ -499,12 +506,10 @@ void Game::PlayGameMode4()
 }
 
 // TODO:
-// implement scope-in for phone
-
-// Add ammo / reload??
-
 // More humans / respawn? Moving humans? following a path moving back and forth.
 	// Game needs to be harder and longer. Maybe always have 5 standing still and 5 walking + respawns, making it so u dont need to kill the walking ones if ur bad.
 	// Mayeb respawn time tho to reward killing the walking ones.
+
+// Add ammo / reload??
 
 // Look into more precise mouse stuff? Like reading the DPI of the mouse.
