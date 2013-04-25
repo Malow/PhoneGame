@@ -321,6 +321,13 @@ void Game::PlayGameMode3()
 		arrow->RotateAxis(around, -angle);
 		arrow->SetScale(log(1 + VecToObjective.GetLength()) * 0.03f);
 		//////////////////////////////////////////////////////////////////////////
+
+		// End game after 2 mins
+		if(time > 120.0f)
+		{
+			this->FinishScreen(score, "4, Helicopter", time);
+			go = false;
+		}
 	}
 
 

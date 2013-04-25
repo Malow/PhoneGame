@@ -229,6 +229,13 @@ void Game::PlayGameMode2()
 
 		// print score and time text
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
+
+		// End game after 2 mins
+		if(time > 120.0f)
+		{
+			this->FinishScreen(0, "2, Labyrinth", time);
+			go = false;
+		}
 	}
 
 	if(this->networkController)
@@ -245,3 +252,7 @@ void Game::PlayGameMode2()
 
 	mGe->DeleteText(timeTxt);
 }
+
+// TODO
+
+// Implement score and update FinishScreen function-call

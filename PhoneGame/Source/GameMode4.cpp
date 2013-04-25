@@ -499,9 +499,6 @@ void Game::PlayGameMode4()
 							humans[i]->DontRender(true);
 							score++;
 
-							if(score == NR_OF_HUMANS)
-								started = false;
-
 							starTimer = 2.0f;
 							i = NR_OF_HUMANS;
 						}
@@ -526,6 +523,12 @@ void Game::PlayGameMode4()
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString((int)time)).c_str());
 
+		// End game after 2 mins
+		if(time > 120.0f)
+		{
+			this->FinishScreen(score, "3, Sniper", time);
+			go = false;
+		}
 		//////////////////////////////////////////////////////////////////////////
 	}
 
@@ -578,3 +581,5 @@ void Game::PlayGameMode4()
 // Add ammo / reload??
 
 // Look into more precise mouse stuff? Like reading the DPI of the mouse.
+
+// Make all game modes stop after 120 sec and record score.

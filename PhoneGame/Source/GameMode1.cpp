@@ -265,6 +265,13 @@ void Game::PlayGameMode1()
 		GetGraphics()->GetCamera()->Move(ourDir * diff * SPEED_MULTIPLIER * speed);
 		GetGraphics()->GetCamera()->SetForward(ourDir);
 		GetGraphics()->GetCamera()->SetUpVector(ourUp);
+
+		// End game after 2 mins
+		if(time > 120.0f)
+		{
+			this->FinishScreen(score, "1, Starchaser", time);
+			go = false;
+		}
 	}
 
 	if(this->networkController)

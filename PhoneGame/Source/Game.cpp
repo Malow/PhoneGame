@@ -8,6 +8,8 @@ Game::Game()
 	this->gameMode = -1;
 	this->go = true;
 	this->play = true;
+	this->pingTimer = 0.0f;
+	this->isPinging = false;
 }
 
 Game::~Game()
@@ -29,6 +31,8 @@ void Game::NewNetworkClient( MaloW::ClientChannel* cc )
 
 void Game::Play()
 {
+	bool pingb = true;
+
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	this->play = true;
 	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
@@ -80,6 +84,24 @@ void Game::Play()
 
 			// 0 is default and means keep looping waiting for input from phone.
 		case 0:
+			if(isPinging)
+				this->pingTimer += diff;
+			if(GetGraphics()->GetKeyListener()->IsPressed('P'))
+			{
+				if(pingb)
+				{
+					if(this->networkController)
+					{
+						this->networkController->cc->sendData("PING");
+						this->isPinging = true;
+						this->pingTimer = 0.0f;
+					}
+					pingb = false;
+				}			
+			}
+			else
+				pingb = true;
+
 			this->HandleEvent(diff);
 			break;
 
@@ -223,7 +245,11 @@ void Game::HandleEvent(float diff)
 
 			// Ping request
 			if(msg == "PING")
-				this->networkController->cc->sendData("PING");
+			{
+				this->isPinging = false;
+				MaloW::Debug("Ping done: " + MaloW::convertNrToString(this->pingTimer) + " ms.");
+				this->pingTimer = 0.0f;
+			}
 		}
 
 		// New client connected
@@ -241,4 +267,25 @@ void Game::HandleEvent(float diff)
 
 		delete ev;
 	}
+}
+
+void Game::FinishScreen( int score, string gamemode, float time )
+{
+	MaloW::Debug("Game " + gamemode + " Finished after " + MaloW::convertNrToString(time) + " seconds. Score: " + MaloW::convertNrToString(score));
+	iText* finishText = GetGraphics()->CreateText(string("Finished after " + MaloW::convertNrToString((int)time) + " seconds! Score: " + MaloW::convertNrToString(score)).c_str(), 
+		Vector2((GetGraphics()->GetEngineParameters().WindowWidth / 2) * 0.5f, GetGraphics()->GetEngineParameters().WindowHeight / 2), 2.0f, "Media/fonts/newBorder");
+	while(GetGraphics()->IsRunning() && go)
+	{
+		Sleep(1);
+		// Updates GFX
+		float diff = GetGraphics()->Update();
+
+		// Handle events such as network packets and client connections
+		this->HandleEvent(diff);
+
+		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
+			go = false;
+	}
+
+	GetGraphics()->DeleteText(finishText);
 }
