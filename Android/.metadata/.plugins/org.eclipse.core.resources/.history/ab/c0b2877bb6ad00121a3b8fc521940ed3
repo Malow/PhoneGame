@@ -36,12 +36,44 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v) 
 			{
-				String message = "KEYBOARD CHOSE MODE: 1";
+				String message = "GAM 1";
 				if(mTcpClient != null)
 				{
 					mTcpClient.sendMessage(message);
+					startActivityByNr(1);
 				}
-				startActivityByNr(1);
+			}
+		});
+        
+        // Labyrinth Button
+        tButton = (Button) findViewById(R.id.game_2);
+        tButton.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "GAM 2";
+				if(mTcpClient != null)
+				{
+					mTcpClient.sendMessage(message);
+					startActivityByNr(2);
+				}
+			}
+		});
+        
+        // Helicopter Button
+        tButton = (Button) findViewById(R.id.game_3);
+        tButton.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View v) 
+			{
+				String message = "GAM 3";
+				if(mTcpClient != null)
+				{
+					mTcpClient.sendMessage(message);
+					startActivityByNr(3);
+				}
 			}
 		});
 
@@ -55,6 +87,14 @@ public class MainActivity extends Activity
 		if(nr == 1)
 		{
 			startActivity(new Intent(MainActivity.this, SpaceShipActivity.class));
+		}
+		else if(nr == 2)
+		{
+			startActivity(new Intent(MainActivity.this, LabyrinthActivity.class));
+		}
+		else if(nr == 3)
+		{
+			startActivity(new Intent(MainActivity.this, FPSGameActivity.class));
 		}
 	}
     @Override
@@ -105,7 +145,7 @@ public class MainActivity extends Activity
         
         if(mTcpClient != null)
         {
- 			String message = "QUIT";
+ 			String message = "EXIT";
  			mTcpClient.sendMessage(message);
 	        mTcpClient.stopClient(); // Stop update if we close app
 	    	mConnectTask.cancel(true);
@@ -145,8 +185,27 @@ public class MainActivity extends Activity
         protected void onProgressUpdate(String... values) 
         {
             super.onProgressUpdate(values);
+            values[0] = values[0].trim();
+            System.out.println(values[0]);
             String[] SString = values[0].split(":");
             if(SString[0].equals("CURRENT MODE"))
+            {
+            	int GameMode = Integer.parseInt(SString[1].trim());
+            	if(GameMode != 0)
+            	{
+            		startActivityByNr(GameMode);
+            	}
+            }
+            if(SString[0].equals("QUITTING"))
+            {
+            	Log.e("QUIT", "QUTIING GAMEMODE");
+        		
+            	/*Intent intentB = new Intent();
+            	intentB.setClass(SpaceShipActivity.this, MainActivity.class);
+            	intentB.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            	startActivity(intentB);*/
+            }
+            if(SString[0].equals("KEYBOARD CHOSE MODE"))
             {
             	int GameMode = Integer.parseInt(SString[1].trim());
             	if(GameMode != 0)

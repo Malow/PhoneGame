@@ -213,6 +213,13 @@ public class MainActivity extends Activity
             		startActivityByNr(GameMode);
             	}
             }
+            if(SString[0].equals("PING"))
+            {
+            	if(mTcpClient != null)
+            	{
+            		mTcpClient.sendMessage("PING");
+            	}
+            }
         }
     }
 }
