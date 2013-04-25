@@ -16,7 +16,6 @@ public class FPSGameView extends View
 	private static final int AXIS_Y = 1;
 	private ShapeDrawable mDrawableCircleInner = null;
 	private ShapeDrawable mDrawableCircleOuter = null;
-	private int mSwingMultiplier = 10;
 	private int mXPos = 50;
 	private int mYPos = 250;
 	private int mCircleWidth = 175;
@@ -85,11 +84,18 @@ public class FPSGameView extends View
 		PointF joyVector = new PointF(0.0f ,0.0f);
 		PointF joySMid = new PointF(0.0f ,0.0f);
 		PointF pos = new PointF(0.0f ,0.0f);
-		if(event.getAxisValue(AXIS_X) > super.getWidth() / 2)
+		if(event.getAxisValue(AXIS_X) > super.getWidth() * 0.75)
 		{
 			joyVector = new PointF(mXPos, mYPos);
 		}
-		else if(event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN)  
+		else if(event.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			mXPos = (int) event.getAxisValue(AXIS_X);
+	    	mYPos = (int) event.getAxisValue(AXIS_Y);
+	    	
+	    	joyVector = new PointF(mXPos, mYPos);
+		}
+		else if(event.getAction() == MotionEvent.ACTION_MOVE)  
 		{
 			joySMid = new PointF(mXPos, mYPos);
 			pos = new PointF(event.getAxisValue(AXIS_X),
@@ -117,6 +123,9 @@ public class FPSGameView extends View
 			String message = "AIM " + (joyVector.x - mXPos) + " " + (joyVector.y - mYPos) + " ";
 			mTcpClient.sendMessage(message);
 		}
+		mDrawableCircleOuter.setBounds(mXPos - 5 - (mCircleWidth / 2), mYPos - 5 - (mCircleWidth / 2),
+    			mXPos + mCircleWidth + 5 - (mCircleWidth / 2), mYPos + mCircleWidth + 5 - (mCircleWidth / 2));
+		
 		mDrawableCircleInner.setBounds((int) (joyVector.x) - (mCircleWidth / 2), (int) (joyVector.y) - (mCircleWidth / 2) , 
 				(int) (joyVector.x + mCircleWidth) - (mCircleWidth / 2), (int) (joyVector.y + mCircleWidth) - (mCircleWidth / 2));
 		postInvalidate();
