@@ -57,7 +57,7 @@ void Map::Update(const float dt)
 		Vector3 xA = Vector3(1,0,0);
 		Vector3 xAnew = temp * xA;
 
-		if(this->GetTargetAngleX() < this->mMaxAngleX)
+		if(abs(this->GetTargetAngleX()) < this->mMaxAngleX)
 		{
 			this->mAngleX += angle;
 			this->mMesh->RotateAxis(xAnew, angle);
@@ -71,7 +71,7 @@ void Map::Update(const float dt)
 		else
 			angle = speed*dt*multiplier;
 
-		if(this->GetTargetAngleZ() < this->mMaxAngleZ)
+		if(abs(this->GetTargetAngleZ()) < this->mMaxAngleZ)
 		{
 			this->mAngleZ += angle;
 			this->mMesh->RotateAxis(Vector3(0,0,1), angle);

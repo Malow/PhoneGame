@@ -304,7 +304,7 @@ void Game::PlayGameMode2()
 
 
 		// End game after 2 mins
-		if(time > 120.0f)
+		if(time > 120.0f || score > 13)
 		{
 			this->FinishScreen(score, "2, Labyrinth", time);
 			go = false;
