@@ -56,8 +56,12 @@ void Map::Update(const float dt)
 		temp.SetRotationZ(this->mAngleZ);
 		Vector3 xA = Vector3(1,0,0);
 		Vector3 xAnew = temp * xA;
-		this->mAngleX += angle;
-		this->mMesh->RotateAxis(xAnew, angle);
+
+		if(this->GetTargetAngleX() < this->mMaxAngleX)
+		{
+			this->mAngleX += angle;
+			this->mMesh->RotateAxis(xAnew, angle);
+		}
 
 		speed = abs(this->mTargetAngleZ - this->mAngleZ) * 2;
 		if(speed > 0.5f)
@@ -66,8 +70,12 @@ void Map::Update(const float dt)
 			angle = -speed*dt*multiplier;
 		else
 			angle = speed*dt*multiplier;
-		this->mAngleZ += angle;
-		this->mMesh->RotateAxis(Vector3(0,0,1), angle);
+
+		if(this->GetTargetAngleZ() < this->mMaxAngleZ)
+		{
+			this->mAngleZ += angle;
+			this->mMesh->RotateAxis(Vector3(0,0,1), angle);
+		}
 	}
 }
 /*void Map::Update(const float dt)

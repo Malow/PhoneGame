@@ -35,7 +35,8 @@ void Game::Play()
 
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	this->play = true;
-	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
+	iImage* gameModeImage = GetGraphics()->CreateImage(Vector2(0, 0), Vector2(GetGraphics()->GetEngineParameters().WindowWidth, 
+		GetGraphics()->GetEngineParameters().WindowHeight), "Media/ChooseGameMode.png");
 	GetGraphics()->StartRendering();
 	while(play)
 	{	
@@ -82,7 +83,7 @@ void Game::Play()
 			}
 			break;
 
-			// 0 is default and means keep looping waiting for input from phone.
+			// 0 is default and means keep looping waiting for input from phone. Also take "P" keypress to make a ping and write MS in MaloW::Debug.
 		case 0:
 			if(isPinging)
 				this->pingTimer += diff;
@@ -105,7 +106,7 @@ void Game::Play()
 			this->HandleEvent(diff);
 			break;
 
-			// 1 is play game mode 1.
+			// 1 is play game mode 1, Starchaser
 		case 1:
 			gameModeImage->SetOpacity(0.0f);
 			this->PlayGameMode1();
@@ -113,7 +114,7 @@ void Game::Play()
 			gameModeImage->SetOpacity(1.0f);
 			break;
 
-			// 2 is play game mode 2.
+			// 2 is play game mode 2, Labyrinth
 		case 2:
 			gameModeImage->SetOpacity(0.0f);
 			this->PlayGameMode2();
@@ -121,6 +122,7 @@ void Game::Play()
 			gameModeImage->SetOpacity(1.0f);
 			break;
 
+			// 3 is play game mode 4 (3), Sniper
 		case 3:
 			gameModeImage->SetOpacity(0.0f);
 			this->PlayGameMode4();
@@ -128,6 +130,7 @@ void Game::Play()
 			gameModeImage->SetOpacity(1.0f);
 			break;
 
+			// 4 is play game mode 3 (4), Helicopter
 		case 4:
 			gameModeImage->SetOpacity(0.0f);
 			this->PlayGameMode3();
@@ -136,9 +139,12 @@ void Game::Play()
 			break;
 
 		default:
+			MaloW::Debug("GameMode has reached " + MaloW::convertNrToString(this->gameMode) + " which is unsupported");
+			this->HandleEvent(diff);
 			break;
 		}
 
+		// Exit program
 		if(GetGraphics()->GetKeyListener()->IsPressed('Q'))
 		{
 			play = false;

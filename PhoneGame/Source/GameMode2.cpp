@@ -3,6 +3,28 @@
 #include "PowerBall.h"
 #include "GameObject.h"
 
+#define START_POS Vector3(-13.0f,27,-13)
+
+static const Vector3 scorePos[15] = 
+{
+	Vector3(-13.0f,27,-13), // Start pos
+	Vector3(-8.33696, 25, -9.35953),
+	Vector3(-4.30064, 25, -10.8502),
+	Vector3(5.39558, 25, -12.7168),
+	Vector3(13.7062, 25, -6.46825),
+	Vector3(4.55834, 25, -2.98388),
+	Vector3(-10.6329, 25, -3.1082),
+	Vector3(2.04798, 25, 2.20836),
+	Vector3(13.95, 25, 3.94194),
+	Vector3(4.91268, 25, 6.56377),
+	Vector3(-4.83424, 25, 6.15924),
+	Vector3(-10.51, 25, 12.7038),
+	Vector3(-1.22922, 25, 13.9699),
+	Vector3(4.91268, 25, 13.9699),
+	Vector3(13.95, 25, 13.9699)
+};
+
+
 #define PI 3.1415
 #define NROFPREV 1
 float CalcAngle(Vector3 &phoneDirr, Vector3 DefaultDir, Vector3 prevVectors[], int current)
@@ -58,7 +80,7 @@ void Game::PlayGameMode2()
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 
 	Vector3 centerPlatform = Vector3(0,20,0);
-	Map* mPlatform = new Map("Media/MazeMap.obj", centerPlatform);
+	Map* mPlatform = new Map("Media/MazeMapFixed.obj", centerPlatform);
 	Map* mBox = new Map("Media/MazeMapFrame.obj", centerPlatform + Vector3(0,1,0) );
 	mPlatform->SetShrinkValue(0.0f);
 
@@ -69,23 +91,33 @@ void Game::PlayGameMode2()
 	mPlatform->SetTargetAngleX(0.5f);
 	mPlatform->SetTargetAngleZ(-0.5f);
 
-	PowerBall* mBalls = new PowerBall("Media/Ball.obj", Vector3(-13.0f,27,-13));
+	PowerBall* mBalls = new PowerBall("Media/Ball.obj", START_POS);
 	mBalls->SetForwardVector(Vector3(0,0,1));
 	mBalls->SetKnockoutMode();
 	mBalls->SetAcceleration(mBalls->GetAcceleration()*30.0f);
 
+
+	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
+	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/new");
+
+	iImage* guiStar = GetGraphics()->CreateImage(Vector2(200, 90), Vector2(75, 75), "Media/star.png");
+	guiStar->SetOpacity(0.0f);
+	float starTimer = 0.0f;
+
+
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	mGe->GetCamera()->SetPosition(centerPlatform+ Vector3(0.0f, 30.0f, 20.0f));
+	mGe->GetCamera()->SetPosition(centerPlatform + Vector3(0.0f, 30.0f, 20.0f));
 	mGe->GetCamera()->LookAt(centerPlatform);
 
 	// Score / results:
 	float time = 0.0f;
 	bool started = false;
+	int score = 0;
 
 	float delayTimer = 1000.0f;
 
-	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 60), 1.0f, "Media/fonts/new");
+
 
 	go = true;
 	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);
@@ -140,7 +172,13 @@ void Game::PlayGameMode2()
 				this->networkController->needRestart = false;
 			}
 			delete mBalls;
-			mBalls = new PowerBall("Media/Ball.obj", Vector3(-13.0f,27,-13));
+
+			// Spawn at last score - 1;
+			if(score == 0)
+				mBalls = new PowerBall("Media/Ball.obj", scorePos[0]);
+			else
+				mBalls = new PowerBall("Media/Ball.obj", scorePos[score - 1]);
+
 			mBalls->SetForwardVector(Vector3(0,0,1));
 			mBalls->SetKnockoutMode();
 			mBalls->SetAcceleration(mBalls->GetAcceleration()*15.0f);
@@ -216,9 +254,37 @@ void Game::PlayGameMode2()
 			tempPos.RotateAroundAxis(Vector3(0,0,1), (PI/8.0f)*diff*0.001f);
 			mBalls->SetPosition(mPlatform->GetMesh()->GetPosition() + tempPos);
 		}
-		Vector3 tabort = mBalls->GetPosition();
+		
+		//////////////////////////////////////////////////////////////////////////
+		static bool posb = true;
+		if(GetGraphics()->GetKeyListener()->IsPressed('Q'))
+		{
+			if(posb)
+			{
+				MaloW::Debug(mBalls->GetPosition());
+				posb = false;
+			}			
+		}
+		else
+			posb = true;
+		//////////////////////////////////////////////////////////////////////////
+
 		if(started)
+		{
+			for(int i = score + 1; i < 15; i++)
+			{
+				Vector3 toScore = scorePos[i] - mBalls->GetPosition();
+				toScore.y = 0.0f;
+				float distanceToScore = toScore.GetLength();
+				if(distanceToScore < 2.0f)
+				{
+					score = i;
+					starTimer = 2.0f;
+				}
+			}
+
 			time += diff * 0.001f;
+		}
 		else
 		{
 			if((mBalls->GetPosition() - Vector3(-13.0f,25,-13)).GetLength() > 3)
@@ -227,13 +293,20 @@ void Game::PlayGameMode2()
 			}
 		}
 
+		starTimer -= diff * 0.001f;
+		if(starTimer < 0.0f)
+			starTimer = 0.0f;
+		guiStar->SetOpacity(starTimer);
+
 		// print score and time text
+		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());
 		timeTxt->SetText(string("TIME: " + MaloW::convertNrToString(time)).c_str());
+
 
 		// End game after 2 mins
 		if(time > 120.0f)
 		{
-			this->FinishScreen(0, "2, Labyrinth", time);
+			this->FinishScreen(score, "2, Labyrinth", time);
 			go = false;
 		}
 	}
@@ -251,8 +324,12 @@ void Game::PlayGameMode2()
 	delete mBox;
 
 	mGe->DeleteText(timeTxt);
+	mGe->DeleteText(scoreTxt);
+	GetGraphics()->DeleteImage(guiStar);
 }
 
 // TODO
 
 // Implement score and update FinishScreen function-call
+
+// Fix map nerf bula.
