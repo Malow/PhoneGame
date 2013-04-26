@@ -281,7 +281,7 @@ void Game::FinishScreen( int score, string gamemode, float time )
 	iText* finishText = GetGraphics()->CreateText(string("Finished after " + MaloW::convertNrToString((int)time) + " seconds! Score: " + MaloW::convertNrToString(score)).c_str(), 
 		Vector2((GetGraphics()->GetEngineParameters().WindowWidth / 2) * 0.5f, GetGraphics()->GetEngineParameters().WindowHeight / 2), 2.0f, "Media/fonts/newBorder");
 	iText* escText = GetGraphics()->CreateText("Press ESC to return to menu", 
-		Vector2((GetGraphics()->GetEngineParameters().WindowWidth / 2) * 0.7f, GetGraphics()->GetEngineParameters().WindowHeight / 2), 2.0f, "Media/fonts/newBorder");
+		Vector2((GetGraphics()->GetEngineParameters().WindowWidth / 2) * 0.5f, GetGraphics()->GetEngineParameters().WindowHeight / 2) * 1.2f, 2.0f, "Media/fonts/newBorder");
 
 	while(GetGraphics()->IsRunning() && go)
 	{

@@ -59,7 +59,7 @@ void Game::PlayGameMode2()
 {
 	GraphicsEngine* mGe = GetGraphics();
 	
-	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
+	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG2.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
 
 	GetGraphics()->GetCamera()->SetUpVector(Vector3(0, 1, 0));
@@ -105,7 +105,7 @@ void Game::PlayGameMode2()
 	float starTimer = 0.0f;
 
 
-	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG2.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	mGe->GetCamera()->SetPosition(centerPlatform + Vector3(0.0f, 30.0f, 20.0f));
 	mGe->GetCamera()->LookAt(centerPlatform);
@@ -329,7 +329,3 @@ void Game::PlayGameMode2()
 }
 
 // TODO
-
-// Implement score and update FinishScreen function-call
-
-// Fix map nerf bula.

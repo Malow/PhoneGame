@@ -29,7 +29,7 @@ void Game::PlayGameMode1()
 	int score = 0;
 	bool started = false;
 
-	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
+	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG1.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
 	GetGraphics()->ChangeCamera(RTS);
 	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
@@ -77,7 +77,7 @@ void Game::PlayGameMode1()
 	guiStar->SetOpacity(0.0f);
 	float starTimer = 0.0f;
 
-	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG1.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	go = true;
 	int starcolor = 2;
@@ -310,6 +310,3 @@ void Game::PlayGameMode1()
 
 // TODO:
 // Turning less effective with lower speed -> Test before doing this.
-
-// TEST the new algorithm with the phone... I now only make non-linear scaling between 0 - 0.1, and then linear from there on.
-// Implement game mode-thingy on the phone.
