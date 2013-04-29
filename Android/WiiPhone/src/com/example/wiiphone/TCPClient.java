@@ -1,12 +1,24 @@
 package com.example.wiiphone;
 
-import android.util.Log;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
- 
- 
+
+import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.util.Log;
+
+
+
 public class TCPClient {
+	public static Context context = null;
 	public static TCPClient mTCPClient = null;
     private String mServerMessage;
     public static final String SERVERIP = "192.168.1.122"; //your computer IP address
@@ -21,8 +33,9 @@ public class TCPClient {
     /**
      *  Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TCPClient(OnMessageReceived listener) {
+    public TCPClient(OnMessageReceived listener, Context c) {
         mMessageListener = listener;
+        context = c;
         mTCPClient = this;
     }
     public boolean GetReadyToSend()
@@ -81,9 +94,8 @@ public class TCPClient {
  
         try 
         {
-			/*
 			// Get your IP Adress in int
-			WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+			WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 			int ipAddress = wifiInfo.getIpAddress();
 
@@ -99,14 +111,10 @@ public class TCPClient {
 			String c=ipBinary.substring(16,24);
 			String d=ipBinary.substring(24,32);
 			//Convert to numbers
-			String actualIpAddress = Integer.parseInt(d,2)+"."+Integer.parseInt(c,2)+"."+Integer.parseInt(b,2)+"."+Integer.parseInt(a,2);
+			String actualIpAddress = Integer.parseInt(d,2)+"."+Integer.parseInt(c,2)+"."+Integer.parseInt(b,2)+".";
 
 			// Remove the last digits
-			String parts[] = actualIpAddress.trim().split(".");
-			actualIpAddress = parts[0] + "." + parts[1] + "." + parts[2] + ".";
-
-			*/
-
+/*
             //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVERIP);
  
@@ -114,22 +122,44 @@ public class TCPClient {
  
             //create a socket to make the connection with the server
             socket = new Socket(serverAddr, SERVERPORT);
-
-			/*
+*/			
+			int i = 0;
+			int sleep = 5;
 			do
 			{
 				try
 				{
-					InetAddress serverAddr = InetAddress.getByName(actualIpAddress);
-					socket = new Socket(serverAddr, SERVERPORT);
+					Log.e("DEBUG", "Trying to reach: " + actualIpAddress+i);
+					InetAddress serverAddr = InetAddress.getByName(actualIpAddress+i);
+					if(serverAddr.isReachable(sleep))
+					{
+						Log.e("DEBUG", "Trying: " + actualIpAddress+i);
+						socket = new Socket(serverAddr, SERVERPORT);
+					}
 				}
 				catch(IOException e)
 				{
+					Log.e("DEBUG", "Couldn't connect to: " + actualIpAddress+i);
 					socket = null;
 				}
+				finally
+				{
+					i++;
+					
+					if(i > 255)
+					{
+						Thread.sleep(sleep);
+						if(sleep < 100)
+						{
+							sleep += 5;
+						}
+						i = 0;
+					}
+				}
 			}
-			while(!socket);
-			*/
+			while(socket == null);
+			i--;
+			Log.e("DEBUG", "Connected to: " + actualIpAddress+i);
 
             Log.e("TCP Client", "C: Connecting done");
             mReadyToSend = true;
