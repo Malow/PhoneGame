@@ -46,7 +46,7 @@ static Vector3 prevPhoneDir[NR_OF_PREVPHONEDIR];
 
 void Game::PlayGameMode4()
 {
-	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
+	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG3.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 
 	float prevMouseSens = GetGraphics()->GetEngineParameters().MouseSensativity;
 	float prevFOV = GetGraphics()->GetEngineParameters().FOV;
@@ -161,7 +161,7 @@ void Game::PlayGameMode4()
 	}
 
 
-	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG3.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
 
 	
 	for(int i = 0; i < NR_OF_HUMANS; i++)
@@ -581,5 +581,3 @@ void Game::PlayGameMode4()
 // Add ammo / reload??
 
 // Look into more precise mouse stuff? Like reading the DPI of the mouse.
-
-// Make all game modes stop after 120 sec and record score.
