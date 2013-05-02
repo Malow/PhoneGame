@@ -237,6 +237,12 @@ void Game::PlayGameMode1()
 			score++;
 
 			starTimer = 2.0f;
+
+			// Do Vibration
+			if(this->networkController)
+			{
+				this->networkController->cc->sendData("VIB: 300");
+			}
 		}
 		// print score and time text.
 		scoreTxt->SetText(string("SCORE: " + MaloW::convertNrToString(score)).c_str());

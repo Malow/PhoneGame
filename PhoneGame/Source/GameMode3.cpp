@@ -281,10 +281,23 @@ void Game::PlayGameMode3()
 		else
 			healthText->SetColor(Vector3(-(health - 50.0f) * 5.1f, 0.0f, -128.0f));
 
+
+		static bool vibOnce = true;
 		if(heli->GetHealth() < 95.0f)
+		{
 			warningDamage->SetOpacity(1.0f);
+			// Do Vibration
+			if(this->networkController && vibOnce)
+			{
+				this->networkController->cc->sendData("VIB: 300");
+				vibOnce = false;
+			}
+		}
 		else
+		{
 			warningDamage->SetOpacity(0.0f);
+			vibOnce = true;
+		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// GAME LOGIC

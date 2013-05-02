@@ -280,6 +280,12 @@ void Game::PlayGameMode2()
 				{
 					score = i;
 					starTimer = 2.0f;
+
+					// Do Vibration
+					if(this->networkController)
+					{
+						this->networkController->cc->sendData("VIB: 300");
+					}
 				}
 			}
 

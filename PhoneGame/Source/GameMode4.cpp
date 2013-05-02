@@ -488,6 +488,7 @@ void Game::PlayGameMode4()
 				// Do collision, if you hit something:
 				Vector3 camFor = GetGraphics()->GetCamera()->GetForward();
 				Vector3 camPos = GetGraphics()->GetCamera()->GetPosition();
+				bool hit = false;
 				for(int i = 0; i < NR_OF_HUMANS; i++)
 				{
 					if(humanAlive[i])
@@ -501,11 +502,24 @@ void Game::PlayGameMode4()
 
 							starTimer = 2.0f;
 							i = NR_OF_HUMANS;
+							hit = true;
 						}
 					}
 				}
 				shootTimer = 1.0f;
 				recoilTimer = 1.1f;
+
+				// Do Vibration
+				if(this->networkController)
+				{
+					if(hit)
+						this->networkController->cc->sendData("VIB: 500");
+					else
+					{
+						this->networkController->cc->sendData("VIB: 250");
+						
+					}
+				}
 			}
 
 			shoot = false;
