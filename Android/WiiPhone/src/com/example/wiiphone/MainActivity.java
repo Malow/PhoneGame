@@ -1,10 +1,12 @@
 package com.example.wiiphone;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +15,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity
 {
+	private Context mContext = null;
     private WakeLock mWakeLock = null;
     private TCPClient mTcpClient = null;
     private ConnectTask mConnectTask = null;
@@ -28,6 +31,8 @@ public class MainActivity extends Activity
     	System.out.println("onCreate START");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        mContext = this;
         
         Button tButton = (Button) findViewById(R.id.game_1);
         // SpaceShip Button
@@ -172,7 +177,7 @@ public class MainActivity extends Activity
                     //this method calls the onProgressUpdate
                     publishProgress(message);
                 }
-            });
+            }, mContext);
     		
     		if(mTcpClient != null)
     		{
@@ -212,6 +217,19 @@ public class MainActivity extends Activity
             	{
             		startActivityByNr(GameMode);
             	}
+            }
+            if(SString[0].equals("PING"))
+            {
+            	if(mTcpClient != null)
+            	{
+            		mTcpClient.sendMessage("PING");
+            	}
+            }
+            if(SString[0].equals("VIB"))
+            {
+            	long duration = (long) Float.parseFloat(SString[1].trim());
+	            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	        	v.vibrate(duration);
             }
         }
     }

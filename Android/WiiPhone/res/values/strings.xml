@@ -7,7 +7,7 @@
     <string name="start_button_text">this button starts the program</string>
     <string name="choose_game_button_1">Star Chaser</string>
 	<string name="choose_game_button_2">Labyrinth</string>
-	<string name="choose_game_button_3">Cönter Strajk</string>
+	<string name="choose_game_button_3">Sniper</string>
 	<string name="button_up">UP</string>
 	<string name="button_down">DOWN</string>
 	<string name="button_shot">Shot</string>
