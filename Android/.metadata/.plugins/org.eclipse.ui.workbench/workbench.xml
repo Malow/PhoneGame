@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="28" version="2.0">
+<workbench progressCount="20" version="2.0">
 <workbenchAdvisor/>
 <window height="862" maximized="true" width="1024" x="120" y="120">
 <fastViewData fastViewLocation="1024"/>
@@ -47,7 +47,7 @@
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" partName="MainActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/MainActivity.java" title="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6322" selectionTopPixel="3949"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5246" selectionTopPixel="3489"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TCPClient.java" partName="TCPClient.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/TCPClient.java" title="TCPClient.java" tooltip="WiiPhone/src/com/example/wiiphone/TCPClient.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
@@ -75,8 +75,7 @@
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
 <expanded>
-<category IMemento.internal.id="Warnings"/>
-<category IMemento.internal.id="Warnings (2 items)"/>
+<category IMemento.internal.id="Errors (3 items)"/>
 </expanded>
 <columnWidths org.eclipse.ui.ide.locationField="120" org.eclipse.ui.ide.markerType="120" org.eclipse.ui.ide.pathField="160" org.eclipse.ui.ide.resourceField="120" org.eclipse.ui.ide.severityAndDescriptionField="461"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
@@ -335,12 +334,6 @@
 <item historyLabel="TCPClient.java" index="1">
 <position/>
 </item>
-<item historyLabel="TCPClient.java" index="1">
-<position/>
-</item>
-<item historyLabel="TCPClient.java" index="1">
-<position/>
-</item>
 <item historyLabel="MainActivity.java" index="0">
 <position info="not_deleted" x="5004" y="0"/>
 </item>
@@ -459,8 +452,14 @@
 <item historyLabel="MainActivity.java" index="8">
 <position info="not_deleted" x="4640" y="0"/>
 </item>
-<item active="true" historyLabel="MainActivity.java" index="8">
+<item historyLabel="MainActivity.java" index="8">
 <position/>
+</item>
+<item historyLabel="MainActivity.java" index="8">
+<position/>
+</item>
+<item active="true" historyLabel="MainActivity.java" index="8">
+<position info="not_deleted" x="6119" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>

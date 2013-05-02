@@ -220,6 +220,9 @@ public class MainActivity extends Activity
             }
             if(SString[0].equals("PING"))
             {
+            	long duration = (long) Float.parseFloat(SString[1].trim());
+	            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	        	v.vibrate(duration);
             	if(mTcpClient != null)
             	{
             		mTcpClient.sendMessage("PING");

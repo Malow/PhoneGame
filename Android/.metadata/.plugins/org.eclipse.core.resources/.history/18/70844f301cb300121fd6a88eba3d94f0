@@ -220,6 +220,7 @@ public class MainActivity extends Activity
             }
             if(SString[0].equals("PING"))
             {
+            	
             	if(mTcpClient != null)
             	{
             		mTcpClient.sendMessage("PING");

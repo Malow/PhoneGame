@@ -193,6 +193,7 @@ public class MainActivity extends Activity
             values[0] = values[0].trim();
             System.out.println(values[0]);
             String[] SString = values[0].split(":");
+            System.out.println(SString[0]);
             if(SString[0].equals("CURRENT MODE"))
             {
             	int GameMode = Integer.parseInt(SString[1].trim());
@@ -220,6 +221,9 @@ public class MainActivity extends Activity
             }
             if(SString[0].equals("PING"))
             {
+            	long duration = (long) Float.parseFloat(SString[1].trim());
+	            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+	        	v.vibrate(duration);
             	if(mTcpClient != null)
             	{
             		mTcpClient.sendMessage("PING");
