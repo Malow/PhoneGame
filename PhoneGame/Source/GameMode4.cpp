@@ -516,7 +516,7 @@ void Game::PlayGameMode4()
 						this->networkController->cc->sendData("VIB: 200");
 					else
 					{
-						this->networkController->cc->sendData("VIB: 100");
+						this->networkController->cc->sendData("VIB: 50");
 						
 					}
 				}
