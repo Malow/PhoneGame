@@ -117,7 +117,7 @@ void Game::PlayGameMode2()
 
 	float delayTimer = 1000.0f;
 
-
+	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 
 	go = true;
 	const Vector3 DefaultDir = Vector3(0.0f, 1.0f, 0.0f);

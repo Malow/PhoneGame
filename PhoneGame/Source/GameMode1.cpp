@@ -32,6 +32,7 @@ void Game::PlayGameMode1()
 	GetGraphics()->ShowLoadingScreen("Media/LoadingScreen/LoadingScreenBG1.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f);
 	GetGraphics()->ChangeSkyBox("Media/StarMap.dds"); 
 	GetGraphics()->ChangeCamera(RTS);
+	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	GetGraphics()->GetCamera()->SetPosition(Vector3(25, 25, 20));
 	GetGraphics()->GetCamera()->LookAt(Vector3(0, 0, 0));
 

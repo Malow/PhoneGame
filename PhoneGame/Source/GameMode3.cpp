@@ -33,6 +33,7 @@ void Game::PlayGameMode3()
 
 	GetGraphics()->ChangeSkyBox("Media/skymap.dds");
 	GetGraphics()->ChangeCamera(RTS);
+	GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	GetGraphics()->SetSunLightProperties(Vector3(1, -1, 1), Vector3(1, 1, 1), 1.5f);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->ChangeShadowQuality(4);
