@@ -241,7 +241,7 @@ void Game::PlayGameMode1()
 			// Do Vibration
 			if(this->networkController)
 			{
-				this->networkController->cc->sendData("VIB: 300");
+				this->networkController->cc->sendData("VIB: 100");
 			}
 		}
 		// print score and time text.

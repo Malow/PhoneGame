@@ -513,10 +513,10 @@ void Game::PlayGameMode4()
 				if(this->networkController)
 				{
 					if(hit)
-						this->networkController->cc->sendData("VIB: 500");
+						this->networkController->cc->sendData("VIB: 200");
 					else
 					{
-						this->networkController->cc->sendData("VIB: 250");
+						this->networkController->cc->sendData("VIB: 100");
 						
 					}
 				}

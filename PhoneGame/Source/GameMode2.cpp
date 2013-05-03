@@ -284,7 +284,7 @@ void Game::PlayGameMode2()
 					// Do Vibration
 					if(this->networkController)
 					{
-						this->networkController->cc->sendData("VIB: 300");
+						this->networkController->cc->sendData("VIB: 100");
 					}
 				}
 			}
