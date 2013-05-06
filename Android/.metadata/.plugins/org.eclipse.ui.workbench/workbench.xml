@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="20" version="2.0">
+<workbench progressCount="21" version="2.0">
 <workbenchAdvisor/>
 <window height="862" maximized="true" width="1024" x="120" y="120">
 <fastViewData fastViewLocation="1024"/>
@@ -41,13 +41,14 @@
 <part id="1"/>
 <part id="2"/>
 <part id="3"/>
+<part id="4"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" partName="MainActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/MainActivity.java" title="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java" workbook="DefaultEditorWorkbook">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="MainActivity.java" partName="MainActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/MainActivity.java" title="MainActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/MainActivity.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5246" selectionTopPixel="3489"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3998" selectionTopPixel="0"/>
 </editor>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TCPClient.java" partName="TCPClient.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/TCPClient.java" title="TCPClient.java" tooltip="WiiPhone/src/com/example/wiiphone/TCPClient.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/TCPClient.java"/>
@@ -58,6 +59,10 @@
 </editor>
 <editor id="com.android.ide.eclipse.editors.manifest.ManifestEditor" name="AndroidManifest.xml" partName="WiiPhone Manifest" path="D:/Projekt/PhoneGame/Android/WiiPhone/AndroidManifest.xml" title="WiiPhone Manifest" tooltip="WiiPhone/AndroidManifest.xml" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/AndroidManifest.xml"/>
+</editor>
+<editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipActivity.java" partName="SpaceShipActivity.java" path="D:/Projekt/PhoneGame/Android/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java" title="SpaceShipActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
+<editorState selectionHorizontalPixel="16" selectionLength="0" selectionOffset="1287" selectionTopPixel="360"/>
 </editor>
 </editors>
 <views>
@@ -330,13 +335,9 @@
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" path="/WiiPhone/res/values/strings.xml"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.manifest.ManifestEditor" path="/WiiPhone/AndroidManifest.xml"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/MainActivity.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.CommonXmlEditor" path="/WiiPhone/res/layout/activity_main.xml"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
 </editors>
-<item historyLabel="TCPClient.java" index="1">
-<position/>
-</item>
-<item historyLabel="MainActivity.java" index="0">
-<position info="not_deleted" x="5004" y="0"/>
-</item>
 <item historyLabel="WiiPhone Manifest" index="2"/>
 <item historyLabel="TCPClient.java" index="1">
 <position info="not_deleted" x="3208" y="0"/>
@@ -458,8 +459,12 @@
 <item historyLabel="MainActivity.java" index="8">
 <position/>
 </item>
-<item active="true" historyLabel="MainActivity.java" index="8">
+<item historyLabel="MainActivity.java" index="8">
 <position info="not_deleted" x="6119" y="0"/>
+</item>
+<item historyLabel="activity_main.xml" index="9"/>
+<item active="true" historyLabel="SpaceShipActivity.java" index="10">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -479,6 +484,9 @@
 </trimLayout>
 </window>
 <mruList>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java">
+<persistable path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
+</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="com.android.ide.eclipse.editors.manifest.ManifestEditor" name="AndroidManifest.xml" tooltip="WiiPhone/AndroidManifest.xml">
 <persistable path="/WiiPhone/AndroidManifest.xml"/>
 </file>
@@ -511,9 +519,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="FPSGameActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/FPSGameActivity.java">
 <persistable path="/WiiPhone/src/com/example/wiiphone/FPSGameActivity.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SpaceShipActivity.java" tooltip="WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java">
-<persistable path="/WiiPhone/src/com/example/wiiphone/SpaceShipActivity.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Vector2.java" tooltip="WiiPhone/src/com/example/wiiphone/Vector2.java">
 <persistable path="/WiiPhone/src/com/example/wiiphone/Vector2.java"/>
