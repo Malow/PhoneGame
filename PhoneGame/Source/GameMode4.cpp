@@ -162,6 +162,7 @@ void Game::PlayGameMode4()
 
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG3.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	this->FlushQueue();
 
 	
 	for(int i = 0; i < NR_OF_HUMANS; i++)

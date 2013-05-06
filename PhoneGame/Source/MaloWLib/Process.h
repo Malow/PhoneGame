@@ -79,6 +79,8 @@ namespace MaloW
 		long getNrOfProcs() { return this->nextPID; }
 		int GetEventQueueSize() const { return this->EvQueue->size(); }
 
+		void FlushQueue();
+
 		static unsigned long __stdcall threadProc(void* p)
 		{
 			((Process*)p)->Life();

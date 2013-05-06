@@ -79,6 +79,7 @@ void Game::PlayGameMode1()
 	float starTimer = 0.0f;
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG1.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	this->FlushQueue();
 
 	go = true;
 	int starcolor = 2;

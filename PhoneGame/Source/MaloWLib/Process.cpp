@@ -242,3 +242,28 @@ void Process::Close()
 	this->PutEvent(ev);	
 	CloseSpecific();
 }
+
+void MaloW::Process::FlushQueue()
+{
+	if(this->ProcMtx)
+	{
+		DWORD res = WaitForSingleObject(this->ProcMtx, INFINITE);
+		DebugMtxInfo(res);
+	}
+	else 
+		MaloW::Debug("Mutex is broken / hasn't been created / has been closed for proc: " + MaloW::convertNrToString((float)this->id));
+
+	if(this->debug)
+		MaloW::Debug("ERROR: Proc: " + MaloW::convertNrToString((float)this->id) + " Mutex for FlushQueue failed, multiple procs modifying data.");
+	this->debug = true;
+
+	ProcessEvent* ev = NULL;
+	while(!this->EvQueue->isEmpty())
+	{
+		ev = this->EvQueue->Dequeue();
+		delete ev;
+	}
+
+	this->debug = false;
+	ReleaseMutex(this->ProcMtx);
+}

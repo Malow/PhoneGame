@@ -106,6 +106,7 @@ void Game::PlayGameMode2()
 
 
 	GetGraphics()->LoadingScreen("Media/LoadingScreen/LoadingScreenBG2.png", "Media/LoadingScreen/LoadingScreenPB.png", 1.0f, 1.0f, 1.0f, 1.0f);
+	this->FlushQueue();
 
 	mGe->GetCamera()->SetPosition(centerPlatform + Vector3(0.0f, 30.0f, 20.0f));
 	mGe->GetCamera()->LookAt(centerPlatform);
