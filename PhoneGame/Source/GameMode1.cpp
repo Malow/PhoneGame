@@ -66,6 +66,7 @@ void Game::PlayGameMode1()
 	iText* speedTxt = GetGraphics()->CreateText("", Vector2(50, 35), 1.0f, "Media/fonts/new");
 	iText* timeTxt = GetGraphics()->CreateText("", Vector2(50, 65), 1.0f, "Media/fonts/new");
 	iText* scoreTxt = GetGraphics()->CreateText("", Vector2(50, 95), 1.0f, "Media/fonts/new");
+	iText* queueTxt = GetGraphics()->CreateText("", Vector2(500, 95), 1.0f, "Media/fonts/new");
 
 #ifdef _DEBUG
 	iText* phoneDirTxtX = GetGraphics()->CreateText("", Vector2(50, 155), 1.0f, "Media/fonts/new");
@@ -86,12 +87,11 @@ void Game::PlayGameMode1()
 	GetGraphics()->Update();
 	while(GetGraphics()->IsRunning() && go)
 	{
-		Sleep(1);
 		// Updates GFX
 		float diff = GetGraphics()->Update();	
 
 		// Handle events such as network packets and client connections
-		this->HandleEvent(diff);
+		this->HandleEvent2(diff);
 
 		if(GetGraphics()->GetKeyListener()->IsPressed(VK_ESCAPE))
 			go = false;
@@ -132,6 +132,7 @@ void Game::PlayGameMode1()
 		// print speed text.
 		speedTxt->SetText(string("SPEED: " + MaloW::convertNrToString((int)speed)).c_str());
 	
+		queueTxt->SetText(string("QUEUE: " + MaloW::convertNrToString(this->GetEventQueueSize())).c_str());
 
 		// Handle phone inputs
 		if(this->networkController)
@@ -305,6 +306,7 @@ void Game::PlayGameMode1()
 	GetGraphics()->DeleteText(speedTxt);
 	GetGraphics()->DeleteText(timeTxt);
 	GetGraphics()->DeleteText(scoreTxt);
+	GetGraphics()->DeleteText(queueTxt);
 
 #ifdef _DEBUG
 	GetGraphics()->DeleteText(phoneDirTxtX);

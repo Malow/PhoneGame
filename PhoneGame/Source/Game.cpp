@@ -275,6 +275,120 @@ void Game::HandleEvent(float diff)
 	}
 }
 
+void Game::HandleEvent2(float diff)
+{
+	// Take care of packets / events
+	while(MaloW::ProcessEvent* ev = this->PeekEvent())
+	{
+		// Network packet containing data
+		if(MaloW::NetworkPacket* np = dynamic_cast<MaloW::NetworkPacket*>(ev))
+		{
+			string msg = np->getMessage();
+
+			// Accelerometer update
+			if(msg.substr(0, 3) == "ACC")
+			{
+				msg = msg.substr(4);
+				int splitpos = msg.find(' ');
+				string xstr = msg.substr(0, splitpos);
+				msg = msg.substr(splitpos + 1);
+				splitpos = msg.find(' ');
+				string ystr = msg.substr(0, splitpos);
+				msg = msg.substr(splitpos + 1);
+				string zstr = msg;
+
+				float x = atof(xstr.c_str());
+				float y = atof(ystr.c_str());
+				float z = atof(zstr.c_str());
+
+
+				Vector3 dir = Vector3(x, y, z);
+				dir.Normalize();
+				this->networkController->direction = dir;
+			}
+
+			// Aim message for GameMode4 (3)
+			if(msg.substr(0, 3) == "AIM")
+			{
+				msg = msg.substr(4);
+				int spacePos = msg.find(' ');
+				float x = atof(msg.substr(0, spacePos).c_str());
+				float y = atof(msg.substr(spacePos + 1).c_str());
+				this->networkController->aim = Vector2(x, y);
+			}
+
+			// Speed message
+			if(msg.substr(0, 3) == "SPD")
+			{
+				msg = msg.substr(4);
+				float spd = atof(msg.c_str());
+				this->networkController->speed = spd;
+			}
+
+			// Shoot message for GameMode4 (3)
+			if(msg.substr(0, 5) == "SHOOT")
+			{
+				this->networkController->shoot = true;
+			}
+
+			// Restart for gameMode2
+			if(msg.substr(0, 7) == "RESTART")
+			{
+				this->networkController->needRestart = true;
+			}
+
+			// Answer current game mode
+			if(msg.substr(0, 8) == "GET MODE")
+			{
+				this->networkController->cc->sendData("CURRENT MODE: " + MaloW::convertNrToString(this->gameMode));
+			}
+
+			// Gamemode change
+			if(msg.substr(0, 3) == "GAM")
+			{
+				msg = msg.substr(4);
+				this->gameMode = atoi(msg.c_str());
+			}
+
+			// Quit the game mode
+			if(msg.substr(0, 4) == "QUIT")
+			{
+				this->go = false;
+			}
+
+			// Exit the program
+			if(msg.substr(0, 4) == "EXIT")
+			{
+				this->go = false;
+				this->play = false;
+			}
+
+			// Ping request
+			if(msg == "PING")
+			{
+				this->isPinging = false;
+				MaloW::Debug("Ping done: " + MaloW::convertNrToString(this->pingTimer) + " ms.");
+				this->pingTimer = 0.0f;
+			}
+		}
+
+		// New client connected
+		if(NewNetworkClientEvent* nnce = dynamic_cast<NewNetworkClientEvent*>(ev))
+		{
+			if(this->networkController)
+			{
+				MaloW::Debug("Dropping current connection due to a new one incomming.");
+				delete this->networkController;
+				this->networkController = NULL;
+			}
+			this->networkController = new NetworkController();
+			this->networkController->cc = nnce->GetCC();
+		}
+
+		delete ev;
+	}
+}
+
 void Game::FinishScreen( int score, string gamemode, float time )
 {
 	MaloW::Debug("Game " + gamemode + " Finished after " + MaloW::convertNrToString(time) + " seconds. Score: " + MaloW::convertNrToString(score));

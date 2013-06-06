@@ -74,6 +74,7 @@ private:
 	bool isPinging;
 
 	void HandleEvent(float diff);
+	void HandleEvent2(float diff);
 	void PlayGameMode1();
 	void PlayGameMode2();
 	void PlayGameMode3();
